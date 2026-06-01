@@ -84,7 +84,7 @@ state = {
 ### 📊 סקירה כללית (`renderOverview`) — 3 תת-טאבים
 - **🌍 מצב אקלים** (`renderOverviewClimate`): מפת נקודות Leaflet עם שכבות (כולל שיטפון), דוחות שמ"ט, ניתוח מגמות, וחלון רגולציה.
 - **💧 מים ומשקעים** (`renderWaterStatus`): מפת מקורות מים, KPI, ניתוח סיכון. דאטה: `WATER_FEATURES`.
-- **🌊 הצפות (תמ"א 1/7)** (`renderFloodsStatus`) — **חדש**. ראו §8.
+- **🌊 הצפות (תמ"א 1/7)** (`renderFloodsStatus`) — **חדש**. ראו §8. כולל גם **סינון לפי סטטוס תכנית** (סיידבר), **שכבת נכסי חברות** על המפה, ופאנל **הצלבת נכסי חברות מול פשטי הצפה** (§9.10–11).
 
 ### 🏢 סקירת חברות (`renderCompaniesOverview`)
 - **📊 תצוגת שוק** (`renderOverviewMarket`): פילטרים, **🧪 סליידר מבחן עקה** (חדש), KPI, גרף בועות סיכון-מול-הון-עצמי, גרף בועות ענפי, מפת חום ענף×תרחיש. הגוף המתעדכן הופרד ל-`renderMarketBody()` (מתרענן חי בעת גרירת הסליידר).
@@ -140,13 +140,20 @@ state = {
 8. **טאב הצפות (תמ"א 1/7)** — נתונים חיים מ-ArcGIS, 6 שכבות, מקרא, קישורי מקור.
 9. **ניקוי** — הסרת משתנה `changelog` מת מפרופיל החברה.
 
+### עדכון המשך (2026-06-01, סשן web)
+
+10. **🏢 הצלבת נכסי חברות מול פשטי הצפה** — פאנל חדש בטאב ההצפות (מתחת למפה). כפתור "חשב סיכון הצפה לנכסים" מריץ שאילתות מרחביות חיות (`returnCountOnly`) מול ArcGIS לכל עיר שבה ממוקמים נכסי חברה (~5 ק״מ סביב מרכז העיר), ומדרג כל חברה: **גבוהה** (נכס בתחום פשט/שטח הצפה), **בינונית** (קרבת נחל), **נמוכה**. מציג KPI + טבלה ממוינת + דגל "מטה חשוף". בנוסף — שכבת overlay **🏢 נכסי חברות** על המפה (כפתור בשורת השכבות) שמציגה את כל הנכסים, צבועים לפי חשיפה לאחר החישוב. פונקציות: `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodCityLevel`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`. מקור-אמת: `_floodCoState`.
+11. **🔎 סינון טאב הצפות לפי סטטוס תכנית** — רצועת צ'יפים בסיידבר (שדה `STATUS` מהנתונים). הצ'יפים מתגלים דינמית תוך כדי טעינת השכבות (`floodSyncStatusUI`). כיבוי/הדלקה מצייר מחדש מתוך GeoJSON שמור **ללא משיכה חוזרת** (`floodRedraw`, `floodBuildLayer`, `_floodRaw`). מצב: `_floodStatusOff`, עזרים `floodFeaturePasses`/`floodStatusKey`.
+12. **📊 ראדר מוכנות בדוח ה-PDF** — `pfPrintReport` כולל כעת סעיף "מוכנות התיק לפי קטגוריה — מול ממוצע השוק": ראדר SVG (מוכנות התיק המשוקללת מול ממוצע כלל המאגר) + טבלת פערים. פונקציה: `pfPrepRadarSVG(matched)` (משתמשת ב-`PREP_CATEGORIES` החי ו-`prepLabelFor`).
+
 ---
 
 ## 10. נושאים פתוחים / TODO
 
 - **למלא נתונים בגיליון "חברות":** `מספר מנפיק` (התאמת תיק מדויקת), `הון עצמי` ו-`שווי שוק` (גרף הבועות). משימת דאטה של המשתמש.
-- **ראדר מוכנות בדוח/ייצוא:** כרגע הראדר רק במסך; אפשר להוסיף לדוח ה-PDF.
-- **טאב הצפות:** אפשר להוסיף סינון לפי סטטוס תכנית, או הצלבה בין נכסי חברות לפשטי הצפה (סיכון הצפה לכל חברה לפי מיקום נכסיה).
+- ~~**ראדר מוכנות בדוח/ייצוא**~~ — ✅ נוסף לדוח ה-PDF (§9.12).
+- ~~**טאב הצפות: סינון לפי סטטוס + הצלבת נכסי חברות**~~ — ✅ שניהם מומשו (§9.10–11).
+- **דיוק הצלבת נכסים:** הבדיקה כיום ברמת **מרכז-עיר** (~5 ק״מ), כי מיקומי הנכסים הם נתוני הדגמה. לשדרוג: לאחסן lat/lng אמיתי לכל נכס ולבצע שאילתת `esriGeometryPoint` מדויקת לכל נכס; אפשר גם לחבר את ציון חשיפת ההצפה ל-`finalRisk` של החברה.
 - **ביצועים:** `climate_data.xlsx` תפח ל-~60MB (נתוני מפה רבים) — לשקול דילול גיליונות כבדים אם הטעינה/שמירה איטית.
 - **קואורדינטות/CRS:** שירות ArcGIS עובד ב-Web Mercator; השאילתות מבקשות `outSR=4326` ולכן ה-GeoJSON תקין ל-Leaflet.
 - ניקוי קוד מת מינורי נוסף.
@@ -174,8 +181,10 @@ state = {
 | סקירה/אקלים | `renderOverview`, `renderOverviewClimate`, `initClimateMap` |
 | מים | `renderWaterStatus`, `initWaterMap`, `waterToggleLayer`, `WATER_FEATURES` |
 | **הצפות** | `renderFloodsStatus`, `initFloodsMap`, `floodFetchAndDraw`, `floodReload`, `floodToggleLayer`, `floodQueryUrl`, `floodOffsetDeg`, `floodPopup`, `FLOOD_LAYERS`, `FLOOD_SERVICE` |
+| **הצפות — סינון סטטוס** | `floodBuildLayer`, `floodRedraw`, `floodToggleStatus`, `floodStatusFilterHtml`, `floodSyncStatusUI`, `floodFeaturePasses`, `floodStatusKey`, `_floodRaw`, `_floodStatusOff`, `_floodStatuses` |
+| **הצפות — נכסי חברות** | `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodCityLevel`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`, `FLOOD_CO_LAYERS`, `_floodCoState` |
 | חברות | `renderOverviewMarket`, `renderOverviewCompany`, `renderRadar`, `renderPrepRadar`, `sectorPrepAvg`, `prepValForCat`, `renderChart_HeatmapSecScen` |
-| תיק | `renderPortfolio`, `renderPortfolioBody`, `handlePortfolioFile`, `decodeCsvBytes`, `pfSheetToRows`, `ingestPortfolio`, `pfExportXlsx`, `pfPrintReport`, `pfClear` |
+| תיק | `renderPortfolio`, `renderPortfolioBody`, `handlePortfolioFile`, `decodeCsvBytes`, `pfSheetToRows`, `ingestPortfolio`, `pfExportXlsx`, `pfPrintReport`, `pfPrepRadarSVG`, `pfClear` |
 | מוכנות | `PREP_CATEGORIES`, `PREP_CATS_IDS`, `prepLabelFor`, `suggestRec`, `setRecommendation` |
 
 ---
