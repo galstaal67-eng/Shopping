@@ -830,6 +830,35 @@ async function xlLoad() {
 
   if (COMPANIES.length) state.selectedTicker = COMPANIES[0].ticker;
   state.assets = initCompanyAssets();
+
+  // ── Assets: גיליון "נכסים" עם קואורדינטות אמת (lat/lng) ──
+  // אם קיים, הנכסים של כל ticker שמופיע בגיליון מוחלפים בנתוני האמת;
+  // tickers שאינם בגיליון שומרים על נכסי הדמו הסינתטיים.
+  const assetRows = sheetRows('נכסים');
+  if (assetRows.length) {
+    state._assetsFromExcel = true;
+    const byTk = {};
+    assetRows.forEach(function(r){
+      const tk = String(r['ticker']||'').trim();
+      if (!tk) return;
+      const isForeign = String(r['סוג מיקום']||'').trim().indexOf('חו') === 0; // "חו"ל"
+      const typeLabel = String(r['סוג נכס']||'').trim();
+      const type = ASSET_TYPE_BY_LABEL[typeLabel] || 'hq';
+      const place = String(r['עיר / מיקום']||r['עיר']||r['מיקום']||'').trim();
+      const lat = parseFloat(String(r['קו רוחב']||'').replace(/[^\d.\-]/g,''));
+      const lng = parseFloat(String(r['קו אורך']||'').replace(/[^\d.\-]/g,''));
+      const label = String(r['תיאור']||'').trim() || (ASSET_TYPES[type] ? ASSET_TYPES[type].label : type);
+      const hasLatLng = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+      if (!byTk[tk]) byTk[tk] = { domestic: [], foreign: [] };
+      const a = { type: type, label: label };
+      if (hasLatLng) { a.lat = lat; a.lng = lng; a.real = true; }   // קואורדינטת אמת
+      if (isForeign) { a.location = place; byTk[tk].foreign.push(a); }
+      else { a.city = place; byTk[tk].domestic.push(a); }
+    });
+    Object.keys(byTk).forEach(function(tk){ state.assets[tk] = byTk[tk]; });
+    console.log('Loaded assets sheet for', Object.keys(byTk).length, 'companies');
+  }
+
   render();
   // רענון מפת הנקודות (Leaflet) כך שדירוג השיטפון המעודכן ייצבע מחדש
   if (state.activeTab === 'overview' && state.overviewMode === 'climate') {
@@ -947,6 +976,13 @@ async function xlSaveNow() {
     });
     addSheet('_meta', metaRows, ['ticker','lastUpdated','changeLog']);
 
+    // Assets — נכתב רק אם הגיליון כבר קיים בחוברת או שהמשתמש ביקש לסנכרן,
+    // כדי לא לזהם אוטומטית קבצים קיימים בנתוני נכסי הדמו.
+    if (wb.SheetNames.indexOf('נכסים') !== -1 || state._assetsFromExcel) {
+      addSheet('נכסים', xlAssetRows(),
+        ['ticker','שם חברה','סוג מיקום','סוג נכס','עיר / מיקום','קו רוחב','קו אורך','תיאור']);
+    }
+
     // Write back to the same file
     const buf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 
@@ -988,6 +1024,51 @@ async function xlSaveNow() {
     }
     console.error('xlSave error', e);
   }
+}
+
+/* קואורדינטת נכס לחישוב/ייצוא:
+   - נכס אמת (real, מ-Excel) → הקואורדינטה המדויקת (precise=true).
+   - נכס דמו → מרכז העיר/המיקום (precise=false), כך שכמה נכסים באותה עיר
+     מתאחדים למפתח אחד בבדיקת ההצפה. */
+function assetCoord(asset) {
+  if (asset.real && typeof asset.lat === 'number' && typeof asset.lng === 'number')
+    return { lat: asset.lat, lng: asset.lng, precise: true };
+  if (asset.city) { var r = ISRAEL_CITIES.find(function(c){ return c.name === asset.city; }); if (r) return { lat: r.lat, lng: r.lng, precise: false }; }
+  if (asset.location) { var f = FOREIGN_LOCATIONS.find(function(l){ return l.name === asset.location; }); if (f) return { lat: f.lat, lng: f.lng, precise: false }; }
+  if (typeof asset.lat === 'number' && typeof asset.lng === 'number') return { lat: asset.lat, lng: asset.lng, precise: !!asset.real };
+  return null;
+}
+
+/* בניית שורות גיליון "נכסים" מתוך state.assets */
+function xlAssetRows() {
+  var rows = [], t2c = Object.fromEntries(COMPANIES.map(function(c){ return [c.ticker, c]; }));
+  Object.keys(state.assets).forEach(function(tk){
+    var co = t2c[tk]; if (!co) return;
+    var a = state.assets[tk] || {};
+    function push(x, foreign){
+      var c = assetCoord(x);
+      rows.push({
+        'ticker': tk, 'שם חברה': co.name, 'סוג מיקום': foreign ? 'חו"ל' : 'מקומי',
+        'סוג נכס': (ASSET_TYPES[x.type] ? ASSET_TYPES[x.type].label : x.type),
+        'עיר / מיקום': (foreign ? x.location : x.city) || '',
+        'קו רוחב': c ? +c.lat.toFixed(5) : '', 'קו אורך': c ? +c.lng.toFixed(5) : '',
+        'תיאור': x.label || ''
+      });
+    }
+    (a.domestic || []).forEach(function(x){ push(x, false); });
+    (a.foreign  || []).forEach(function(x){ push(x, true); });
+  });
+  return rows;
+}
+
+/* כתיבת/סנכרון גיליון "נכסים" ל-Excel המחובר (יוצר תבנית עריכה לקואורדינטות אמת) */
+function xlExportAssets() {
+  if (!_xlFileHandle) { alert('יש להתחבר תחילה לקובץ Excel (כפתור החיבור למעלה) כדי לסנכרן את גיליון הנכסים.'); return; }
+  state._assetsFromExcel = true;
+  _xlDirty = true;
+  Promise.resolve(xlSaveNow()).then(function(){
+    alert('גיליון "נכסים" נכתב/עודכן בקובץ. ערכו בו את "קו רוחב"/"קו אורך" לכל נכס (קואורדינטות אמת), ואז התחברו מחדש לקובץ כדי לטעון אותן ולקבל הצלבה מדויקת מול פשטי ההצפה.');
+  });
 }
 
 /* ── Hook into all state mutations ── */
@@ -1042,6 +1123,10 @@ const ASSET_TYPES = {
   realestate:  {label: 'פרויקט נדל"ן', color: '#059669', icon: '🏗️'},
   branch:      {label: 'סניף/חנות',    color: '#ea580c', icon: '🏪'}
 };
+/* מיפוי הפוך: תווית עברית → מזהה סוג נכס (לקריאת גיליון "נכסים" מ-Excel) */
+const ASSET_TYPE_BY_LABEL = (function(){
+  var m = {}; Object.keys(ASSET_TYPES).forEach(function(k){ m[ASSET_TYPES[k].label] = k; }); return m;
+})();
 
 /* ערים ישראליות עם קואורדינטות יחסיות על המפה הסכמטית של ישראל (0-100, 0-130) + lat/lng אמיתיים */
 const ISRAEL_CITIES = [
@@ -3368,7 +3453,8 @@ function initCompanyAssets() {
     const assets = [];
     // משרדי מטה - לכל חברה
     const hqCity = ISRAEL_CITIES[Math.floor(rand() * 8)]; // ערי המרכז
-    assets.push({type: 'hq', city: hqCity.name, x: hqCity.x + (rand()-0.5)*2, y: hqCity.y + (rand()-0.5)*2, label: 'מטה החברה'});
+    assets.push({type: 'hq', city: hqCity.name, x: hqCity.x + (rand()-0.5)*2, y: hqCity.y + (rand()-0.5)*2,
+                 lat: hqCity.lat + (rand()-0.5)*0.03, lng: hqCity.lng + (rand()-0.5)*0.03, label: 'מטה החברה'});
     // נכסים נוספים לפי ענף
     const numExtra = Math.floor(rand() * 4) + 1;
     for (let i = 0; i < numExtra; i++) {
@@ -3386,7 +3472,8 @@ function initCompanyAssets() {
         type = rand() < 0.5 ? 'warehouse' : 'hq';
       }
       const label = ASSET_TYPES[type].label + ' - ' + city.name;
-      assets.push({type: type, city: city.name, x: city.x + (rand()-0.5)*3, y: city.y + (rand()-0.5)*3, label: label});
+      assets.push({type: type, city: city.name, x: city.x + (rand()-0.5)*3, y: city.y + (rand()-0.5)*3,
+                   lat: city.lat + (rand()-0.5)*0.03, lng: city.lng + (rand()-0.5)*0.03, label: label});
     }
     // נכסים בחו"ל - רק לחברות גדולות (במדדים המובילים) או טכנולוגיה
     const hasForeign = c.index === 'ת"א 35' || (c.sector === 'טכנולוגיה' && rand() < 0.6);
@@ -3401,7 +3488,7 @@ function initCompanyAssets() {
         const loc = FOREIGN_LOCATIONS[idx];
         const types = c.sector === 'טכנולוגיה' ? ['hq', 'branch'] : ['warehouse', 'factory', 'hq'];
         const t = types[Math.floor(rand() * types.length)];
-        foreign.push({type: t, location: loc.name, side: loc.side, x: loc.x, y: loc.y, label: ASSET_TYPES[t].label + ' - ' + loc.name});
+        foreign.push({type: t, location: loc.name, side: loc.side, x: loc.x, y: loc.y, lat: loc.lat, lng: loc.lng, label: ASSET_TYPES[t].label + ' - ' + loc.name});
       }
     }
     result[c.ticker] = { domestic: assets, foreign: foreign };
@@ -3491,7 +3578,9 @@ function rawRisk(company) {
 function finalRisk(company) {
   const raw = rawRisk(company);
   const prep = companyPrepScore(company);
-  const adjusted = raw * (1 - (prep - 1) * 0.075);
+  let adjusted = raw * (1 - (prep - 1) * 0.075);
+  // שילוב אופציונלי של חשיפת ההצפה הגאוגרפית (תוסף, מעבר להפחתת המוכנות)
+  adjusted += floodRiskAdj(company);
   return Math.min(5, Math.max(1, adjusted));
 }
 
@@ -3617,6 +3706,9 @@ function renderHeader() {
   if ((state.stressFactor || 1) > 1) {
     const sPct = Math.round((state.stressFactor - 1) * 100);
     html += '<div style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:#7c2d12;color:#fff;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700">🧪 מבחן עקה פעיל: +' + sPct + '% <button onclick="stressReset()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px;font-weight:700">איפוס</button></div>';
+  }
+  if (state.includeFloodInRisk) {
+    html += '<div style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:#0c4a6e;color:#fff;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;margin-right:8px">🌊 חשיפת הצפה משולבת במודל <button onclick="floodToggleRiskModel(false)" style="background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px;font-weight:700">כבה</button></div>';
   }
   html += '<div class="tabs">';
   tabs.forEach(function(t) {
@@ -4465,17 +4557,28 @@ function floodCountUrl(layerId, lat, lng, d) {
   return FLOOD_SERVICE + '/' + layerId + '/query?' + params.toString();
 }
 
-function floodCollectAssetCities() {
-  var set = {};
+/* מפתח מיקום לאיחוד שאילתות (קירוב ~100 מ׳) */
+function floodLocKey(c) { return c.lat.toFixed(3) + ',' + c.lng.toFixed(3); }
+
+/* אוסף מיקומים ייחודיים מנכסי כל החברות בישראל (domestic) → {key:{lat,lng,precise}} */
+function floodCollectAssetLocs() {
+  var map = {};
   COMPANIES.forEach(function(c){
     var a = state.assets[c.ticker]; if (!a) return;
-    (a.domestic||[]).forEach(function(x){ if (x.city) set[x.city] = true; });
+    (a.domestic||[]).forEach(function(x){
+      var co = assetCoord(x); if (!co) return;
+      var k = floodLocKey(co);
+      // מיקום מדויק גובר על קירוב-עיר אם שניהם ממופים לאותו מפתח
+      if (!map[k] || (co.precise && !map[k].precise)) map[k] = co;
+    });
   });
-  return Object.keys(set);
+  return map;
 }
 
-function floodCityLevel(name) {
-  var i = _floodCoState && _floodCoState.byCity[name];
+/* רמת חשיפת נכס בודד לפי תוצאת השאילתה למיקומו */
+function floodAssetLevel(asset) {
+  var co = assetCoord(asset); if (!co) return 'unknown';
+  var i = _floodCoState && _floodCoState.byKey[floodLocKey(co)];
   if (!i) return 'unknown';
   if (i.plain > 0 || i.area > 0) return 'high';
   if (i.river > 0) return 'medium';
@@ -4483,54 +4586,87 @@ function floodCityLevel(name) {
 }
 
 function floodComputeCompanies() {
-  var rows = [];
+  var rows = [], byTicker = {};
   COMPANIES.forEach(function(c){
     var a = state.assets[c.ticker]; if (!a || !(a.domestic||[]).length) return;
-    var dom = a.domestic, high=0, med=0, hqExposed=false;
+    var dom = a.domestic, high=0, med=0, hqExposed=false, precise=false;
     dom.forEach(function(x){
-      var lv = floodCityLevel(x.city);
+      var lv = floodAssetLevel(x);
       if (lv==='high') high++; else if (lv==='medium') med++;
+      var co = assetCoord(x); if (co && co.precise) precise = true;
       if (x.type==='hq' && (lv==='high'||lv==='medium')) hqExposed = true;
     });
     var n = dom.length, exposed = high+med;
     var level = high>0 ? 'high' : (med>0 ? 'medium' : 'low');
+    byTicker[c.ticker] = level;
     rows.push({co:c, n:n, high:high, med:med, exposed:exposed, hqExposed:hqExposed,
-               level:level, score:(high*2 + med)/(n*2)});
+               level:level, precise:precise, score:(high*2 + med)/(n*2)});
   });
   rows.sort(function(a,b){ return (b.high-a.high) || (b.exposed-a.exposed) || (b.score-a.score); });
   _floodCoState.companies = rows;
+  _floodCoState.byTicker = byTicker;
+}
+
+/* מריץ מערך של יוצרי-הבטחות עם הגבלת מקביליות (כדי לא להציף את השירות) */
+function floodRunJobs(makers, concurrency) {
+  return new Promise(function(resolve, reject){
+    var i=0, done=0, n=makers.length, failed=false;
+    if (!n) return resolve();
+    function next(){
+      while (i < n && (i - done) < concurrency) {
+        (function(job){
+          job().then(function(){ done++; if (done===n) resolve(); else next(); })
+               .catch(function(e){ if (!failed){ failed=true; reject(e); } });
+        })(makers[i++]);
+      }
+    }
+    next();
+  });
 }
 
 function floodAnalyzeCompanies() {
   if (_floodCoState && _floodCoState.loading) return;
-  var cities = floodCollectAssetCities().filter(function(name){
-    return ISRAEL_CITIES.some(function(c){ return c.name===name; });
-  });
-  if (!cities.length) { alert('לא נמצאו נכסי חברות בישראל לניתוח.'); return; }
-  _floodCoState = { loading:true, error:null, byCity:{}, companies:[], ts:Date.now() };
+  var locs = floodCollectAssetLocs();
+  var keys = Object.keys(locs);
+  if (!keys.length) { alert('לא נמצאו נכסי חברות לניתוח.'); return; }
+  _floodCoState = { loading:true, error:null, byKey:{}, byTicker:{}, companies:[], ts:Date.now() };
   floodRenderCoPanel();
-  var d = 0.045, jobs = [];   // ~5 ק"מ סביב מרכז העיר
-  cities.forEach(function(name){
-    var rec = ISRAEL_CITIES.find(function(c){ return c.name===name; });
-    var info = { plain:0, area:0, river:0 };
-    _floodCoState.byCity[name] = info;
+  var makers = [];
+  keys.forEach(function(k){
+    var loc = locs[k];
+    var d = loc.precise ? 0.0015 : 0.045;   // נכס אמת ~150מ׳ • קירוב-עיר ~5ק״מ
+    var info = { plain:0, area:0, river:0, precise:loc.precise };
+    _floodCoState.byKey[k] = info;
     FLOOD_CO_LAYERS.forEach(function(L0){
-      jobs.push(
-        fetch(floodCountUrl(L0.id, rec.lat, rec.lng, d))
+      makers.push(function(){
+        return fetch(floodCountUrl(L0.id, loc.lat, loc.lng, d))
           .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-          .then(function(j){ info[L0.key] = (j && typeof j.count==='number') ? j.count : 0; })
-      );
+          .then(function(j){ info[L0.key] = (j && typeof j.count==='number') ? j.count : 0; });
+      });
     });
   });
-  Promise.all(jobs).then(function(){
+  floodRunJobs(makers, 8).then(function(){
     floodComputeCompanies();
     _floodCoState.loading = false;
     floodRenderCoPanel();
-    if (_floodMap && _floodAssetLayer) floodDrawAssets(); // צביעה מחדש אם שכבת הנכסים דולקת
+    if (state.includeFloodInRisk) render();              // עדכון מלא אם החשיפה משולבת במודל
+    else if (_floodMap && _floodAssetLayer) floodDrawAssets();
   }).catch(function(){
     if (_floodCoState) { _floodCoState.loading = false; _floodCoState.error = 'טעינת הנתונים מ-ArcGIS נכשלה (בדקו חיבור אינטרנט).'; }
     floodRenderCoPanel();
   });
+}
+
+/* שילוב חשיפת ההצפה הגאוגרפית במודל הסיכון (אופציונלי, מחושב מראש ב-byTicker) */
+function floodRiskAdj(company) {
+  if (!state.includeFloodInRisk) return 0;
+  if (!_floodCoState || _floodCoState.loading || !_floodCoState.byTicker) return 0;
+  var lv = _floodCoState.byTicker[company.ticker];
+  return lv==='high' ? 0.5 : (lv==='medium' ? 0.25 : 0);
+}
+function floodToggleRiskModel(checked) {
+  state.includeFloodInRisk = !!checked;
+  render();
 }
 
 /* ציור תוכן פאנל החברות במקום (ללא render מלא) */
@@ -4546,8 +4682,11 @@ function floodCoPanelHtml() {
   h += '<div><h3 style="margin-bottom:2px">🏢 הצלבת נכסי חברות מול פשטי הצפה</h3>';
   h += '<div style="font-size:11px;color:#64748b">חשיפת הצפה לכל חברה לפי מיקום נכסיה — חי משירות ה-ArcGIS של תמ״א 1/7.</div></div>';
   if (!st || (!st.loading)) {
+    h += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    h += '<button onclick="xlExportAssets()" title="כתיבת/סנכרון גיליון נכסים ל-Excel לעריכת קואורדינטות אמת" style="background:#fff;color:#0f172a;border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📤 ייצא/סנכרן נכסים</button>';
     h += '<button onclick="floodAnalyzeCompanies()" style="background:#0f172a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">'
       + (st ? '🔄 חשב מחדש' : '▶️ חשב סיכון הצפה לנכסים') + '</button>';
+    h += '</div>';
   }
   h += '</div>';
 
@@ -4560,7 +4699,8 @@ function floodCoPanelHtml() {
     return h;
   }
   if (!st) {
-    h += '<div style="font-size:12px;color:#64748b;line-height:1.6">הכלי בודק לכל עיר שבה ממוקמים נכסי חברות אם בסביבתה (~5 ק״מ) יש פשט/שטח הצפה או נחל, ומדרג כל חברה לפי חשיפת נכסיה. דורש חיבור אינטרנט.</div>';
+    h += '<div style="font-size:12px;color:#64748b;line-height:1.6">הכלי בודק לכל נכס אם במיקומו יש פשט/שטח הצפה או נחל, ומדרג כל חברה לפי חשיפת נכסיה. לנכסים עם <b>קואורדינטות אמת</b> (מגיליון "נכסים" ב-Excel) הבדיקה מדויקת (~150 מ׳); לנכסי דמו — קירוב ברמת מרכז-עיר (~5 ק״מ). דורש חיבור אינטרנט.</div>';
+    h += '<div style="font-size:11px;color:#475569;margin-top:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;line-height:1.6">💡 להזנת מיקומי אמת: לחצו <b>📤 ייצא/סנכרן נכסים</b> (דורש קובץ Excel מחובר), מלאו "קו רוחב"/"קו אורך" בגיליון <b>"נכסים"</b>, והתחברו מחדש לקובץ.</div>';
     return h;
   }
 
@@ -4604,7 +4744,15 @@ function floodCoPanelHtml() {
     });
     h += '</tbody></table></div>';
   }
-  h += '<div style="font-size:10px;color:#94a3b8;margin-top:8px;line-height:1.5">הבדיקה מתבצעת ברמת מרכז-עיר (קירוב, ~5 ק״מ) ולא ברזולוציית כתובת מדויקת — מיקומי הנכסים הם נתוני הדגמה. "בפשט הצפה" = נכס בעיר שבסביבתה שכבת פשט/שטח הצפה; "בקרבת נחל" = שכבת נחלים בלבד.</div>';
+  // שילוב במודל הסיכון (משימה 2)
+  var nPrecise = rows.filter(function(r){ return r.precise; }).length;
+  h += '<label style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;font-size:12px;color:#0c4a6e;cursor:pointer">';
+  h += '<input type="checkbox" style="margin-top:2px" ' + (state.includeFloodInRisk?'checked':'') + ' onchange="floodToggleRiskModel(this.checked)">';
+  h += '<span>שלב את חשיפת ההצפה הגאוגרפית ב<b>מודל הסיכון</b> — תוספת של <b>+0.5</b> לחשיפה גבוהה ו-<b>+0.25</b> לבינונית על דירוג הסיכון הסופי. <b>משפיע על כל הדשבורד</b> (KPI, רשימות, תיק). מומלץ להפעיל בעיקר עם קואורדינטות אמת.</span>';
+  h += '</label>';
+
+  h += '<div style="font-size:10px;color:#94a3b8;margin-top:8px;line-height:1.5">"בפשט הצפה" = נכס בתחום/קרבת שכבת פשט/שטח הצפה; "בקרבת נחל" = שכבת נחלים בלבד. נכסים עם קואורדינטות אמת נבדקים ב-~150 מ׳; נכסי דמו בקירוב מרכז-עיר (~5 ק״מ). '
+    + (nPrecise ? '<b>' + nPrecise + '</b> חברות נותחו עם קואורדינטות אמת.' : 'כל הנכסים כעת בנתוני דמו — ראו 📤 לעיל להזנת מיקומי אמת.') + '</div>';
   h += '<div style="font-size:10px;color:#94a3b8;margin-top:2px">עודכן: ' + new Date(st.ts).toLocaleString('he-IL') + '</div>';
   return h;
 }
@@ -4629,15 +4777,16 @@ function floodDrawAssets() {
   COMPANIES.forEach(function(c){
     var a = state.assets[c.ticker]; if (!a) return;
     (a.domestic||[]).forEach(function(x){
-      var rec = ISRAEL_CITIES.find(function(cc){ return cc.name===x.city; });
-      if (!rec) return;
-      // jitter דטרמיניסטי קל כדי שנכסים באותה עיר לא יוסתרו זה את זה
-      var lat = rec.lat + (((x.y||0)%1) - 0.5) * 0.03;
-      var lng = rec.lng + (((x.x||0)%1) - 0.5) * 0.03;
-      var lv = (_floodCoState && !_floodCoState.loading) ? floodCityLevel(x.city) : 'unknown';
+      // מיקום תצוגה: קואורדינטת הנכס (אמת/דמו-מג'וטר) אם קיימת, אחרת מרכז העיר
+      var lat, lng;
+      if (typeof x.lat === 'number' && typeof x.lng === 'number') { lat = x.lat; lng = x.lng; }
+      else { var rec = ISRAEL_CITIES.find(function(cc){ return cc.name===x.city; }); if (!rec) return;
+             lat = rec.lat + (((x.y||0)%1) - 0.5) * 0.03; lng = rec.lng + (((x.x||0)%1) - 0.5) * 0.03; }
+      var lv = (_floodCoState && !_floodCoState.loading) ? floodAssetLevel(x) : 'unknown';
       var ac = ASSET_TYPES[x.type] || {label:'נכס', icon:''};
       var m = L.circleMarker([lat,lng], {radius:4, fillColor:floodAssetColor(lv), fillOpacity:0.9, color:'#fff', weight:1});
-      m.bindPopup('<div style="direction:rtl;font-size:12px"><b>' + escapeHtml(c.name) + '</b><br>' + escapeHtml(ac.label) + ' • ' + escapeHtml(x.city)
+      m.bindPopup('<div style="direction:rtl;font-size:12px"><b>' + escapeHtml(c.name) + '</b><br>' + escapeHtml(ac.label) + ' • ' + escapeHtml(x.city||'')
+        + (x.real ? ' 📍' : '')
         + (lv!=='unknown' ? '<br>חשיפת הצפה: <b style="color:' + floodLevelColor(lv) + '">' + floodLevelLabel(lv) + '</b>' : '') + '</div>');
       group.addLayer(m);
     });
@@ -7276,12 +7425,16 @@ function initLeafletMap(company) {
 
     // סמני נכסים בישראל
     companyAssets.domestic.forEach(function(a) {
-      const cityRecord = ISRAEL_CITIES.find(function(c) { return c.name === a.city; });
-      if (!cityRecord) return;
+      // קואורדינטת אמת/דמו אם קיימת; אחרת מרכז העיר עם jitter קטן
+      let lat, lng;
+      if (typeof a.lat === 'number' && typeof a.lng === 'number') { lat = a.lat; lng = a.lng; }
+      else {
+        const cityRecord = ISRAEL_CITIES.find(function(c) { return c.name === a.city; });
+        if (!cityRecord) return;
+        lat = cityRecord.lat + (Math.random() - 0.5) * 0.02;
+        lng = cityRecord.lng + (Math.random() - 0.5) * 0.02;
+      }
       const ac = ASSET_TYPES[a.type];
-      // jitter קטן כדי שאם יש כמה נכסים באותה עיר הם לא יוסתרו זה מזה
-      const lat = cityRecord.lat + (Math.random() - 0.5) * 0.02;
-      const lng = cityRecord.lng + (Math.random() - 0.5) * 0.02;
       allLatLngs.push([lat, lng]);
 
       const icon = L.divIcon({
@@ -7301,10 +7454,15 @@ function initLeafletMap(company) {
 
     // סמני נכסים בחו"ל
     companyAssets.foreign.forEach(function(f) {
-      const locRecord = FOREIGN_LOCATIONS.find(function(l) { return l.name === f.location; });
-      if (!locRecord) return;
+      let flat, flng;
+      if (typeof f.lat === 'number' && typeof f.lng === 'number') { flat = f.lat; flng = f.lng; }
+      else {
+        const locRecord = FOREIGN_LOCATIONS.find(function(l) { return l.name === f.location; });
+        if (!locRecord) return;
+        flat = locRecord.lat; flng = locRecord.lng;
+      }
       const ac = ASSET_TYPES[f.type];
-      allLatLngs.push([locRecord.lat, locRecord.lng]);
+      allLatLngs.push([flat, flng]);
 
       const icon = L.divIcon({
         className: 'asset-marker-icon',
@@ -7313,7 +7471,7 @@ function initLeafletMap(company) {
         iconAnchor: [17, 17],
         popupAnchor: [0, -17]
       });
-      const marker = L.marker([locRecord.lat, locRecord.lng], { icon: icon }).addTo(map);
+      const marker = L.marker([flat, flng], { icon: icon }).addTo(map);
       const popupHtml =
         '<div class="popup-title"><span class="popup-icon">' + ac.icon + '</span>' + escapeHtml(ac.label) + '</div>' +
         '<div class="popup-meta">🌍 ' + escapeHtml(f.location) + '</div>' +

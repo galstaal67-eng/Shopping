@@ -142,9 +142,15 @@ state = {
 
 ### עדכון המשך (2026-06-01, סשן web)
 
-10. **🏢 הצלבת נכסי חברות מול פשטי הצפה** — פאנל חדש בטאב ההצפות (מתחת למפה). כפתור "חשב סיכון הצפה לנכסים" מריץ שאילתות מרחביות חיות (`returnCountOnly`) מול ArcGIS לכל עיר שבה ממוקמים נכסי חברה (~5 ק״מ סביב מרכז העיר), ומדרג כל חברה: **גבוהה** (נכס בתחום פשט/שטח הצפה), **בינונית** (קרבת נחל), **נמוכה**. מציג KPI + טבלה ממוינת + דגל "מטה חשוף". בנוסף — שכבת overlay **🏢 נכסי חברות** על המפה (כפתור בשורת השכבות) שמציגה את כל הנכסים, צבועים לפי חשיפה לאחר החישוב. פונקציות: `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodCityLevel`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`. מקור-אמת: `_floodCoState`.
+10. **🏢 הצלבת נכסי חברות מול פשטי הצפה** — פאנל חדש בטאב ההצפות (מתחת למפה). כפתור "חשב סיכון הצפה לנכסים" מריץ שאילתות מרחביות חיות (`returnCountOnly`) מול ArcGIS לכל עיר שבה ממוקמים נכסי חברה (~5 ק״מ סביב מרכז העיר), ומדרג כל חברה: **גבוהה** (נכס בתחום פשט/שטח הצפה), **בינונית** (קרבת נחל), **נמוכה**. מציג KPI + טבלה ממוינת + דגל "מטה חשוף". בנוסף — שכבת overlay **🏢 נכסי חברות** על המפה (כפתור בשורת השכבות) שמציגה את כל הנכסים, צבועים לפי חשיפה לאחר החישוב. פונקציות: `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodAssetLevel`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`. מקור-אמת: `_floodCoState`. *(שודרג מאוחר יותר לדיוק לפי קואורדינטות — §9.14.)*
 11. **🔎 סינון טאב הצפות לפי סטטוס תכנית** — רצועת צ'יפים בסיידבר (שדה `STATUS` מהנתונים). הצ'יפים מתגלים דינמית תוך כדי טעינת השכבות (`floodSyncStatusUI`). כיבוי/הדלקה מצייר מחדש מתוך GeoJSON שמור **ללא משיכה חוזרת** (`floodRedraw`, `floodBuildLayer`, `_floodRaw`). מצב: `_floodStatusOff`, עזרים `floodFeaturePasses`/`floodStatusKey`.
 12. **📊 ראדר מוכנות בדוח ה-PDF** — `pfPrintReport` כולל כעת סעיף "מוכנות התיק לפי קטגוריה — מול ממוצע השוק": ראדר SVG (מוכנות התיק המשוקללת מול ממוצע כלל המאגר) + טבלת פערים. פונקציה: `pfPrepRadarSVG(matched)` (משתמשת ב-`PREP_CATEGORIES` החי ו-`prepLabelFor`).
+
+### עדכון המשך — קואורדינטות אמת + שילוב במודל (2026-06-01)
+
+13. **📍 קואורדינטות נכסים אמיתיות (גיליון "נכסים")** — מודל הנכסים שודרג: לכל נכס יש `lat/lng`. נכסי דמו מקבלים קואורדינטה נגזרת-עיר (דטרמיניסטית), ונכסי **אמת** נטענים מגיליון Excel מנוהל חדש בשם **"נכסים"** (עמודות: `ticker`, `שם חברה`, `סוג מיקום` [מקומי/חו"ל], `סוג נכס`, `עיר / מיקום`, `קו רוחב`, `קו אורך`, `תיאור`). round-trip מלא: `xlSaveNow` כותב את הגיליון (רק אם קיים או אחרי "ייצא/סנכרן"), `xlLoad` קורא ומחליף נכסים per-ticker (tickers שלא בגיליון שומרים דמו). כפתור **📤 ייצא/סנכרן נכסים** (`xlExportAssets`) יוצר תבנית לעריכה. עזרים: `assetCoord(asset)` (precise אם `real`), `xlAssetRows`, `ASSET_TYPE_BY_LABEL`. כל הצרכנים (מפת החברה `renderLeafletMap`, שכבת הנכסים, הצלבת ההצפה) מעדיפים `lat/lng`.
+14. **🌊 הצלבת נכסים — דיוק לפי קואורדינטות** — `floodAnalyzeCompanies` שודרג: שאילתה **לכל נכס** (לא רק עיר), עם איחוד מיקומים (`floodCollectAssetLocs`/`floodLocKey`) והגבלת מקביליות (`floodRunJobs`, 8 במקביל). נכס אמת נבדק ב-~150 מ׳ (`d=0.0015`), נכס דמו בקירוב עיר ~5 ק״מ (`d=0.045`). הוחלף `floodCityLevel`→`floodAssetLevel(asset)`; `byCity`→`byKey`. הפאנל מציין כמה חברות נותחו עם קואורדינטות אמת.
+15. **⚖️ שילוב חשיפת הצפה במודל הסיכון (toggle)** — `state.includeFloodInRisk` (ברירת מחדל כבוי). כשמופעל (checkbox בפאנל ההצפות, רק אחרי חישוב) — `finalRisk` מקבל תוספת `floodRiskAdj(company)`: **+0.5** לחשיפה גבוהה, **+0.25** לבינונית (תקרה 5). מקור-אמת יחיד → מתפשט לכל הדשבורד (KPI/רשימות/תיק/דוחות). מחוון גלובלי בכותרת (`renderHeader`) עם כפתור "כבה". מפה: `_floodCoState.byTicker`. החלפה: `floodToggleRiskModel`.
 
 ---
 
@@ -153,8 +159,11 @@ state = {
 - **למלא נתונים בגיליון "חברות":** `מספר מנפיק` (התאמת תיק מדויקת), `הון עצמי` ו-`שווי שוק` (גרף הבועות). משימת דאטה של המשתמש.
 - ~~**ראדר מוכנות בדוח/ייצוא**~~ — ✅ נוסף לדוח ה-PDF (§9.12).
 - ~~**טאב הצפות: סינון לפי סטטוס + הצלבת נכסי חברות**~~ — ✅ שניהם מומשו (§9.10–11).
-- **דיוק הצלבת נכסים:** הבדיקה כיום ברמת **מרכז-עיר** (~5 ק״מ), כי מיקומי הנכסים הם נתוני הדגמה. לשדרוג: לאחסן lat/lng אמיתי לכל נכס ולבצע שאילתת `esriGeometryPoint` מדויקת לכל נכס; אפשר גם לחבר את ציון חשיפת ההצפה ל-`finalRisk` של החברה.
-- **ביצועים:** `climate_data.xlsx` תפח ל-~60MB (נתוני מפה רבים) — לשקול דילול גיליונות כבדים אם הטעינה/שמירה איטית.
+- ~~**דיוק הצלבת נכסים + חיבור ל-`finalRisk`**~~ — ✅ קואורדינטות אמת מ-Excel (§9.13–14) + toggle שילוב במודל (§9.15).
+- **למלא קואורדינטות אמת בגיליון "נכסים":** כרגע רוב הנכסים בנתוני דמו. להזנת מיקומי אמת: 📤 ייצא/סנכרן נכסים → מלא `קו רוחב`/`קו אורך` ב-Excel → התחבר מחדש. משימת דאטה של המשתמש.
+- **עריכת נכסים בתוך האפליקציה:** כיום העריכה דרך Excel בלבד (תואם מודל "Excel = מקור-אמת"). אפשר להוסיף UI עריכה ישיר (הוספת/מחיקת נכס, גרירה על המפה) בעתיד.
+- **כיול תוספת ה-`floodRiskAdj`:** הערכים (+0.5/+0.25) הם הנחת-עבודה; כדאי לכייל מול נתוני אמת/מתודולוגיה.
+- **ביצועים:** `climate_data.xlsx` תפח ל-~60MB (נתוני מפה רבים) — לשקול דילול גיליונות כבדים אם הטעינה/שמירה איטית. הוספת ~2,300 שורות נכסים זניחה.
 - **קואורדינטות/CRS:** שירות ArcGIS עובד ב-Web Mercator; השאילתות מבקשות `outSR=4326` ולכן ה-GeoJSON תקין ל-Leaflet.
 - ניקוי קוד מת מינורי נוסף.
 
@@ -176,13 +185,15 @@ state = {
 |------|----------|
 | ליבה | `render`, `renderHeader`, `renderActiveTab`, `attachEvents`, `state` |
 | Excel | `xlConnect`, `xlLoad`, `xlSaveNow`, `xlScheduleSave`, `xlSaveManual`, `prepLabelFor` |
-| חישוב | `sectorScenarioScore` (←stressFactor), `companyScenarioScore`, `rawRisk`, `finalRisk`, `companyPrepScore`, `mapScoreColor` |
+| נכסים | `initCompanyAssets`, `assetCoord`, `xlAssetRows`, `xlExportAssets`, `ASSET_TYPES`, `ASSET_TYPE_BY_LABEL`, גיליון "נכסים" |
+| חישוב | `sectorScenarioScore` (←stressFactor), `companyScenarioScore`, `rawRisk`, `finalRisk` (←`floodRiskAdj`), `companyPrepScore`, `mapScoreColor` |
+| הצפה במודל | `floodRiskAdj`, `floodToggleRiskModel`, `state.includeFloodInRisk`, `_floodCoState.byTicker` |
 | מבחן עקה | `renderStressControl(target)`, `stressOnInput(el,target)`, `stressOnChange`, `stressReset`, `renderMarketBody`, `marketUsedSet` |
 | סקירה/אקלים | `renderOverview`, `renderOverviewClimate`, `initClimateMap` |
 | מים | `renderWaterStatus`, `initWaterMap`, `waterToggleLayer`, `WATER_FEATURES` |
 | **הצפות** | `renderFloodsStatus`, `initFloodsMap`, `floodFetchAndDraw`, `floodReload`, `floodToggleLayer`, `floodQueryUrl`, `floodOffsetDeg`, `floodPopup`, `FLOOD_LAYERS`, `FLOOD_SERVICE` |
 | **הצפות — סינון סטטוס** | `floodBuildLayer`, `floodRedraw`, `floodToggleStatus`, `floodStatusFilterHtml`, `floodSyncStatusUI`, `floodFeaturePasses`, `floodStatusKey`, `_floodRaw`, `_floodStatusOff`, `_floodStatuses` |
-| **הצפות — נכסי חברות** | `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodCityLevel`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`, `FLOOD_CO_LAYERS`, `_floodCoState` |
+| **הצפות — נכסי חברות** | `floodAnalyzeCompanies`, `floodComputeCompanies`, `floodAssetLevel`, `floodCollectAssetLocs`, `floodLocKey`, `floodRunJobs`, `floodCountUrl`, `floodCoPanelHtml`, `floodRenderCoPanel`, `floodToggleAssets`, `floodDrawAssets`, `FLOOD_CO_LAYERS`, `_floodCoState` |
 | חברות | `renderOverviewMarket`, `renderOverviewCompany`, `renderRadar`, `renderPrepRadar`, `sectorPrepAvg`, `prepValForCat`, `renderChart_HeatmapSecScen` |
 | תיק | `renderPortfolio`, `renderPortfolioBody`, `handlePortfolioFile`, `decodeCsvBytes`, `pfSheetToRows`, `ingestPortfolio`, `pfExportXlsx`, `pfPrintReport`, `pfPrepRadarSVG`, `pfClear` |
 | מוכנות | `PREP_CATEGORIES`, `PREP_CATS_IDS`, `prepLabelFor`, `suggestRec`, `setRecommendation` |
