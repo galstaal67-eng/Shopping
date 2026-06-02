@@ -152,6 +152,12 @@ state = {
 14. **🌊 הצלבת נכסים — דיוק לפי קואורדינטות** — `floodAnalyzeCompanies` שודרג: שאילתה **לכל נכס** (לא רק עיר), עם איחוד מיקומים (`floodCollectAssetLocs`/`floodLocKey`) והגבלת מקביליות (`floodRunJobs`, 8 במקביל). נכס אמת נבדק ב-~150 מ׳ (`d=0.0015`), נכס דמו בקירוב עיר ~5 ק״מ (`d=0.045`). הוחלף `floodCityLevel`→`floodAssetLevel(asset)`; `byCity`→`byKey`. הפאנל מציין כמה חברות נותחו עם קואורדינטות אמת.
 15. **⚖️ שילוב חשיפת הצפה במודל הסיכון (toggle)** — `state.includeFloodInRisk` (ברירת מחדל כבוי). כשמופעל (checkbox בפאנל ההצפות, רק אחרי חישוב) — `finalRisk` מקבל תוספת `floodRiskAdj(company)`: **+0.5** לחשיפה גבוהה, **+0.25** לבינונית (תקרה 5). מקור-אמת יחיד → מתפשט לכל הדשבורד (KPI/רשימות/תיק/דוחות). מחוון גלובלי בכותרת (`renderHeader`) עם כפתור "כבה". מפה: `_floodCoState.byTicker`. החלפה: `floodToggleRiskModel`.
 
+### עדכון המשך — מצב אחסון-דפדפן + פריסת Netlify (2026-06-02)
+
+16. **🌐 מצב אחסון כפול (IndexedDB / קובץ מקומי)** — מנגנון ה-Excel הופשט לשכבת אחסון. `_xlMode`: **'idb'** (ברירת מחדל, לאתר מתארח) — הנתונים נשמרים/נטענים מ-IndexedDB של הדפדפן; **'fsa'** — קובץ מקומי דרך File System Access API (כמו קודם, נכנס בלחיצת "📂 חבר קובץ"). בעלייה `xlAutoStart()` טוען מ-IndexedDB אם קיים, אחרת מושך `climate_data.xlsx` המצורף לאתר (`fetch`), זורע ל-IndexedDB וטוען. עזרים: `idbOpen/idbGet/idbPut`, `storageGetBaseBytes`, `storagePutBytes`, `fsaWriteBytes`, `triggerDownload`. **רפקטור:** הלוגיקה של בניית הגיליונות חולצה ל-`xlApplyManagedSheets(wb)`; `xlBuildWorkbookBytes()` בונה בייטים (בסיס+מנוהלים); `xlSaveNow`/`xlLoad(preBytes)` עובדים בשני המצבים. כלל שימור הגיליונות הלא-מנוהלים נשמר (קוראים בסיס לפני כתיבה).
+17. **⬇️ הורדה + 🌐 דילול לאתר** — כפתורים חדשים ב-`xl-bar`: **⬇️ הורד Excel** (`xlDownload`) מוריד עותק מעודכן; **🌐 קובץ לאתר** (`xlExportSlim`) מדלל את גיליונות המפה הכבדים (`נקודות`/`Streams`) לתקרת ~8,000 שורות (stride דינמי) ומוריד `climate_data.xlsx` קטן לאחסון ב-Netlify. שאר הגיליונות נשמרים במלואם.
+18. **📦 חבילת פריסה** — בשורש: `netlify.toml` (publish=`site`), `DEPLOY_NETLIFY.md` (הוראות), ו-`site/index.html` (עותק של `climate_dashboard.html` — *לעדכן ב-`cp` אחרי עריכות*). המשתמש מוסיף `climate_data.xlsx` מדולל ל-`site/`. ⚠️ אתר סטטי לא כותב חזרה לשרת — שמירה היא בדפדפן + הורדה; לשיתוף בין מכשירים נדרש backend (Netlify Functions/Blobs).
+
 ---
 
 ## 10. נושאים פתוחים / TODO
@@ -184,7 +190,9 @@ state = {
 | תחום | פונקציות |
 |------|----------|
 | ליבה | `render`, `renderHeader`, `renderActiveTab`, `attachEvents`, `state` |
-| Excel | `xlConnect`, `xlLoad`, `xlSaveNow`, `xlScheduleSave`, `xlSaveManual`, `prepLabelFor` |
+| Excel/אחסון | `xlConnect`, `xlLoad(preBytes)`, `xlSaveNow`, `xlScheduleSave`, `xlSaveManual`, `xlApplyManagedSheets`, `xlBuildWorkbookBytes`, `xlAutoStart`, `xlDownload`, `xlExportSlim`, `prepLabelFor` |
+| שכבת אחסון | `_xlMode`, `idbOpen/idbGet/idbPut`, `storageGetBaseBytes`, `storagePutBytes`, `fsaWriteBytes`, `triggerDownload`, `IDB_KEY` |
+| פריסה | `netlify.toml`, `DEPLOY_NETLIFY.md`, `site/index.html` (עותק), `site/README.txt` |
 | נכסים | `initCompanyAssets`, `assetCoord`, `xlAssetRows`, `xlExportAssets`, `ASSET_TYPES`, `ASSET_TYPE_BY_LABEL`, גיליון "נכסים" |
 | חישוב | `sectorScenarioScore` (←stressFactor), `companyScenarioScore`, `rawRisk`, `finalRisk` (←`floodRiskAdj`), `companyPrepScore`, `mapScoreColor` |
 | הצפה במודל | `floodRiskAdj`, `floodToggleRiskModel`, `state.includeFloodInRisk`, `_floodCoState.byTicker` |

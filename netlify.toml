@@ -1,0 +1,15 @@
+# Netlify deploy config — דשבורד סיכוני אקלים
+# מפרסם את תיקיית site/ (index.html + climate_data.xlsx אופציונלי)
+[build]
+  publish = "site"
+
+# קאשינג: ה-HTML תמיד טרי; קובץ הבסיס xlsx נטען פעם אחת ונשמר ב-IndexedDB
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/climate_data.xlsx"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
