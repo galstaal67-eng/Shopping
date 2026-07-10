@@ -162,10 +162,40 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 }
 
 .shopcat{margin-bottom:14px}
-.shopcat h3{
-  font-size:14px;color:var(--muted);font-weight:700;margin:0 4px 7px;display:flex;align-items:center;gap:7px;
+.shopcat-head{
+  width:100%;font-size:14px;color:var(--muted);font-weight:700;margin:0 0 7px;padding:6px 4px;
+  display:flex;align-items:center;gap:7px;text-align:right;
 }
-.shopcat h3 .cc{font-size:11.5px;background:#e8edf3;border-radius:999px;padding:1px 8px;color:var(--soft)}
+.shopcat-head .cc{font-size:11.5px;background:#e8edf3;border-radius:999px;padding:1px 8px;color:var(--soft)}
+.shopcat-head .sp{flex:1}
+.shopcat-head .chev{color:var(--soft);font-size:11px;transition:transform .18s}
+.shopcat.closed .shopcat-head .chev{transform:rotate(-90deg)}
+.shopcat.closed .shopcat-items{display:none}
+
+/* price button + cart total */
+.srow .price{
+  align-self:stretch;display:flex;align-items:center;justify-content:center;padding:0 8px;
+  min-width:50px;font-size:12.5px;font-weight:700;color:var(--soft);
+  border-inline-start:1px solid #f1f5f9;white-space:nowrap;
+}
+.srow .price.has{color:var(--teal-dark);font-size:13px}
+.carttotal{
+  margin-top:12px;background:var(--teal-soft);border-radius:10px;padding:9px 14px;
+  display:flex;justify-content:space-between;align-items:center;font-size:14.5px;color:var(--teal-dark);
+}
+.carttotal b{font-size:18px}
+.pricechips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pricechips button{
+  border:1.5px solid var(--teal);color:var(--teal-dark);border-radius:999px;padding:7px 16px;
+  font-weight:700;font-size:15px;background:#f0fdfa;
+}
+.ocr-status{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
+.camline{
+  display:flex;align-items:center;gap:8px;width:100%;border:1.5px dashed var(--teal);color:var(--teal-dark);
+  border-radius:12px;padding:11px 14px;margin-top:12px;font-weight:700;background:#f0fdfa;justify-content:center;
+}
+.checkline{display:flex;align-items:center;gap:9px;margin-top:14px;font-size:14.5px}
+.checkline input{width:20px;height:20px;accent-color:var(--teal)}
 .srow{
   background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin-bottom:7px;
   display:flex;align-items:center;gap:4px;overflow:hidden;
@@ -296,22 +326,26 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
    נפוצים נוספים. פריטים שהיו מסומנים באקסל מסומנים גם כאן.
 ================================================================ */
 const SEED = [
- { id:'veg', name:'ירקות', emoji:'🥕', items:[
+ { id:'veg', name:'ירקות', emoji:'🍅', items:[
    ['עגבנייה','אדומה',1],['עגבניות שרי','',0],['מלפפון','קשים',1],['פלפל אדום','',0],['פלפל צהוב','',0],
-   ['פלפל חריף','',0],['בצל לבן','בינוניים',1],['בצל סגול','',0],['שום','',0],['תפוח אדמה','',1],
-   ['בטטה','',0],['גזר','',1],['קישוא','',0],['חציל','',0],['כרובית','ארוזה',0],['ברוקולי','',1],
-   ['כרוב לבן','',0],['כרוב סגול','',1],['חסה','',0],['עלי תרד','',0],['פטרוזיליה','2 שקיות',1],
-   ['כוסברה','2 שקיות',1],['שמיר','',0],['בצל ירוק','',0],['נענע','',0],['סלק','',0],['צנון','',0],
-   ['צנונית','',0],['קולרבי','',0],['שומר','',0],['סלרי','',0],['דלעת','',0],['דלורית','',0],
-   ['שעועית ירוקה','',0],['אפונה','',0],['תירס','',1],['פטריות','',0],['אבוקדו','',0],['לימון','',0],
-   ['זיתים ירוקים','',0],['צ׳ילי מתוק','',0],['ג׳ינג׳ר','',0],
+   ['פלפל חריף','',0],['קישוא','',0],['חציל','',0],['כרובית','ארוזה',0],['ברוקולי','',1],
+   ['כרוב לבן','',0],['כרוב סגול','',1],['שעועית ירוקה','',0],['אפונה','',0],['תירס','',1],
+   ['דלעת','',0],['דלורית','',0],['פטריות','',0],['אבוקדו','',0],['זיתים ירוקים','',0],['צ׳ילי מתוק','',0],
+ ]},
+ { id:'roots', name:'שורשים ובצלים', emoji:'🥔', items:[
+   ['בצל לבן','בינוניים',1],['בצל סגול','',0],['שום','',0],['תפוח אדמה','',1],['בטטה','',0],
+   ['גזר','',1],['סלק','',0],['צנון','',0],['צנונית','',0],['קולרבי','',0],['שומר','',0],['ג׳ינג׳ר','',0],
+ ]},
+ { id:'herbs', name:'עלים ותבלינים', emoji:'🌿', items:[
+   ['חסה','',0],['עלי תרד','',0],['פטרוזיליה','2 שקיות',1],['כוסברה','2 שקיות',1],
+   ['שמיר','',0],['בצל ירוק','',0],['נענע','',0],['סלרי','',0],
  ]},
  { id:'fruit', name:'פירות', emoji:'🍎', items:[
    ['תפוח','',1],['בננה','בשלות',0],['תפוז','',0],['אגס','',0],['ענבים','',0],['אפרסק','',0],
    ['שזיף','',0],['משמש','',0],['נקטרינה','',0],['דובדבן','',0],['תות שדה','',0],['אננס','',0],
    ['מנגו','',0],['פפאיה','',0],['קיווי','',0],['אבטיח','',0],['מלון','',0],['רימון','',0],
-   ['תאנה','',0],['אפרסמון','',0],['שסק','',1],['קלמנטינה','',0],['אשכולית','',0],['תמרים','',0],
-   ['אגוזים / שקדים','',0],
+   ['תאנה','',0],['אפרסמון','',0],['שסק','',1],['קלמנטינה','',0],['אשכולית','',0],['לימון','',0],
+   ['תמרים','',0],['אגוזים / שקדים','',0],
  ]},
  { id:'meat', name:'בשר ודגים', emoji:'🍗', items:[
    ['חזה עוף','טרי',1],['כרעיים עוף','',0],['כנפיים','',0],['סטייק פרגית','',0],['בשר בקר טחון','2ק"ג - טרי',0],
@@ -357,6 +391,7 @@ const LS_KEY = 'shopping-app-v1';
 let state = null;
 let view = 'request';
 let openCats = {};
+let shopClosed = {};
 
 /* ---------- state ---------- */
 function freshState(){
@@ -368,15 +403,45 @@ function freshState(){
     }))
   }));
   cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
-  return { v:1, cats, settings:{ reqName:'', reqPhone:'' } };
+  return { v:2, cats, settings:{ reqName:'', reqPhone:'' } };
 }
 function load(){
   try{
     const raw = localStorage.getItem(LS_KEY);
-    if(raw){ state = JSON.parse(raw); if(state && state.v === 1) return; }
+    if(raw){
+      const old = JSON.parse(raw);
+      if(old && old.v === 2){ state = old; return; }
+      if(old && old.v === 1){ state = migrateV1(old); save(); return; }
+    }
   }catch(e){}
   state = freshState();
   save();
+}
+/* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
+   סימונים, הערות, מחירים ומוצרים שנוספו ידנית נשמרים. */
+function migrateV1(old){
+  const st = freshState();
+  if(old.settings) st.settings = old.settings;
+  const byName = {};
+  st.cats.forEach(c => c.items.forEach(it => { byName[it.name.trim()] = it; }));
+  (old.cats || []).forEach(oc => (oc.items || []).forEach(oi => {
+    const name = (oi.name || '').trim();
+    if(!name) return;
+    const t = byName[name];
+    if(t){
+      t.need = !!oi.need; t.bought = !!oi.bought;
+      if(oi.note) t.note = oi.note;
+      if(oi.price != null) t.price = oi.price;
+    }else{
+      const cat = st.cats.find(c => c.id === oc.id) || st.cats.find(c => c.id === 'veg');
+      cat.items.push({
+        id: 'i' + Date.now() + Math.floor(Math.random()*1e6),
+        name, note: oi.note || '', need: !!oi.need, bought: !!oi.bought,
+        ...(oi.price != null ? {price: oi.price} : {})
+      });
+    }
+  }));
+  return st;
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
@@ -505,7 +570,7 @@ function resetAll(){
   if(!confirm('לאפס את הרשימה? כל הסימונים והבקשות המיוחדות יימחקו (הקטלוג יישאר).')) return;
   state.cats.forEach(c => {
     if(c.special) c.items = [];
-    else c.items.forEach(it => { it.need = false; it.bought = false; });
+    else c.items.forEach(it => { it.need = false; it.bought = false; delete it.price; });
   });
   save(); render();
   toast('הרשימה אופסה 🔄');
@@ -527,6 +592,7 @@ function renderShop(){
   const done = all.filter(x => x.it.bought).length;
   const pct = Math.round(done / all.length * 100);
   const who = state.settings.reqName || 'מי שרשם את הרשימה';
+  const total = cartTotal();
   let html = `
   <div class="progress-card">
     <div class="toprow">
@@ -534,6 +600,7 @@ function renderShop(){
       <span class="nums"><b>${done}</b> מתוך ${all.length} נאספו</span>
     </div>
     <div class="bar"><div style="width:${pct}%"></div></div>
+    ${total > 0 ? `<div class="carttotal"><span>🧾 מצטבר בעגלה</span><b>₪${fmtPrice(total)}</b></div>` : ''}
     <div class="who">
       <span>יש שאלה? ${esc(who)} זמין/ה בוואטסאפ:</span>
       <button class="askbtn" onclick="askGeneral()">💬 שאלה כללית</button>
@@ -553,7 +620,14 @@ function renderShop(){
     const items = c.items.filter(i => i.need);
     if(!items.length) return;
     const cdone = items.filter(i => i.bought).length;
-    html += `<div class="shopcat"><h3>${c.emoji} ${esc(c.name)} <span class="cc">${cdone}/${items.length}</span></h3>`;
+    const closed = shopClosed[c.id];
+    html += `
+    <div class="shopcat ${closed?'closed':''}" id="shopcat-${c.id}">
+      <button class="shopcat-head" onclick="toggleShopCat('${c.id}')">
+        ${c.emoji} ${esc(c.name)} <span class="cc">${cdone}/${items.length}</span>
+        <span class="sp"></span><span class="chev">◀</span>
+      </button>
+      <div class="shopcat-items">`;
     const sorted = items.slice().sort((a,b) => (a.bought?1:0) - (b.bought?1:0));
     sorted.forEach(it => {
       html += `
@@ -565,19 +639,126 @@ function renderShop(){
             ${it.note ? `<span class="snote">📌 ${esc(it.note)}</span>` : ''}
           </span>
         </button>
+        <button class="price ${it.price!=null?'has':''}" title="מחיר" onclick="openPriceModal('${it.id}')">
+          ${it.price!=null ? '₪'+fmtPrice(it.price) : '₪ +'}
+        </button>
         <button class="ask" title="שאלה בוואטסאפ" onclick="askAbout('${it.id}')">
           <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
         </button>
       </div>`;
     });
-    html += `</div>`;
+    html += `</div></div>`;
   });
   m.innerHTML = html;
 }
+function toggleShopCat(id){ shopClosed[id] = !shopClosed[id]; render(); }
 function toggleBought(id){
   const f = findItem(id); if(!f) return;
   f.it.bought = !f.it.bought;
   save(); render();
+}
+
+/* ===== price tracking ===== */
+function fmtPrice(n){ return (Math.round(n * 100) / 100).toFixed(2); }
+function cartTotal(){
+  let t = 0;
+  neededItems().forEach(x => { if(x.it.bought && x.it.price != null) t += x.it.price; });
+  return t;
+}
+function openPriceModal(id){
+  const f = findItem(id); if(!f) return;
+  const it = f.it;
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>₪ מחיר — ${esc(it.name)}</h2>
+    <div class="msub">צלמו את תווית המחיר שעל המדף או על השקית — או הזינו ידנית.</div>
+    <button class="camline" onclick="$('#priceFile').click()">📷 צלם / העלה תווית מחיר</button>
+    <input type="file" id="priceFile" accept="image/*" capture="environment" style="display:none" onchange="onPriceFile(this)">
+    <div class="ocr-status" id="ocrStatus"></div>
+    <div class="pricechips" id="ocrChips"></div>
+    <label>מחיר (₪)</label>
+    <input type="text" inputmode="decimal" id="priceIn" value="${it.price!=null ? fmtPrice(it.price) : ''}"
+           placeholder="0.00" style="direction:ltr;text-align:right;font-size:20px;font-weight:700">
+    ${it.bought ? '' : `
+    <div class="checkline">
+      <input type="checkbox" id="alsoBought" checked>
+      <label for="alsoBought" style="margin:0;font-weight:500;color:var(--ink)">סמן שהפריט נאסף לעגלה 🛒</label>
+    </div>`}
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+      ${it.price!=null ? `<button class="ghost" style="color:var(--red)" onclick="removePrice('${it.id}')">הסר מחיר</button>` : ''}
+      <button class="primary" onclick="savePrice('${it.id}')">שמירה</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+  if(it.price == null) setTimeout(() => { const p = $('#priceIn'); if(p) p.focus(); }, 250);
+}
+function savePrice(id){
+  const f = findItem(id); if(!f) return;
+  const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
+  const val = parseFloat(raw);
+  if(!raw || isNaN(val) || val <= 0 || val >= 10000){ toast('הזינו מחיר תקין'); return; }
+  f.it.price = Math.round(val * 100) / 100;
+  const ab = $('#alsoBought');
+  if(ab && ab.checked) f.it.bought = true;
+  save(); closeModal(); render();
+  toast('₪' + fmtPrice(f.it.price) + ' נשמר ל"' + f.it.name + '"');
+}
+function removePrice(id){
+  const f = findItem(id); if(!f) return;
+  delete f.it.price;
+  save(); closeModal(); render();
+}
+/* --- OCR: זיהוי המחיר מתוך צילום התווית (tesseract.js נטען רק בשימוש ראשון) --- */
+function loadTesseract(){
+  if(window.Tesseract) return Promise.resolve();
+  if(loadTesseract._p) return loadTesseract._p;
+  loadTesseract._p = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+    s.onload = res;
+    s.onerror = () => { loadTesseract._p = null; rej(new Error('load failed')); };
+    document.head.appendChild(s);
+  });
+  return loadTesseract._p;
+}
+function extractPrices(text){
+  const found = [];
+  const dec = text.match(/\d{1,4}[.,]\d{2}(?!\d)/g) || [];
+  dec.forEach(m => found.push(parseFloat(m.replace(',', '.'))));
+  if(found.length < 2){
+    (text.match(/(?<![\d.,])\d{1,3}(?![\d.,])/g) || []).forEach(m => found.push(parseFloat(m)));
+  }
+  const seen = new Set();
+  return found
+    .filter(v => v >= 0.5 && v < 1000)
+    .filter(v => { const k = v.toFixed(2); if(seen.has(k)) return false; seen.add(k); return true; })
+    .sort((a,b) => (Number.isInteger(b) ? 0 : 1) - (Number.isInteger(a) ? 0 : 1))
+    .slice(0, 5);
+}
+async function onPriceFile(inp){
+  const file = inp.files && inp.files[0];
+  if(!file) return;
+  const st = $('#ocrStatus'), chips = $('#ocrChips');
+  chips.innerHTML = '';
+  st.textContent = '⏳ טוען מנוע זיהוי...';
+  try{ await loadTesseract(); }
+  catch(e){ st.textContent = '⚠️ אין חיבור לאינטרנט — הזינו את המחיר ידנית.'; return; }
+  st.textContent = '🔍 מזהה מחיר בתמונה...';
+  try{
+    const r = await Tesseract.recognize(file, 'eng');
+    const cands = extractPrices(r.data.text || '');
+    if(!cands.length){
+      st.textContent = 'לא זוהה מחיר 😕 נסו לצלם קרוב יותר, או הזינו ידנית.';
+      return;
+    }
+    st.textContent = 'זה המחיר? הקישו עליו:';
+    chips.innerHTML = cands.map(v =>
+      `<button onclick="$('#priceIn').value='${fmtPrice(v)}'">₪${fmtPrice(v)}</button>`).join('');
+    if(cands.length === 1) $('#priceIn').value = fmtPrice(cands[0]);
+  }catch(e){
+    st.textContent = '⚠️ הזיהוי נכשל — הזינו את המחיר ידנית.';
+  }
+  inp.value = '';
 }
 
 /* ===== WhatsApp ===== */
@@ -606,7 +787,10 @@ function askAbout(id){
 }
 function notifyDone(){
   const name = state.settings.reqName;
-  openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒' + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);
+  const total = cartTotal();
+  openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒'
+    + (total > 0 ? '\n🧾 סה"כ לפי המחירים שהוזנו: ₪' + fmtPrice(total) : '')
+    + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);
 }
 
 /* ---------- question modal ---------- */
