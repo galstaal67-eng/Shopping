@@ -387,6 +387,22 @@ const SEED = [
  ]},
 ];
 
+/* צבע פסטל מזהה לכל קטגוריה (רקע בהיר + צבע הדגשה) */
+const CAT_COLORS = {
+  veg:    {bg:'#ffe5e5', ac:'#c9403a'},
+  roots:  {bg:'#f6ead8', ac:'#a9762b'},
+  herbs:  {bg:'#e0f5e0', ac:'#2e8e4a'},
+  fruit:  {bg:'#ffe3ee', ac:'#c94b85'},
+  meat:   {bg:'#fdeadd', ac:'#bb5d1f'},
+  dairy:  {bg:'#e4edff', ac:'#3b6fd4'},
+  clean:  {bg:'#dcf5f8', ac:'#12889d'},
+  dry:    {bg:'#efe6fa', ac:'#8244c9'},
+  bread:  {bg:'#fbf3d0', ac:'#a08016'},
+  frozen: {bg:'#e2f1ff', ac:'#2287cc'},
+  special:{bg:'#fff3c4', ac:'#a97b12'},
+};
+function catCol(c){ return CAT_COLORS[c.id] || {bg:'#eef2f6', ac:'#64748b'}; }
+
 const LS_KEY = 'shopping-app-v1';
 let state = null;
 let view = 'request';
@@ -504,13 +520,14 @@ function renderRequest(){
   state.cats.forEach(c => {
     const cnt = c.items.filter(i => i.need).length;
     const open = openCats[c.id] || c.special;
+    const col = catCol(c);
     html += `
     <div class="cat ${open?'open':''} ${c.special?'special':''}" id="cat-${c.id}">
-      <button class="cat-head" onclick="toggleCat('${c.id}')">
+      <button class="cat-head" style="background:${col.bg}" onclick="toggleCat('${c.id}')">
         <span class="emoji">${c.emoji}</span>
-        <span class="name">${esc(c.name)}</span>
-        <span class="count ${cnt?'':'zero'}">${cnt}</span>
-        <span class="chev">◀</span>
+        <span class="name" style="color:${col.ac}">${esc(c.name)}</span>
+        <span class="count ${cnt?'':'zero'}" ${cnt?`style="color:${col.ac};background:rgba(255,255,255,.8)"`:''}>${cnt}</span>
+        <span class="chev" style="color:${col.ac}">◀</span>
       </button>
       <div class="cat-body">`;
     c.items.forEach(it => {
@@ -621,17 +638,18 @@ function renderShop(){
     if(!items.length) return;
     const cdone = items.filter(i => i.bought).length;
     const closed = shopClosed[c.id];
+    const col = catCol(c);
     html += `
     <div class="shopcat ${closed?'closed':''}" id="shopcat-${c.id}">
-      <button class="shopcat-head" onclick="toggleShopCat('${c.id}')">
-        ${c.emoji} ${esc(c.name)} <span class="cc">${cdone}/${items.length}</span>
-        <span class="sp"></span><span class="chev">◀</span>
+      <button class="shopcat-head" style="background:${col.bg};color:${col.ac};border-radius:10px" onclick="toggleShopCat('${c.id}')">
+        ${c.emoji} ${esc(c.name)} <span class="cc" style="background:rgba(255,255,255,.8);color:${col.ac}">${cdone}/${items.length}</span>
+        <span class="sp"></span><span class="chev" style="color:${col.ac}">◀</span>
       </button>
       <div class="shopcat-items">`;
     const sorted = items.slice().sort((a,b) => (a.bought?1:0) - (b.bought?1:0));
     sorted.forEach(it => {
       html += `
-      <div class="srow ${it.bought?'done':''} ${c.special?'special-item':''}">
+      <div class="srow ${it.bought?'done':''} ${c.special?'special-item':''}" style="border-inline-start:4px solid ${col.ac}">
         <button class="main-tap" onclick="toggleBought('${it.id}')">
           <span class="bigchk">${it.bought?'✓':''}</span>
           <span class="stxt">
