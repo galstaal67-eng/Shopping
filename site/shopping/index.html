@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+<title>רשימת קניות</title>
+<style>
+:root{
+  --teal:#0d9488; --teal-dark:#0f766e; --teal-soft:#ccfbf1;
+  --bg:#f4f6f8; --card:#ffffff; --line:#e2e8f0;
+  --ink:#0f172a; --muted:#64748b; --soft:#94a3b8;
+  --green:#16a34a; --green-soft:#dcfce7;
+  --amber:#d97706; --amber-soft:#fef3c7;
+  --red:#dc2626; --red-soft:#fee2e2;
+  --wa:#25d366; --wa-dark:#128c7e;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  min-height:100vh;
+  font-family:'Heebo','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+}
+body.has-summary{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:inherit}
+input,textarea{font-family:inherit;font-size:inherit}
+
+/* ===== Header ===== */
+header{
+  background:linear-gradient(135deg,var(--teal-dark),var(--teal));
+  color:#fff;padding:14px 16px calc(12px);
+  position:sticky;top:0;z-index:30;box-shadow:0 2px 8px rgba(13,148,136,.25);
+}
+header .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+header .sub{font-size:12.5px;color:#d3f5ef;margin-top:2px}
+.iconbtn{
+  width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.16);color:#fff;font-size:19px;flex-shrink:0;
+}
+.iconbtn:active{background:rgba(255,255,255,.3)}
+
+/* ===== Tabs (bottom nav) ===== */
+nav.tabs{
+  position:fixed;bottom:0;right:0;left:0;z-index:40;
+  background:var(--card);border-top:1px solid var(--line);
+  display:flex;padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -4px 16px rgba(15,23,42,.07);
+}
+nav.tabs button{
+  flex:1;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:var(--soft);font-size:12px;font-weight:500;position:relative;
+}
+nav.tabs button .ticon{font-size:22px;line-height:1}
+nav.tabs button.active{color:var(--teal-dark);font-weight:700}
+nav.tabs button .badge{
+  position:absolute;top:4px;inset-inline-start:calc(50% + 8px);
+  min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+
+main{max-width:640px;margin:0 auto;padding:14px 12px 8px}
+
+/* ===== Category cards ===== */
+.cat{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.cat-head{
+  width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:right;
+}
+.cat-head .emoji{font-size:22px}
+.cat-head .name{font-weight:700;font-size:16.5px;flex:1}
+.cat-head .count{
+  font-size:12.5px;font-weight:700;color:var(--teal-dark);background:var(--teal-soft);
+  border-radius:999px;padding:2px 10px;min-width:30px;text-align:center;
+}
+.cat-head .count.zero{color:var(--soft);background:#eef2f6}
+.cat-head .chev{color:var(--soft);font-size:13px;transition:transform .18s}
+.cat.open .cat-head .chev{transform:rotate(-90deg)}
+.cat-body{display:none;border-top:1px solid var(--line)}
+.cat.open .cat-body{display:block}
+
+/* ===== Item rows (request view) ===== */
+.item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f1f5f9;
+}
+.item:last-of-type{border-bottom:none}
+.item .chk{
+  width:26px;height:26px;border-radius:8px;border:2px solid #cbd5e1;background:#fff;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;transition:all .12s;
+}
+.item.on .chk{background:var(--teal);border-color:var(--teal)}
+.item .txt{flex:1;min-width:0}
+.item .nm{font-size:15.5px}
+.item.on .nm{font-weight:700;color:var(--teal-dark)}
+.item .note-in{
+  width:100%;border:none;background:transparent;color:var(--amber);font-size:13px;padding:0;
+  outline:none;display:none;
+}
+.item .note-in::placeholder{color:#d8cba8}
+.item.on .note-in{display:block}
+.item .del{color:#e2a0a0;font-size:17px;padding:4px 6px;display:none}
+body.editmode .item .del{display:block}
+body.editmode .item .note-in{display:block}
+
+/* add item row */
+.addrow{display:flex;gap:8px;padding:10px 14px;background:#f8fafc;scroll-margin-bottom:170px}
+.addrow input{
+  flex:1;border:1.5px dashed #cbd5e1;border-radius:10px;padding:8px 12px;background:#fff;outline:none;font-size:14.5px;
+}
+.addrow input:focus{border-color:var(--teal);border-style:solid}
+.addrow button{
+  background:var(--teal);color:#fff;border-radius:10px;padding:0 16px;font-weight:700;font-size:14.5px;
+}
+
+/* special requests card */
+.cat.special{border:1.5px solid #fcd34d;background:#fffdf5}
+.cat.special .cat-head .name{color:#92400e}
+
+/* toolbar above list */
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.pill{
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+  font-size:13.5px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px;box-shadow:var(--shadow);
+}
+.pill.primary{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
+.pill.warn{color:var(--red)}
+body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);font-weight:700}
+
+/* ===== Sticky summary bar (request view) ===== */
+.summary{
+  position:fixed;bottom:calc(58px + env(safe-area-inset-bottom));right:0;left:0;z-index:35;
+  display:flex;justify-content:center;padding:0 12px;pointer-events:none;
+}
+.summary .inner{
+  pointer-events:auto;background:var(--ink);color:#fff;border-radius:999px;padding:10px 10px 10px 18px;
+  display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(15,23,42,.35);max-width:640px;width:100%;
+  justify-content:space-between;
+}
+.summary .cnt{font-size:14.5px;font-weight:500}
+.summary .cnt b{color:#5eead4}
+.summary .send{
+  background:var(--wa);color:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ===== Shopper view ===== */
+.progress-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px;
+}
+.progress-card .toprow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.progress-card .title{font-weight:700;font-size:16px}
+.progress-card .nums{font-size:13.5px;color:var(--muted)}
+.progress-card .nums b{color:var(--green);font-size:16px}
+.bar{height:10px;background:#e8edf3;border-radius:999px;overflow:hidden}
+.bar>div{height:100%;background:linear-gradient(to left,var(--green),#4ade80);border-radius:999px;transition:width .25s;width:0}
+.progress-card .who{font-size:13px;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.progress-card .who .askbtn{
+  background:var(--wa);color:#fff;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700;
+  display:inline-flex;align-items:center;gap:5px;
+}
+
+.shopcat{margin-bottom:14px}
+.shopcat h3{
+  font-size:14px;color:var(--muted);font-weight:700;margin:0 4px 7px;display:flex;align-items:center;gap:7px;
+}
+.shopcat h3 .cc{font-size:11.5px;background:#e8edf3;border-radius:999px;padding:1px 8px;color:var(--soft)}
+.srow{
+  background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin-bottom:7px;
+  display:flex;align-items:center;gap:4px;overflow:hidden;
+}
+.srow .main-tap{
+  flex:1;display:flex;align-items:center;gap:12px;padding:13px 14px;text-align:right;min-width:0;
+}
+.srow .bigchk{
+  width:30px;height:30px;border-radius:50%;border:2.5px solid #cbd5e1;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;transition:all .15s;
+}
+.srow .stxt{flex:1;min-width:0}
+.srow .snm{font-size:16.5px;font-weight:500}
+.srow .snote{font-size:13px;color:var(--amber);display:flex;align-items:center;gap:4px}
+.srow .ask{
+  align-self:stretch;display:flex;align-items:center;padding:0 13px;color:var(--wa-dark);font-size:21px;
+  border-inline-start:1px solid #f1f5f9;
+}
+.srow.done{opacity:.55}
+.srow.done .bigchk{background:var(--green);border-color:var(--green)}
+.srow.done .snm{text-decoration:line-through;color:var(--muted);font-weight:400}
+.srow.special-item{border:1.5px solid #fcd34d}
+
+.empty{
+  text-align:center;padding:48px 20px;color:var(--soft);
+}
+.empty .big{font-size:52px;margin-bottom:10px}
+.empty p{font-size:15px;max-width:280px;margin:0 auto}
+.empty .gobtn{
+  margin-top:16px;background:var(--teal);color:#fff;border-radius:999px;padding:10px 22px;font-weight:700;
+}
+
+.done-banner{
+  background:var(--green-soft);border:1.5px solid #86efac;border-radius:var(--radius);
+  padding:16px;text-align:center;margin-bottom:12px;
+}
+.done-banner .t{font-weight:700;color:#166534;font-size:17px;margin-bottom:8px}
+.done-banner .actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.done-banner button{border-radius:999px;padding:8px 18px;font-weight:700;font-size:14px}
+.done-banner .wa-b{background:var(--wa);color:#fff}
+.done-banner .rs-b{background:#fff;border:1px solid #86efac;color:#166534}
+
+/* ===== Modal ===== */
+.overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:60;display:none;
+  align-items:flex-end;justify-content:center;
+}
+.overlay.show{display:flex}
+.modal{
+  background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:640px;
+  padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
+  animation:slideup .2s ease;
+}
+@keyframes slideup{from{transform:translateY(40px);opacity:.5}to{transform:none;opacity:1}}
+.modal h2{font-size:18px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.modal .msub{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.modal label{display:block;font-size:13.5px;font-weight:700;color:var(--muted);margin:14px 0 5px}
+.modal input[type=text],.modal input[type=tel],.modal textarea{
+  width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;background:#fff;
+}
+.modal input:focus,.modal textarea:focus{border-color:var(--teal)}
+.modal .hint{font-size:12px;color:var(--soft);margin-top:4px}
+.modal .btnrow{display:flex;gap:10px;margin-top:20px}
+.modal .btnrow button{flex:1;border-radius:12px;padding:12px;font-weight:700;font-size:15px}
+.modal .primary{background:var(--teal);color:#fff}
+.modal .wa-btn{background:var(--wa);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px}
+.modal .ghost{background:#eef2f6;color:var(--muted)}
+.qopt{
+  display:block;width:100%;text-align:right;border:1.5px solid var(--line);border-radius:12px;
+  padding:11px 14px;margin-bottom:8px;font-size:14.5px;background:#fff;
+}
+.qopt.sel{border-color:var(--wa-dark);background:#f0fdf4;font-weight:700}
+.danger-zone{margin-top:22px;border-top:1px dashed var(--line);padding-top:16px}
+.danger-zone button{
+  width:100%;border:1.5px solid var(--red-soft);background:#fff;color:var(--red);
+  border-radius:12px;padding:11px;font-weight:700;
+}
+.toast{
+  position:fixed;bottom:calc(120px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;border-radius:999px;padding:9px 20px;font-size:14px;z-index:80;
+  opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+.toast.show{opacity:1}
+.wa-ic{width:18px;height:18px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="row">
+    <div>
+      <h1>🛒 רשימת קניות</h1>
+    </div>
+    <button class="iconbtn" id="settingsBtn" title="הגדרות">⚙️</button>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<div class="summary" id="summaryBar" style="display:none">
+  <div class="inner">
+    <span class="cnt" id="summaryCnt"></span>
+    <button class="send" id="sendListBtn">
+      <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
+      שלח לקונה
+    </button>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button id="tab-request" class="active" onclick="setView('request')">
+    <span class="ticon">📝</span>מה צריך
+  </button>
+  <button id="tab-shop" onclick="setView('shop')">
+    <span class="ticon">🛍️</span>קנייה
+    <span class="badge" id="shopBadge" style="display:none"></span>
+  </button>
+</nav>
+
+<div class="overlay" id="overlay"><div class="modal" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ================================================================
+   נתונים: הקטלוג נבנה מקובץ האקסל "רשימת קניות.xlsx" (הגיליון
+   "סימון מוצרים לרכישה"), כולל ההערות המקוריות, ומועשר במוצרים
+   נפוצים נוספים. פריטים שהיו מסומנים באקסל מסומנים גם כאן.
+================================================================ */
+const SEED = [
+ { id:'veg', name:'ירקות', emoji:'🥕', items:[
+   ['עגבנייה','אדומה',1],['עגבניות שרי','',0],['מלפפון','קשים',1],['פלפל אדום','',0],['פלפל צהוב','',0],
+   ['פלפל חריף','',0],['בצל לבן','בינוניים',1],['בצל סגול','',0],['שום','',0],['תפוח אדמה','',1],
+   ['בטטה','',0],['גזר','',1],['קישוא','',0],['חציל','',0],['כרובית','ארוזה',0],['ברוקולי','',1],
+   ['כרוב לבן','',0],['כרוב סגול','',1],['חסה','',0],['עלי תרד','',0],['פטרוזיליה','2 שקיות',1],
+   ['כוסברה','2 שקיות',1],['שמיר','',0],['בצל ירוק','',0],['נענע','',0],['סלק','',0],['צנון','',0],
+   ['צנונית','',0],['קולרבי','',0],['שומר','',0],['סלרי','',0],['דלעת','',0],['דלורית','',0],
+   ['שעועית ירוקה','',0],['אפונה','',0],['תירס','',1],['פטריות','',0],['אבוקדו','',0],['לימון','',0],
+   ['זיתים ירוקים','',0],['צ׳ילי מתוק','',0],['ג׳ינג׳ר','',0],
+ ]},
+ { id:'fruit', name:'פירות', emoji:'🍎', items:[
+   ['תפוח','',1],['בננה','בשלות',0],['תפוז','',0],['אגס','',0],['ענבים','',0],['אפרסק','',0],
+   ['שזיף','',0],['משמש','',0],['נקטרינה','',0],['דובדבן','',0],['תות שדה','',0],['אננס','',0],
+   ['מנגו','',0],['פפאיה','',0],['קיווי','',0],['אבטיח','',0],['מלון','',0],['רימון','',0],
+   ['תאנה','',0],['אפרסמון','',0],['שסק','',1],['קלמנטינה','',0],['אשכולית','',0],['תמרים','',0],
+   ['אגוזים / שקדים','',0],
+ ]},
+ { id:'meat', name:'בשר ודגים', emoji:'🍗', items:[
+   ['חזה עוף','טרי',1],['כרעיים עוף','',0],['כנפיים','',0],['סטייק פרגית','',0],['בשר בקר טחון','2ק"ג - טרי',0],
+   ['סטייקים','טרי',0],['צלי כתף בקר','',0],['סינטה','',0],['צלעות כבש','',0],['שווארמה הודו','',0],
+   ['פרגיות','',0],['שניצל עוף','',0],['נקניקיות','',0],['קבב בקר','',0],['פילה סלמון','',0],
+   ['דניס טרי','',0],['לברק','',0],['אמנון (מושט)','',0],['טונה בהירה בשימור','',0],['פילה מוסר ים','',0],
+   ['נסיכת הנילוס','',0],['קרפיון','',0],['קציצות דגים מוכנות','',0],
+ ]},
+ { id:'dairy', name:'חלב וגבינות', emoji:'🥛', items:[
+   ['חלב','',0],['גבינה לבנה 9%','',0],['גבינת קוטג\' 9%','',0],['גבינה צפתית','',0],['גבינה בולגרית 9%','',0],
+   ['גבינה צהובה','',0],['גבינת שמנת','',1],['גבינת ברי','',1],['גבינה יפה','',0],['מאסדם','200גר',1],
+   ['יוגורט','',0],['יוגורט יווני','',0],['מעדני חלב','',0],['ביצים','',0],['חמאה','',0],
+   ['שמנת מתוקה','',0],['שמנת חמוצה','',0],['קוטג\'','',0],['לאבנה','',0],['מוצרלה','',0],
+ ]},
+ { id:'clean', name:'ניקיון וטואלטיקה', emoji:'🧼', items:[
+   ['סבון נוזלי','',0],['שמפו לשיער רגיל','',1],['מרכך שיער','',0],['משחת שיניים','',0],['נייר טואלט','לא עבה',0],
+   ['נייר סופג','',0],['סמרטוטים לכיור','',0],['סמרטוט רצפה חד״פ','',0],['סמרטוטי מטבח','',0],
+   ['שקיות גדולות לפח אשפה','70/90',0],['שקיות סנדוויץ׳','',0],['מגש אלומיניום','גדול',1],['נוזל כלים','',0],
+   ['אבקת כביסה / ג׳ל','',0],['מרכך כביסה','',0],['אקונומיקה','',0],['נוזל רצפות','',0],
+   ['מגבונים','',0],['דאודורנט','',0],
+ ]},
+ { id:'dry', name:'יבשים ומזווה', emoji:'🥫', items:[
+   ['אורז לבן','',1],['אורז מלא','',0],['אורז מלא שחור','',0],['פסטה מסוגים שונים','',0],['פתיתים','',0],
+   ['קוסקוס','',0],['קינואה','',0],['עדשים ירוקות','',0],['עדשים כתומות','',0],['גרגירי חומוס יבשים','',0],
+   ['שעועית יבשה','',0],['קמח חיטה לבן/מלא','',0],['קמח רגיל','',0],['סוכר לבן/חום','',0],
+   ['מלח שולחן/אטלנטי','',0],['שמן זית','',1],['שמן קנולה/חמניות','',0],['שימורי טונה','',0],
+   ['שימורי תירס','',0],['רסק עגבניות','',0],['חלב עמיד/צמחי','',0],['קפה נמס/מגורען','',0],
+   ['תה בטעמים שונים','',0],['שיבולת שועל','',0],['קורנפלקס/דגני בוקר','',0],['פירורי לחם','',1],
+   ['טחינה גולמית','',0],['דבש/סילאן','',0],['חומץ סינתטי/בלסמי','',0],['רוטב סויה','',0],
+   ['שימורי זיתים','',0],['חמאת בוטנים','',0],['ריבה','',0],['אבקת אפייה / שמרים','',0],
+ ]},
+ { id:'bread', name:'לחם ומאפים', emoji:'🍞', items:[
+   ['לחם פרוס','',0],['לחם מלא','',0],['פיתות','',0],['חלה לשבת','',0],['לחמניות','',0],
+   ['טורטיות','',0],['בייגלה','',0],['עוגיות','',0],['קרקרים','',0],
+ ]},
+ { id:'frozen', name:'קפואים ושתייה', emoji:'🧊', items:[
+   ['ירקות קפואים','',0],['בצק עלים/פילו','',0],['גלידה','',0],['מים מינרלים','',0],['סודה','',0],
+   ['מיץ טבעי','',0],['קולה / משקה מוגז','',0],
+ ]},
+];
+
+const LS_KEY = 'shopping-app-v1';
+let state = null;
+let view = 'request';
+let openCats = {};
+
+/* ---------- state ---------- */
+function freshState(){
+  let uid = 1;
+  const cats = SEED.map(c => ({
+    id: c.id, name: c.name, emoji: c.emoji,
+    items: c.items.map(([name, note, need]) => ({
+      id: 'i' + (uid++), name, note, need: !!need, bought: false
+    }))
+  }));
+  cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
+  return { v:1, cats, settings:{ reqName:'', reqPhone:'' } };
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ state = JSON.parse(raw); if(state && state.v === 1) return; }
+  }catch(e){}
+  state = freshState();
+  save();
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function neededItems(){
+  const out = [];
+  state.cats.forEach(c => c.items.forEach(it => { if(it.need) out.push({cat:c, it}); }));
+  return out;
+}
+function findItem(id){
+  for(const c of state.cats){ const it = c.items.find(i => i.id === id); if(it) return {cat:c, it}; }
+  return null;
+}
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._h); toast._h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function normPhone(p){
+  let d = String(p||'').replace(/\D/g,'');
+  if(d.startsWith('00')) d = d.slice(2);
+  if(d.startsWith('0')) d = '972' + d.slice(1);
+  return d;
+}
+function waLink(text, phone){
+  const t = encodeURIComponent(text);
+  const p = normPhone(phone);
+  return p ? `https://wa.me/${p}?text=${t}` : `https://wa.me/?text=${t}`;
+}
+function openWA(text, phone){ window.open(waLink(text, phone), '_blank'); }
+
+/* ---------- render ---------- */
+function render(){
+  updateBadge();
+  if(view === 'request') renderRequest(); else renderShop();
+  $('#tab-request').classList.toggle('active', view === 'request');
+  $('#tab-shop').classList.toggle('active', view === 'shop');
+  const showSummary = view === 'request' && neededItems().length > 0;
+  $('#summaryBar').style.display = showSummary ? 'flex' : 'none';
+  document.body.classList.toggle('has-summary', showSummary);
+  if(view === 'request') $('#summaryCnt').innerHTML = `ברשימה: <b>${neededItems().length}</b> פריטים`;
+}
+function updateBadge(){
+  const left = neededItems().filter(x => !x.it.bought).length;
+  const b = $('#shopBadge');
+  b.style.display = left ? 'flex' : 'none';
+  b.textContent = left;
+}
+function setView(v){ view = v; window.scrollTo(0,0); render(); }
+
+/* ===== request view ===== */
+function renderRequest(){
+  const m = $('#main');
+  let html = `
+  <div class="toolbar">
+    <button class="pill" id="editPill" onclick="toggleEdit()">✏️ עריכת קטלוג</button>
+    <button class="pill warn" onclick="resetAll()">🔄 איפוס רשימה</button>
+  </div>`;
+  state.cats.forEach(c => {
+    const cnt = c.items.filter(i => i.need).length;
+    const open = openCats[c.id] || c.special;
+    html += `
+    <div class="cat ${open?'open':''} ${c.special?'special':''}" id="cat-${c.id}">
+      <button class="cat-head" onclick="toggleCat('${c.id}')">
+        <span class="emoji">${c.emoji}</span>
+        <span class="name">${esc(c.name)}</span>
+        <span class="count ${cnt?'':'zero'}">${cnt}</span>
+        <span class="chev">◀</span>
+      </button>
+      <div class="cat-body">`;
+    c.items.forEach(it => {
+      html += `
+        <div class="item ${it.need?'on':''}" id="row-${it.id}">
+          <button class="chk" onclick="toggleNeed('${it.id}')">${it.need?'✓':''}</button>
+          <div class="txt">
+            <div class="nm" onclick="toggleNeed('${it.id}')">${esc(it.name)}</div>
+            <input class="note-in" placeholder="הערה (כמות, סוג...)" value="${esc(it.note)}"
+                   onchange="setNote('${it.id}', this.value)">
+          </div>
+          <button class="del" onclick="delItem('${it.id}')">🗑</button>
+        </div>`;
+    });
+    html += `
+        <div class="addrow">
+          <input id="add-${c.id}" placeholder="${c.special ? 'בקשה מיוחדת... (למשל: עוגה ליום הולדת)' : 'הוסף מוצר ל'+esc(c.name)+'...'}"
+                 onkeydown="if(event.key==='Enter')addItem('${c.id}')">
+          <button onclick="addItem('${c.id}')">➕</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  m.innerHTML = html;
+}
+function toggleCat(id){ openCats[id] = !openCats[id]; render(); }
+function toggleNeed(id){
+  const f = findItem(id); if(!f) return;
+  f.it.need = !f.it.need;
+  if(!f.it.need) f.it.bought = false;
+  save(); render();
+}
+function setNote(id, v){
+  const f = findItem(id); if(!f) return;
+  f.it.note = v.trim(); save();
+  updateBadge();
+}
+function addItem(catId){
+  const inp = $('#add-' + catId);
+  const name = inp.value.trim();
+  if(!name) { inp.focus(); return; }
+  const c = state.cats.find(x => x.id === catId);
+  c.items.push({ id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note:'', need:true, bought:false });
+  inp.value = '';
+  save(); render();
+  const again = $('#add-' + catId); if(again) again.focus();
+  toast('"' + name + '" נוסף לרשימה ✓');
+}
+function delItem(id){
+  const f = findItem(id); if(!f) return;
+  if(!confirm('למחוק את "' + f.it.name + '" מהקטלוג?')) return;
+  f.cat.items = f.cat.items.filter(i => i.id !== id);
+  save(); render();
+}
+function toggleEdit(){ document.body.classList.toggle('editmode'); render(); }
+function resetAll(){
+  if(!confirm('לאפס את הרשימה? כל הסימונים והבקשות המיוחדות יימחקו (הקטלוג יישאר).')) return;
+  state.cats.forEach(c => {
+    if(c.special) c.items = [];
+    else c.items.forEach(it => { it.need = false; it.bought = false; });
+  });
+  save(); render();
+  toast('הרשימה אופסה 🔄');
+}
+
+/* ===== shopper view ===== */
+function renderShop(){
+  const m = $('#main');
+  const all = neededItems();
+  if(!all.length){
+    m.innerHTML = `
+      <div class="empty">
+        <div class="big">🛒</div>
+        <p>הרשימה ריקה. סמנו מוצרים במסך "מה צריך" והם יופיעו כאן לקונה.</p>
+        <button class="gobtn" onclick="setView('request')">📝 למילוי הרשימה</button>
+      </div>`;
+    return;
+  }
+  const done = all.filter(x => x.it.bought).length;
+  const pct = Math.round(done / all.length * 100);
+  const who = state.settings.reqName || 'מי שרשם את הרשימה';
+  let html = `
+  <div class="progress-card">
+    <div class="toprow">
+      <span class="title">🛍️ הקנייה שלי</span>
+      <span class="nums"><b>${done}</b> מתוך ${all.length} נאספו</span>
+    </div>
+    <div class="bar"><div style="width:${pct}%"></div></div>
+    <div class="who">
+      <span>יש שאלה? ${esc(who)} זמין/ה בוואטסאפ:</span>
+      <button class="askbtn" onclick="askGeneral()">💬 שאלה כללית</button>
+    </div>
+  </div>`;
+  if(done === all.length){
+    html += `
+    <div class="done-banner">
+      <div class="t">🎉 כל הפריטים נאספו!</div>
+      <div class="actions">
+        <button class="wa-b" onclick="notifyDone()">💬 עדכן שסיימתי</button>
+        <button class="rs-b" onclick="resetAll()">🔄 איפוס לרשימה הבאה</button>
+      </div>
+    </div>`;
+  }
+  state.cats.forEach(c => {
+    const items = c.items.filter(i => i.need);
+    if(!items.length) return;
+    const cdone = items.filter(i => i.bought).length;
+    html += `<div class="shopcat"><h3>${c.emoji} ${esc(c.name)} <span class="cc">${cdone}/${items.length}</span></h3>`;
+    const sorted = items.slice().sort((a,b) => (a.bought?1:0) - (b.bought?1:0));
+    sorted.forEach(it => {
+      html += `
+      <div class="srow ${it.bought?'done':''} ${c.special?'special-item':''}">
+        <button class="main-tap" onclick="toggleBought('${it.id}')">
+          <span class="bigchk">${it.bought?'✓':''}</span>
+          <span class="stxt">
+            <span class="snm">${esc(it.name)}</span>
+            ${it.note ? `<span class="snote">📌 ${esc(it.note)}</span>` : ''}
+          </span>
+        </button>
+        <button class="ask" title="שאלה בוואטסאפ" onclick="askAbout('${it.id}')">
+          <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
+        </button>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  m.innerHTML = html;
+}
+function toggleBought(id){
+  const f = findItem(id); if(!f) return;
+  f.it.bought = !f.it.bought;
+  save(); render();
+}
+
+/* ===== WhatsApp ===== */
+function listAsText(){
+  const d = new Date();
+  const ds = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+  let out = '🛒 *רשימת קניות* – ' + ds + '\n';
+  state.cats.forEach(c => {
+    const items = c.items.filter(i => i.need);
+    if(!items.length) return;
+    out += '\n*' + c.emoji + ' ' + c.name + '*\n';
+    items.forEach(i => { out += '▫️ ' + i.name + (i.note ? ' _(' + i.note + ')_' : '') + '\n'; });
+  });
+  const url = location.href.split('#')[0];
+  out += '\nלרשימה האינטראקטיבית: ' + url;
+  return out;
+}
+function sendList(){
+  if(!neededItems().length){ toast('הרשימה ריקה'); return; }
+  openWA(listAsText(), '');
+}
+function askGeneral(){ openQuestionModal(null); }
+function askAbout(id){
+  const f = findItem(id); if(!f) return;
+  openQuestionModal(f.it);
+}
+function notifyDone(){
+  const name = state.settings.reqName;
+  openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒' + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);
+}
+
+/* ---------- question modal ---------- */
+let qSelected = 0;
+function openQuestionModal(item){
+  const templates = item ? [
+    'אין "' + item.name + '" 😕 להביא משהו דומה במקום?',
+    'לגבי "' + item.name + '" – איזה מותג / גודל להביא?',
+    'לגבי "' + item.name + '" – כמה בדיוק צריך?',
+    '"' + item.name + '" יקר היום 💸 לוותר או לקנות בכל זאת?',
+  ] : [
+    'אני בסופר 🛒 יש עוד משהו שצריך להוסיף?',
+    'סיימתי כמעט – בטוח שלא שכחת כלום?',
+  ];
+  const hasPhone = !!state.settings.reqPhone;
+  qSelected = 0;
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>💬 שאלה ל${esc(state.settings.reqName || 'רושם הרשימה')}</h2>
+    <div class="msub">${item ? 'לגבי: <b>' + esc(item.name) + '</b>' + (item.note ? ' (הערה: ' + esc(item.note) + ')' : '') : 'שאלה כללית על הרשימה'}</div>
+    ${templates.map((t,i) => `<button class="qopt ${i===0?'sel':''}" data-i="${i}" onclick="pickQ(${i})">${esc(t)}</button>`).join('')}
+    <label>או ניסוח חופשי:</label>
+    <textarea id="qFree" rows="2" placeholder="כתבו הודעה משלכם..." oninput="pickQ(-1)"></textarea>
+    ${hasPhone ? '' : '<div class="hint">💡 טיפ: קבעו את מספר הטלפון של רושם הרשימה בהגדרות ⚙️ — וההודעה תיפתח ישר בצ׳אט הנכון.</div>'}
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+      <button class="wa-btn" onclick="sendQ()">
+        <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
+        שלח בוואטסאפ
+      </button>
+    </div>`;
+  box.dataset.templates = JSON.stringify(templates);
+  $('#overlay').classList.add('show');
+}
+function pickQ(i){
+  qSelected = i;
+  document.querySelectorAll('.qopt').forEach(b => b.classList.toggle('sel', +b.dataset.i === i));
+}
+function sendQ(){
+  const templates = JSON.parse($('#modalBox').dataset.templates || '[]');
+  const free = ($('#qFree') && $('#qFree').value.trim()) || '';
+  let msg = qSelected === -1 ? free : (templates[qSelected] || free);
+  if(!msg){ toast('בחרו שאלה או כתבו הודעה'); return; }
+  msg = '🛒 ' + msg;
+  closeModal();
+  openWA(msg, state.settings.reqPhone);
+}
+
+/* ---------- settings modal ---------- */
+function openSettings(){
+  const s = state.settings;
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>⚙️ הגדרות</h2>
+    <div class="msub">מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.</div>
+    <label>שם רושם/ת הרשימה</label>
+    <input type="text" id="setName" value="${esc(s.reqName)}" placeholder="למשל: גל">
+    <label>מספר וואטסאפ של רושם/ת הרשימה</label>
+    <input type="tel" id="setPhone" value="${esc(s.reqPhone)}" placeholder="050-1234567" style="direction:ltr;text-align:right">
+    <div class="hint">אפשר גם בפורמט בינלאומי (9725...). כפתורי השאלה במסך הקנייה ישלחו לצ׳אט הזה.</div>
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+      <button class="primary" onclick="saveSettings()">שמירה</button>
+    </div>
+    <div class="danger-zone">
+      <button onclick="factoryReset()">⚠️ אתחול מלא — החזרת הקטלוג המקורי</button>
+      <div class="hint" style="margin-top:6px">מוחק את כל השינויים, המוצרים שנוספו והסימונים, ומחזיר את הקטלוג של האקסל המקורי.</div>
+    </div>`;
+  $('#overlay').classList.add('show');
+}
+function saveSettings(){
+  state.settings.reqName = $('#setName').value.trim();
+  state.settings.reqPhone = $('#setPhone').value.trim();
+  save(); closeModal(); render();
+  toast('ההגדרות נשמרו ✓');
+}
+function factoryReset(){
+  if(!confirm('לאתחל את האפליקציה לגמרי? כל השינויים יימחקו.')) return;
+  const s = state.settings;
+  state = freshState();
+  state.settings = s;
+  save(); closeModal(); render();
+  toast('הקטלוג אותחל');
+}
+function closeModal(){ $('#overlay').classList.remove('show'); }
+
+/* ---------- init ---------- */
+$('#settingsBtn').addEventListener('click', openSettings);
+$('#sendListBtn').addEventListener('click', sendList);
+$('#overlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+load();
+render();
+</script>
+</body>
+</html>
