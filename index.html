@@ -29,10 +29,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:
 input,textarea{font-family:inherit;font-size:inherit}
 
 /* ===== Header ===== */
+.topstack{position:sticky;top:0;z-index:30}
 header{
   background:linear-gradient(135deg,var(--teal-dark),var(--teal));
   color:#fff;padding:14px 16px calc(12px);
-  position:sticky;top:0;z-index:30;box-shadow:0 2px 8px rgba(13,148,136,.25);
+  box-shadow:0 2px 8px rgba(13,148,136,.25);
+}
+.tripbar{
+  background:#0f172a;color:#fff;padding:9px 16px;display:flex;align-items:center;gap:9px;
+  font-size:13.5px;font-weight:500;box-shadow:0 2px 8px rgba(15,23,42,.25);
+}
+.tripbar .ticon{font-size:17px}
+.tripbar span:not(.ticon){flex:1}
+.tripbar button{
+  background:var(--teal);color:#fff;border-radius:999px;width:30px;height:30px;font-size:18px;
+  font-weight:700;flex-shrink:0;display:flex;align-items:center;justify-content:center;
 }
 header .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 header h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
@@ -479,6 +490,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 </head>
 <body>
 
+<div class="topstack">
 <header>
   <div class="row">
     <div>
@@ -490,6 +502,12 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
     </div>
   </div>
 </header>
+<div class="tripbar" id="tripReqBar" style="display:none">
+  <span class="ticon">🛍️</span>
+  <span id="tripReqText"></span>
+  <button id="tripReqBtn" onclick="openTripRequestModal()">➕</button>
+</div>
+</div>
 
 <main id="main"></main>
 
@@ -781,6 +799,7 @@ function applyDir(){
   const elTr = $('#tabRequestText'); if(elTr) elTr.textContent = L('tabRequest');
   const elTs = $('#tabShopText'); if(elTs) elTs.textContent = L('tabShop');
   const elTh = $('#tabHistoryText'); if(elTh) elTh.textContent = L('tabHistory');
+  updateTripBar();
 }
 function setLang(code){
   lang = code;
@@ -909,6 +928,9 @@ region_jerusalem:'ירושלים והסביבה', region_shfela:'שפלה', regi
 unit_unit:'יח\'', unit_kg:'ק"ג', unit_gram:'גרם', unit_pack:'חבילה', unit_bag:'שקית', unit_bottle:'בקבוק', unit_liter:'ליטר',
 amt_quarter:'רבע', amt_half:'חצי', specialCat:'בקשות מיוחדות',
 inListCount:'ברשימה: {n} פריטים', myFamilyDefault:'המשפחה שלי',
+tripBarText:'🛍️ {name} בקנייה עכשיו — יש משהו להוסיף?', tripReqBtnTitle:'בקש הוספת מוצר',
+tripReqModalTitle:'🛒 בקשה ל{name}', tripReqModalSub:'המוצר יתווסף מיד לרשימה של הקנייה הנוכחית.',
+tripReqPlaceholder:'למשל: עגבניות שרי, נייר טואלט...', tripReqSendBtn:'שלח בקשה 🛒',
 },
 en:{
 appTitle:'Shopping List', btnFamilyChat:'Family chat', btnSettings:'Settings', sendListBtn:'Send to shopper',
@@ -1029,6 +1051,9 @@ region_jerusalem:'Jerusalem area', region_shfela:'Shfela', region_south:'South',
 unit_unit:'unit', unit_kg:'kg', unit_gram:'gram', unit_pack:'pack', unit_bag:'bag', unit_bottle:'bottle', unit_liter:'liter',
 amt_quarter:'quarter', amt_half:'half', specialCat:'Special Requests',
 inListCount:'In list: {n} items', myFamilyDefault:'My Family',
+tripBarText:'🛍️ {name} is shopping now — need anything added?', tripReqBtnTitle:'Request an item',
+tripReqModalTitle:'🛒 Request to {name}', tripReqModalSub:'The item will be added right away to the current shopping trip.',
+tripReqPlaceholder:'e.g. cherry tomatoes, toilet paper...', tripReqSendBtn:'Send request 🛒',
 },
 ru:{
 appTitle:'Список покупок', btnFamilyChat:'Семейный чат', btnSettings:'Настройки', sendListBtn:'Отправить покупателю',
@@ -1149,6 +1174,9 @@ region_jerusalem:'Иерусалим и окрестности', region_shfela:'
 unit_unit:'шт.', unit_kg:'кг', unit_gram:'г', unit_pack:'упаковка', unit_bag:'пакет', unit_bottle:'бутылка', unit_liter:'литр',
 amt_quarter:'четверть', amt_half:'половина', specialCat:'Особые запросы',
 inListCount:'В списке: {n} товаров', myFamilyDefault:'Моя семья',
+tripBarText:'🛍️ {name} сейчас за покупками — нужно что-то добавить?', tripReqBtnTitle:'Запросить товар',
+tripReqModalTitle:'🛒 Запрос к {name}', tripReqModalSub:'Товар будет сразу добавлен в текущую покупку.',
+tripReqPlaceholder:'например: помидоры черри, туалетная бумага...', tripReqSendBtn:'Отправить запрос 🛒',
 },
 ar:{
 appTitle:'قائمة التسوق', btnFamilyChat:'دردشة العائلة', btnSettings:'الإعدادات', sendListBtn:'إرسال إلى المتسوق',
@@ -1269,6 +1297,9 @@ region_jerusalem:'منطقة القدس', region_shfela:'شفيلا', region_sou
 unit_unit:'وحدة', unit_kg:'كغ', unit_gram:'غرام', unit_pack:'عبوة', unit_bag:'كيس', unit_bottle:'زجاجة', unit_liter:'لتر',
 amt_quarter:'ربع', amt_half:'نصف', specialCat:'طلبات خاصة',
 inListCount:'في القائمة: {n} منتج', myFamilyDefault:'عائلتي',
+tripBarText:'🛍️ {name} يتسوق الآن — هل تحتاج إضافة شيء؟', tripReqBtnTitle:'اطلب منتجًا',
+tripReqModalTitle:'🛒 طلب إلى {name}', tripReqModalSub:'سيُضاف المنتج فورًا إلى رحلة التسوق الحالية.',
+tripReqPlaceholder:'مثل: طماطم كرزية، ورق تواليت...', tripReqSendBtn:'إرسال الطلب 🛒',
 },
 };
 
@@ -1504,6 +1535,7 @@ function openWA(text, phone){ window.open(waLink(text, phone), '_blank'); }
 /* ---------- render ---------- */
 function render(){
   updateBadge();
+  updateTripBar();
   if(view === 'request') renderRequest();
   else if(view === 'shop') renderShop();
   else renderHistory();
@@ -1514,6 +1546,35 @@ function render(){
   $('#summaryBar').style.display = showSummary ? 'flex' : 'none';
   document.body.classList.toggle('has-summary', showSummary);
   if(view === 'request') $('#summaryCnt').innerHTML = L('inListCount', {n: '<b>' + neededItems().length + '</b>'});
+}
+/* בר בולט: מוצג לכל בן משפחה (חוץ מהקונה עצמו) כשקנייה פעילה — אפשר לשלוח בקשה מהירה שנוספת מיד לרשימה */
+function updateTripBar(){
+  const bar = $('#tripReqBar');
+  if(!bar) return;
+  const show = !!(fam && state.trip.startedAt && !isShopper());
+  bar.style.display = show ? 'flex' : 'none';
+  if(show) $('#tripReqText').textContent = L('tripBarText', {name: state.trip.shopperName || L('shopper')});
+  const btn = $('#tripReqBtn'); if(btn) btn.title = L('tripReqBtnTitle');
+}
+function openTripRequestModal(){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${esc(L('tripReqModalTitle', {name: state.trip.shopperName || L('shopper')}))}</h2>
+    <div class="msub">${esc(L('tripReqModalSub'))}</div>
+    <input type="text" id="tripReqIn" placeholder="${esc(L('tripReqPlaceholder'))}" onkeydown="if(event.key==='Enter')sendTripRequest()">
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      <button class="primary" onclick="sendTripRequest()">${esc(L('tripReqSendBtn'))}</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+  setTimeout(() => { const i = $('#tripReqIn'); if(i) i.focus(); }, 150);
+}
+function sendTripRequest(){
+  const inp = $('#tripReqIn');
+  const text = (inp && inp.value || '').trim();
+  if(!text){ if(inp) inp.focus(); return; }
+  closeModal();
+  addRequestToList(text, fam.myName);
 }
 function updateBadge(){
   const left = neededItems().filter(x => !x.it.bought).length;
