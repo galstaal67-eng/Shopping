@@ -31,7 +31,7 @@ export default async (req) => {
           if (!(await codes.get(code))) break;
           code = newCode();
         }
-        const member = { id: uid(), name: String(body.userName || 'משתמש').slice(0, 40), phone: String(body.phone || '').slice(0, 20) };
+        const member = { id: uid(), name: String(body.userName || 'משתמש').slice(0, 40), phone: String(body.phone || '').slice(0, 20), joinedAt: Date.now() };
         const fam = {
           id: familyId, code,
           name: String(body.familyName || 'המשפחה שלי').slice(0, 60),
@@ -49,7 +49,7 @@ export default async (req) => {
         if (!familyId) return json({ ok: false, error: 'קוד משפחה לא נמצא' }, 404);
         const fam = await families.get(familyId, { type: 'json' });
         if (!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
-        const member = { id: uid(), name: String(body.userName || 'משתמש').slice(0, 40), phone: String(body.phone || '').slice(0, 20) };
+        const member = { id: uid(), name: String(body.userName || 'משתמש').slice(0, 40), phone: String(body.phone || '').slice(0, 20), joinedAt: Date.now() };
         fam.members.push(member);
         if (fam.members.length > 20) fam.members.length = 20;
         await families.setJSON(familyId, fam);

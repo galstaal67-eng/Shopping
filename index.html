@@ -231,16 +231,35 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 
 .tripline .timer.live{background:#7f1d1d;color:#fecaca;font-size:14px}
 
+/* family board */
+.board{background:#fffdf5;border:1.5px solid #fde68a;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:12px}
+.board .btitle{font-weight:700;font-size:15px;margin-bottom:8px;color:#92400e}
+.bmsg{background:#fff;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;margin-bottom:7px}
+.bmsg .btxt{font-size:15px}
+.bmsg .bmeta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--soft);margin-top:4px;gap:8px;flex-wrap:wrap}
+.bacts{display:flex;gap:6px}
+.bact{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
+.bact.bdel{background:#fff;border-color:var(--red-soft);color:#e2a0a0}
+.bempty{font-size:13px;color:var(--soft);padding:4px 2px}
+
 /* family */
 .famcard{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:12px;padding:14px;margin:6px 0 4px}
+.mtitle{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.mavatar{
+  width:30px;height:30px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;
+}
+.member .mname{flex:1;display:flex;flex-direction:column;line-height:1.3}
+.metag{color:var(--teal-dark);font-size:12px;font-weight:700}
+.mwa{font-size:18px;padding:2px 6px}
 .famtitle{font-weight:700;font-size:15.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .famregion{font-size:12.5px;color:var(--muted);font-weight:500}
 .famcode-line{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:10px;flex-wrap:wrap}
 .famcode{font-weight:700;font-size:19px;letter-spacing:3px;color:var(--teal-dark);background:#fff;border:1px dashed var(--teal);border-radius:8px;padding:2px 12px;direction:ltr}
 .minibtn{background:var(--teal);color:#fff;border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700}
 .minibtn.warn{background:#fff;border:1px solid var(--red-soft);color:var(--red)}
-.members{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
-.member{font-size:14px;display:flex;gap:8px;align-items:baseline}
+.members{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.member{font-size:14px;display:flex;gap:9px;align-items:center}
 .member .mphone{font-size:12px;color:var(--soft);direction:ltr}
 .selectbox{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;font-family:inherit;font-size:15px;outline:none}
 .selectbox:focus{border-color:var(--teal)}
@@ -515,7 +534,7 @@ function freshState(){
     }))
   }));
   cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
-  return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[] };
+  return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[], board:[] };
 }
 function load(){
   try{
@@ -529,6 +548,7 @@ function load(){
   if(!state) state = freshState();
   if(!state.trip) state.trip = { startedAt:null };
   if(!Array.isArray(state.history)) state.history = [];
+  if(!Array.isArray(state.board)) state.board = [];
   saveLocalOnly(); // בלי לקדם updatedAt — טעינת דף לא "דורסת" שינויים מהענן
 }
 /* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
@@ -599,7 +619,7 @@ async function pushList(){
     const res = await apiPost('putList', {
       familyId: fam.familyId, memberId: fam.memberId, byName: fam.myName,
       updatedAt: state.updatedAt || 0,
-      data: { cats: state.cats, trip: state.trip }
+      data: { cats: state.cats, trip: state.trip, board: state.board }
     });
     if(res && res.stale && res.remote) applyRemote(res.remote);
   }catch(e){ /* אין רשת — יסונכרן בהמשך */ }
@@ -616,10 +636,20 @@ function applyRemote(remote){
   if(!(remote.updatedAt > (state.updatedAt || 0))) return;
   const prevTrip = state.trip && state.trip.startedAt;
   const prevNeeded = new Set(neededItems().map(x => x.it.id));
+  const prevBoard = new Set((state.board || []).map(b => b.id));
   state.cats = remote.data.cats || state.cats;
   state.trip = remote.data.trip || { startedAt:null };
+  if(Array.isArray(remote.data.board)) state.board = remote.data.board;
   state.updatedAt = remote.updatedAt;
   saveLocalOnly();
+  // התראה על הודעה חדשה בלוח המודעות (מבני משפחה אחרים)
+  const freshMsgs = (state.board || []).filter(b =>
+    !prevBoard.has(b.id) && (!fam || b.byId !== fam.memberId));
+  if(freshMsgs.length){
+    if(navigator.vibrate) navigator.vibrate(150);
+    const b = freshMsgs[0];
+    toast('📌 ' + (b.by || 'בן משפחה') + ': ' + b.text.slice(0, 60), 5000);
+  }
   if(!prevTrip && state.trip.startedAt && fam && state.trip.shopperId && state.trip.shopperId !== fam.memberId){
     toast('🛍️ ' + (state.trip.shopperName || 'הקונה') + ' התחיל/ה קנייה — צפו בהתקדמות במסך הקנייה!');
   }
@@ -713,6 +743,27 @@ function renderRequest(){
     <button class="pill" id="editPill" onclick="toggleEdit()">✏️ עריכת קטלוג</button>
     <button class="pill warn" onclick="resetAll()">🔄 איפוס רשימה</button>
   </div>`;
+  if(fam){
+    html += `
+    <div class="board">
+      <div class="btitle">📌 לוח מודעות — משפחת ${esc(fam.familyName)}</div>
+      ${(state.board || []).length ? (state.board || []).map(b => `
+        <div class="bmsg">
+          <div class="btxt">${esc(b.text)}</div>
+          <div class="bmeta">
+            <span>${esc(b.by || '')} · ${fmtAgo(b.at)}</span>
+            <span class="bacts">
+              <button class="bact" title="הוסף לרשימת הקניות" onclick="boardToList('${b.id}')">🛒 לרשימה</button>
+              ${(!fam || b.byId === fam.memberId) ? `<button class="bact bdel" onclick="delBoard('${b.id}')">🗑</button>` : ''}
+            </span>
+          </div>
+        </div>`).join('') : '<div class="bempty">אין הודעות — כתבו משהו למשפחה, למשל: "צריך נייר טואלט"</div>'}
+      <div class="addrow" style="background:none;padding:8px 0 0">
+        <input id="boardIn" placeholder="כתבו הודעה למשפחה..." onkeydown="if(event.key==='Enter')postBoard()">
+        <button onclick="postBoard()">📌</button>
+      </div>
+    </div>`;
+  }
   state.cats.forEach(c => {
     const cnt = c.items.filter(i => i.need).length;
     const open = openCats[c.id] || c.special;
@@ -750,6 +801,60 @@ function renderRequest(){
   m.innerHTML = html;
 }
 function toggleCat(id){ openCats[id] = !openCats[id]; render(); }
+
+/* ===== לוח מודעות משפחתי ===== */
+function fmtAgo(ts){
+  if(!ts) return '';
+  const m = Math.floor((Date.now() - ts) / 60000);
+  if(m < 1) return 'עכשיו';
+  if(m < 60) return 'לפני ' + m + ' דק\'';
+  const h = Math.floor(m / 60);
+  if(h < 24) return 'לפני ' + h + ' שע\'';
+  const d = new Date(ts);
+  return d.getDate() + '/' + (d.getMonth() + 1);
+}
+function postBoard(){
+  const inp = $('#boardIn');
+  const text = (inp.value || '').trim();
+  if(!text){ inp.focus(); return; }
+  state.board.unshift({
+    id: 'b' + Date.now() + Math.floor(Math.random()*1e4),
+    text: text.slice(0, 200),
+    by: fam ? fam.myName : (state.settings.reqName || ''),
+    byId: fam ? fam.memberId : null,
+    at: Date.now()
+  });
+  if(state.board.length > 30) state.board.length = 30;
+  save(); pushList(); render();
+  toast('ההודעה פורסמה בלוח 📌');
+}
+function delBoard(id){
+  state.board = state.board.filter(b => b.id !== id);
+  save(); pushList(); render();
+}
+function boardToList(id){
+  const b = state.board.find(x => x.id === id); if(!b) return;
+  // "צריך נייר טואלט" → "נייר טואלט"
+  let name = b.text.replace(/^(צריך|צריכים|חסר|חסרים|לקנות|תקנו?|נא לקנות)\s+/,'').trim() || b.text;
+  // אם המוצר קיים בקטלוג — מסמנים אותו; אחרת נוסף לבקשות מיוחדות
+  let found = null, foundCat = null;
+  for(const c of state.cats){
+    const it = c.items.find(i => i.name.trim() === name);
+    if(it){ found = it; foundCat = c; break; }
+  }
+  if(found){
+    found.need = true; markAdded(found);
+    toast('"' + name + '" סומן ברשימה (' + foundCat.name + ') ✓');
+  }else{
+    const sp = state.cats.find(c => c.id === 'special');
+    const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note: b.by ? 'ביקש/ה: ' + b.by : '', need:true, bought:false };
+    markAdded(item);
+    sp.items.push(item);
+    toast('"' + name + '" נוסף לבקשות מיוחדות ⭐');
+  }
+  state.board = state.board.filter(x => x.id !== id);
+  save(); pushList(); render();
+}
 function markAdded(it){
   it.addedAt = Date.now();
   it.addedById = fam ? fam.memberId : null;
@@ -1415,10 +1520,9 @@ function openSettings(){
         קוד הצטרפות: <span class="famcode">${esc(fam.code)}</span>
         <button class="minibtn" onclick="shareFamilyCode()">📤 שתף</button>
       </div>
-      <div class="members" id="famMembers">${(fam.members || []).map(m => `
-        <div class="member">${m.id === fam.memberId ? '⭐' : '👤'} ${esc(m.name)}
-          <span class="mphone">${esc(m.phone || '')}</span></div>`).join('')}
-      </div>
+      <div class="mtitle">נרשמו למשפחה (${(fam.members || []).length}):</div>
+      <div class="members" id="famMembers">${membersHTML()}</div>
+      ${(fam.members || []).length < 2 ? '<div class="hint">עדיין רק את/ה — שתפו את הקוד כדי שכל המשפחה תצטרף 👆</div>' : ''}
       <div class="hint">הרשימה מסתנכרנת אוטומטית בין כל בני המשפחה. כשמישהו לוחץ "התחל קנייה" — כולם מקבלים איתות ויכולים לעקוב חי.</div>
       <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">🚪 התנתק מהמשפחה במכשיר הזה</button>
     </div>`;
@@ -1453,6 +1557,20 @@ function openSettings(){
   $('#overlay').classList.add('show');
   if(fam) refreshFamily();
 }
+function membersHTML(){
+  return (fam.members || []).map(m => {
+    const me = m.id === fam.memberId;
+    const joined = m.joinedAt ? new Date(m.joinedAt) : null;
+    return `
+    <div class="member">
+      <span class="mavatar">${esc((m.name || '?').trim().charAt(0))}</span>
+      <span class="mname">${esc(m.name)}${me ? ' <span class="metag">(אני)</span>' : ''}
+        <span class="mphone">${esc(m.phone || 'בלי טלפון')}${joined ? ' · הצטרף/ה ' + joined.getDate() + '/' + (joined.getMonth()+1) : ''}</span>
+      </span>
+      ${(!me && m.phone) ? `<button class="mwa" onclick="openWA('היי 👋', '${esc(m.phone)}')" title="וואטסאפ ל${esc(m.name)}">💬</button>` : ''}
+    </div>`;
+  }).join('');
+}
 async function refreshFamily(){
   try{
     const res = await apiGet('getFamily', { familyId: fam.familyId });
@@ -1462,9 +1580,7 @@ async function refreshFamily(){
       fam.region = res.family.region;
       famSave();
       const el = document.getElementById('famMembers');
-      if(el) el.innerHTML = fam.members.map(m => `
-        <div class="member">${m.id === fam.memberId ? '⭐' : '👤'} ${esc(m.name)}
-          <span class="mphone">${esc(m.phone || '')}</span></div>`).join('');
+      if(el) el.innerHTML = membersHTML();
     }
   }catch(e){}
 }
