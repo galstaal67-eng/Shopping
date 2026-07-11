@@ -196,6 +196,46 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 }
 .checkline{display:flex;align-items:center;gap:9px;margin-top:14px;font-size:14.5px}
 .checkline input{width:20px;height:20px;accent-color:var(--teal)}
+
+/* trip timer + deals */
+.tripline{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tripline .startbtn{
+  flex:1;background:var(--teal);color:#fff;border-radius:12px;padding:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:7px;min-width:140px;
+}
+.tripline .timer{
+  flex:1;background:#0f172a;color:#5eead4;border-radius:12px;padding:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:7px;font-size:17px;min-width:110px;
+  font-variant-numeric:tabular-nums;
+}
+.tripline .finishbtn{background:var(--green-soft);color:#166534;border:1px solid #86efac;border-radius:12px;padding:10px 14px;font-weight:700}
+.tripline .dealsbtn{background:var(--amber-soft);color:#92400e;border:1px solid #fcd34d;border-radius:12px;padding:10px 14px;font-weight:700}
+
+/* history */
+.hcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.hhead{width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:right}
+.hhead .hd{flex:1;min-width:0}
+.hhead .hdate{font-weight:700;font-size:15.5px}
+.hhead .hmeta{font-size:12.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.hhead .chev{color:var(--soft);font-size:12px;transition:transform .18s}
+.hcard.open .hhead .chev{transform:rotate(-90deg)}
+.hbody{display:none;border-top:1px solid var(--line);padding:10px 14px 14px}
+.hcard.open .hbody{display:block}
+.hitem{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:5px 0;border-bottom:1px dashed #f1f5f9}
+.hitem .hp{color:var(--teal-dark);font-weight:700;white-space:nowrap}
+.hitem.notbought .hn{color:var(--soft);text-decoration:line-through}
+.hactions{display:flex;gap:8px;margin-top:12px}
+.hactions button{flex:1;border-radius:10px;padding:9px;font-weight:700;font-size:14px}
+.hactions .imp{background:var(--teal);color:#fff}
+.hactions .delh{background:#fff;border:1px solid var(--red-soft);color:var(--red);flex:0 0 auto;padding:9px 14px}
+
+/* deals modal */
+.deal{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px}
+.deal .demoji{font-size:24px}
+.deal .dtxt{flex:1;min-width:0}
+.deal .dname{font-weight:700;font-size:14.5px}
+.deal .ddesc{font-size:12.5px;color:var(--muted)}
+.deal .dtag{background:var(--red);color:#fff;border-radius:8px;padding:2px 8px;font-size:12px;font-weight:700;white-space:nowrap}
 .srow{
   background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin-bottom:7px;
   display:flex;align-items:center;gap:4px;overflow:hidden;
@@ -313,6 +353,9 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
     <span class="ticon">🛍️</span>קנייה
     <span class="badge" id="shopBadge" style="display:none"></span>
   </button>
+  <button id="tab-history" onclick="setView('history')">
+    <span class="ticon">🧾</span>היסטוריה
+  </button>
 </nav>
 
 <div class="overlay" id="overlay"><div class="modal" id="modalBox"></div></div>
@@ -419,18 +462,20 @@ function freshState(){
     }))
   }));
   cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
-  return { v:2, cats, settings:{ reqName:'', reqPhone:'' } };
+  return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[] };
 }
 function load(){
   try{
     const raw = localStorage.getItem(LS_KEY);
     if(raw){
       const old = JSON.parse(raw);
-      if(old && old.v === 2){ state = old; return; }
-      if(old && old.v === 1){ state = migrateV1(old); save(); return; }
+      if(old && old.v === 2) state = old;
+      else if(old && old.v === 1){ state = migrateV1(old); }
     }
   }catch(e){}
-  state = freshState();
+  if(!state) state = freshState();
+  if(!state.trip) state.trip = { startedAt:null };
+  if(!Array.isArray(state.history)) state.history = [];
   save();
 }
 /* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
@@ -493,9 +538,12 @@ function openWA(text, phone){ window.open(waLink(text, phone), '_blank'); }
 /* ---------- render ---------- */
 function render(){
   updateBadge();
-  if(view === 'request') renderRequest(); else renderShop();
+  if(view === 'request') renderRequest();
+  else if(view === 'shop') renderShop();
+  else renderHistory();
   $('#tab-request').classList.toggle('active', view === 'request');
   $('#tab-shop').classList.toggle('active', view === 'shop');
+  $('#tab-history').classList.toggle('active', view === 'history');
   const showSummary = view === 'request' && neededItems().length > 0;
   $('#summaryBar').style.display = showSummary ? 'flex' : 'none';
   document.body.classList.toggle('has-summary', showSummary);
@@ -618,6 +666,13 @@ function renderShop(){
     </div>
     <div class="bar"><div style="width:${pct}%"></div></div>
     ${total > 0 ? `<div class="carttotal"><span>🧾 מצטבר בעגלה</span><b>₪${fmtPrice(total)}</b></div>` : ''}
+    <div class="tripline">
+      ${state.trip.startedAt
+        ? `<div class="timer">⏱ <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>
+           <button class="finishbtn" onclick="finishTrip()">🏁 סיים</button>`
+        : `<button class="startbtn" onclick="startTrip()">▶️ התחל קנייה</button>`}
+      <button class="dealsbtn" onclick="openDeals()">🏷️ מבצעים</button>
+    </div>
     <div class="who">
       <span>יש שאלה? ${esc(who)} זמין/ה בוואטסאפ:</span>
       <button class="askbtn" onclick="askGeneral()">💬 שאלה כללית</button>
@@ -629,7 +684,7 @@ function renderShop(){
       <div class="t">🎉 כל הפריטים נאספו!</div>
       <div class="actions">
         <button class="wa-b" onclick="notifyDone()">💬 עדכן שסיימתי</button>
-        <button class="rs-b" onclick="resetAll()">🔄 איפוס לרשימה הבאה</button>
+        <button class="rs-b" onclick="finishTrip()">🏁 שמור בהיסטוריה ואפס</button>
       </div>
     </div>`;
   }
@@ -673,6 +728,155 @@ function toggleShopCat(id){ shopClosed[id] = !shopClosed[id]; render(); }
 function toggleBought(id){
   const f = findItem(id); if(!f) return;
   f.it.bought = !f.it.bought;
+  save(); render();
+  if(f.it.bought && f.it.price == null) openPriceModal(id);
+}
+
+/* ===== shopping trip (timer + history) ===== */
+function fmtDur(ms){
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+  const p = n => String(n).padStart(2, '0');
+  return h ? h + ':' + p(m) + ':' + p(ss) : m + ':' + p(ss);
+}
+function startTrip(){
+  state.trip.startedAt = Date.now();
+  save(); render();
+  toast('⏱ הקנייה התחילה — בהצלחה!');
+}
+function finishTrip(){
+  const all = neededItems();
+  if(!all.length){ toast('אין פריטים ברשימה'); return; }
+  if(!confirm('לסיים את הקנייה ולשמור אותה בהיסטוריה?')) return;
+  const rec = {
+    id: 'h' + Date.now(),
+    date: new Date().toISOString(),
+    durationMs: state.trip.startedAt ? Date.now() - state.trip.startedAt : null,
+    total: cartTotal(),
+    items: all.map(x => ({
+      name: x.it.name, cat: x.cat.id, catName: x.cat.name, emoji: x.cat.emoji,
+      note: x.it.note || '', bought: !!x.it.bought,
+      ...(x.it.price != null ? {price: x.it.price} : {})
+    })),
+  };
+  state.history.unshift(rec);
+  if(state.history.length > 60) state.history.length = 60;
+  state.trip.startedAt = null;
+  save();
+  toast('הקנייה נשמרה בהיסטוריה 🧾');
+  if(confirm('לאפס את הרשימה לקראת הקנייה הבאה?')){
+    state.cats.forEach(c => {
+      if(c.special) c.items = [];
+      else c.items.forEach(it => { it.need = false; it.bought = false; delete it.price; });
+    });
+    save();
+  }
+  render();
+}
+setInterval(() => {
+  const el = document.getElementById('tripTimer');
+  if(el && state && state.trip.startedAt) el.textContent = fmtDur(Date.now() - state.trip.startedAt);
+}, 1000);
+
+/* ===== deals (demo — store integration planned) ===== */
+const DEMO_DEALS = [
+  {e:'🍅', n:'עגבניות שרי — 1+1', d:'מארז שני במתנה', t:'1+1'},
+  {e:'🧀', n:'גבינה צהובה — 20% הנחה', d:'במעדנייה, עד סוף השבוע', t:'-20%'},
+  {e:'🧻', n:'נייר טואלט 32 גלילים', d:'₪34.90 במקום ₪44.90', t:'מבצע'},
+  {e:'🫒', n:'שמן זית כתית מעולה', d:'השני ב-50% הנחה', t:'2ב50%'},
+  {e:'☕', n:'קפה נמס 200 גרם', d:'₪19.90 לחברי מועדון', t:'מועדון'},
+];
+function openDeals(){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>🏷️ מבצעים בחנות</h2>
+    <div class="msub">בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):</div>
+    ${DEMO_DEALS.map(d => `
+      <div class="deal">
+        <span class="demoji">${d.e}</span>
+        <span class="dtxt"><span class="dname">${d.n}</span><br><span class="ddesc">${d.d}</span></span>
+        <span class="dtag">${d.t}</span>
+      </div>`).join('')}
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
+  $('#overlay').classList.add('show');
+}
+
+/* ===== history view ===== */
+let histOpen = {};
+function renderHistory(){
+  const m = $('#main');
+  if(!state.history.length){
+    m.innerHTML = `
+      <div class="empty">
+        <div class="big">🧾</div>
+        <p>עדיין אין קניות שמורות. במסך הקנייה, לחצו "▶️ התחל קנייה" ובסיום "🏁 סיים" — והקנייה תישמר כאן עם המוצרים, המחירים וזמן הקנייה.</p>
+      </div>`;
+    return;
+  }
+  let html = '';
+  state.history.forEach(rec => {
+    const d = new Date(rec.date);
+    const p = n => String(n).padStart(2, '0');
+    const ds = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ' · ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    const bought = rec.items.filter(i => i.bought).length;
+    const open = histOpen[rec.id];
+    html += `
+    <div class="hcard ${open?'open':''}">
+      <button class="hhead" onclick="toggleHist('${rec.id}')">
+        <span style="font-size:22px">🛒</span>
+        <span class="hd">
+          <span class="hdate">${ds}</span>
+          <span class="hmeta">
+            <span>📦 ${bought}/${rec.items.length} נאספו</span>
+            ${rec.total > 0 ? `<span>🧾 ₪${fmtPrice(rec.total)}</span>` : ''}
+            ${rec.durationMs != null ? `<span>⏱ ${fmtDur(rec.durationMs)}</span>` : ''}
+          </span>
+        </span>
+        <span class="chev">◀</span>
+      </button>
+      <div class="hbody">
+        ${rec.items.map(i => `
+          <div class="hitem ${i.bought?'':'notbought'}">
+            <span class="hn">${i.emoji || ''} ${esc(i.name)}${i.note ? ' <span style="color:var(--amber);font-size:12px">(' + esc(i.note) + ')</span>' : ''}</span>
+            <span class="hp">${i.price != null ? '₪' + fmtPrice(i.price) : (i.bought ? '✓' : '—')}</span>
+          </div>`).join('')}
+        <div class="hactions">
+          <button class="imp" onclick="importPurchase('${rec.id}')">📥 ייבא לרשימה חדשה</button>
+          <button class="delh" onclick="delHist('${rec.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  m.innerHTML = html;
+}
+function toggleHist(id){ histOpen[id] = !histOpen[id]; render(); }
+function importPurchase(id){
+  const rec = state.history.find(h => h.id === id); if(!rec) return;
+  let n = 0;
+  rec.items.forEach(hi => {
+    let found = null;
+    for(const c of state.cats){
+      const it = c.items.find(i => i.name.trim() === hi.name.trim());
+      if(it){ found = it; break; }
+    }
+    if(found){
+      found.need = true; found.bought = false; delete found.price;
+      if(hi.note) found.note = hi.note;
+    }else{
+      const cat = state.cats.find(c => c.id === hi.cat) || state.cats.find(c => c.id === 'special');
+      cat.items.push({
+        id: 'i' + Date.now() + Math.floor(Math.random()*1e6) + n,
+        name: hi.name, note: hi.note || '', need: true, bought: false
+      });
+    }
+    n++;
+  });
+  save(); setView('request');
+  toast('יובאו ' + rec.items.length + ' פריטים לרשימה ✓');
+}
+function delHist(id){
+  if(!confirm('למחוק את הקנייה הזו מההיסטוריה?')) return;
+  state.history = state.history.filter(h => h.id !== id);
   save(); render();
 }
 
@@ -806,8 +1010,10 @@ function askAbout(id){
 function notifyDone(){
   const name = state.settings.reqName;
   const total = cartTotal();
+  const dur = state.trip.startedAt ? fmtDur(Date.now() - state.trip.startedAt) : null;
   openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒'
     + (total > 0 ? '\n🧾 סה"כ לפי המחירים שהוזנו: ₪' + fmtPrice(total) : '')
+    + (dur ? '\n⏱ זמן קנייה: ' + dur : '')
     + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);
 }
 
