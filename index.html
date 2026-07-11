@@ -42,6 +42,32 @@ header .sub{font-size:12.5px;color:#d3f5ef;margin-top:2px}
   background:rgba(255,255,255,.16);color:#fff;font-size:19px;flex-shrink:0;
 }
 .iconbtn:active{background:rgba(255,255,255,.3)}
+.iconbtn{position:relative}
+.hbadge{
+  position:absolute;top:-5px;inset-inline-start:-5px;min-width:19px;height:19px;padding:0 5px;
+  border-radius:10px;background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;border:2px solid var(--teal-dark);
+}
+
+/* chat */
+.chatlist{
+  max-height:44vh;overflow-y:auto;display:flex;flex-direction:column;gap:9px;
+  background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 10px;margin-top:6px;
+}
+.cmsg{display:flex;flex-direction:column;align-items:flex-start}
+.cmsg.mine{align-items:flex-end}
+.cbubble{
+  background:#fff;border:1px solid var(--line);border-radius:14px 14px 14px 4px;
+  padding:8px 13px;max-width:86%;font-size:14.5px;line-height:1.5;
+}
+.cmsg.mine .cbubble{background:var(--teal-soft);border-color:#99f6e4;border-radius:14px 14px 4px 14px}
+.cmeta{font-size:11px;color:var(--soft);margin-top:2px;padding:0 4px}
+.creq{font-size:11.5px;font-weight:700;color:#92400e;background:#fef3c7;border-radius:999px;padding:0 8px}
+.caddbtn{margin-top:6px;background:var(--teal);color:#fff;border-radius:999px;padding:4px 13px;font-size:12.5px;font-weight:700;display:inline-block}
+.chatinput input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;margin-top:10px;background:#fff}
+.chatinput input:focus{border-color:var(--teal)}
+.popmsg{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16.5px;margin:8px 0 2px;line-height:1.6}
+.popmsg.reqmsg{background:#fffbeb;border-color:#fcd34d}
 
 /* ===== Tabs (bottom nav) ===== */
 nav.tabs{
@@ -454,7 +480,10 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
     <div>
       <h1>🛒 רשימת קניות</h1>
     </div>
-    <button class="iconbtn" id="settingsBtn" title="הגדרות">⚙️</button>
+    <div style="display:flex;gap:8px">
+      <button class="iconbtn" id="chatBtn" title="צ'אט משפחתי" style="display:none" onclick="openChat(true)">💬<span class="hbadge" id="chatBadge" style="display:none"></span></button>
+      <button class="iconbtn" id="settingsBtn" title="הגדרות">⚙️</button>
+    </div>
   </div>
 </header>
 
@@ -587,7 +616,7 @@ function freshState(){
     }))
   }));
   cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
-  return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[], board:[] };
+  return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[], board:[], chat:[] };
 }
 function load(){
   try{
@@ -602,6 +631,7 @@ function load(){
   if(!state.trip) state.trip = { startedAt:null };
   if(!Array.isArray(state.history)) state.history = [];
   if(!Array.isArray(state.board)) state.board = [];
+  if(!Array.isArray(state.chat)) state.chat = [];
   saveLocalOnly(); // בלי לקדם updatedAt — טעינת דף לא "דורסת" שינויים מהענן
 }
 /* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
@@ -672,7 +702,7 @@ async function pushList(){
     const res = await apiPost('putList', {
       familyId: fam.familyId, memberId: fam.memberId, byName: fam.myName,
       updatedAt: state.updatedAt || 0,
-      data: { cats: state.cats, trip: state.trip, board: state.board }
+      data: { cats: state.cats, trip: state.trip, board: state.board, chat: state.chat }
     });
     if(res && res.stale && res.remote) applyRemote(res.remote);
   }catch(e){ /* אין רשת — יסונכרן בהמשך */ }
@@ -690,9 +720,11 @@ function applyRemote(remote){
   const prevTrip = state.trip && state.trip.startedAt;
   const prevNeeded = new Set(neededItems().map(x => x.it.id));
   const prevBoard = new Set((state.board || []).map(b => b.id));
+  const prevChat = new Set((state.chat || []).map(c => c.id));
   state.cats = remote.data.cats || state.cats;
   state.trip = remote.data.trip || { startedAt:null };
   if(Array.isArray(remote.data.board)) state.board = remote.data.board;
+  if(Array.isArray(remote.data.chat)) state.chat = remote.data.chat;
   state.updatedAt = remote.updatedAt;
   saveLocalOnly();
   // התראה על הודעה חדשה בלוח המודעות (מבני משפחה אחרים)
@@ -702,6 +734,23 @@ function applyRemote(remote){
     if(navigator.vibrate) navigator.vibrate(150);
     const b = freshMsgs[0];
     toast('📌 ' + (b.by || 'בן משפחה') + ': ' + b.text.slice(0, 60), 5000);
+  }
+  // הודעת צ'אט חדשה מבן משפחה → חלון קופץ (או רענון הצ'אט אם הוא פתוח)
+  const freshChat = (state.chat || []).filter(c =>
+    !prevChat.has(c.id) && (!fam || c.fromId !== fam.memberId));
+  if(freshChat.length){
+    if(navigator.vibrate) navigator.vibrate([120, 60, 120]);
+    const chatList = $('#overlay').classList.contains('show') ? document.getElementById('chatList') : null;
+    if(chatList){
+      chatList.innerHTML = chatMsgsHTML();
+      chatList.scrollTop = chatList.scrollHeight;
+      markChatSeen();
+    }else if($('#overlay').classList.contains('show')){
+      const c = freshChat[0];
+      toast('💬 ' + (c.from || '') + ': ' + c.text.slice(0, 50), 5000);
+    }else{
+      chatPopup(freshChat[0]);
+    }
   }
   if(!prevTrip && state.trip.startedAt && fam && state.trip.shopperId && state.trip.shopperId !== fam.memberId){
     toast('🛍️ ' + (state.trip.shopperName || 'הקונה') + ' התחיל/ה קנייה — צפו בהתקדמות במסך הקנייה!');
@@ -785,6 +834,7 @@ function updateBadge(){
   const b = $('#shopBadge');
   b.style.display = left ? 'flex' : 'none';
   b.textContent = left;
+  updateChatBadge();
 }
 function setView(v){ view = v; window.scrollTo(0,0); render(); }
 
@@ -965,28 +1015,151 @@ function delBoard(id){
   state.board = state.board.filter(b => b.id !== id);
   save(); pushList(); render();
 }
-function boardToList(id){
-  const b = state.board.find(x => x.id === id); if(!b) return;
-  // "צריך נייר טואלט" → "נייר טואלט"
-  let name = b.text.replace(/^(צריך|צריכים|חסר|חסרים|לקנות|תקנו?|נא לקנות)\s+/,'').trim() || b.text;
-  // אם המוצר קיים בקטלוג — מסמנים אותו; אחרת נוסף לבקשות מיוחדות
+/* חילוץ שם מוצר מטקסט חופשי: "אבא תקנה לי רסק עגבניות" → "רסק עגבניות" */
+function extractProductName(text){
+  const stop = new Set(['אבא','אמא','תקנה','תקני','תקנו','תביא','תביאי','תביאו','לי','לנו','גם','בבקשה',
+                        'צריך','צריכים','צריכה','חסר','חסרים','חסרה','נא','לקנות','את','משהו','אפשר','בדרך']);
+  let words = String(text).replace(/[.,!?…]+/g, ' ').trim().split(/\s+/);
+  while(words.length > 1 && stop.has(words[0])) words.shift();
+  return words.join(' ').trim() || String(text).trim();
+}
+/* הוספת בקשה לרשימה: אם המוצר בקטלוג — מסומן בקטגוריה שלו; אחרת לבקשות מיוחדות */
+function addRequestToList(rawText, byName){
+  const name = extractProductName(rawText);
   let found = null, foundCat = null;
   for(const c of state.cats){
     const it = c.items.find(i => i.name.trim() === name);
     if(it){ found = it; foundCat = c; break; }
   }
   if(found){
-    found.need = true; markAdded(found);
+    found.need = true; found.bought = false; markAdded(found);
+    if(byName) found.addedBy = byName;
     toast('"' + name + '" סומן ברשימה (' + foundCat.name + ') ✓');
   }else{
     const sp = state.cats.find(c => c.id === 'special');
-    const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note: b.by ? 'ביקש/ה: ' + b.by : '', need:true, bought:false };
+    const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note: byName ? 'ביקש/ה: ' + byName : '', need:true, bought:false };
     markAdded(item);
+    if(byName) item.addedBy = byName;
     sp.items.push(item);
     toast('"' + name + '" נוסף לבקשות מיוחדות ⭐');
   }
+  save(); pushList(); render();
+  return name;
+}
+function boardToList(id){
+  const b = state.board.find(x => x.id === id); if(!b) return;
+  addRequestToList(b.text, b.by);
   state.board = state.board.filter(x => x.id !== id);
   save(); pushList(); render();
+}
+
+/* ===== צ'אט משפחתי ===== */
+const CHAT_SEEN_KEY = 'shopping-chat-seen';
+let lastChatSeen = +(localStorage.getItem(CHAT_SEEN_KEY) || 0);
+function markChatSeen(){
+  lastChatSeen = Date.now();
+  localStorage.setItem(CHAT_SEEN_KEY, lastChatSeen);
+  updateChatBadge();
+}
+function updateChatBadge(){
+  const btn = document.getElementById('chatBtn');
+  const b = document.getElementById('chatBadge');
+  if(!btn || !b) return;
+  btn.style.display = fam ? 'flex' : 'none';
+  const n = fam ? (state.chat || []).filter(m => m.fromId !== fam.memberId && m.at > lastChatSeen).length : 0;
+  b.style.display = n ? 'flex' : 'none';
+  b.textContent = n;
+}
+function chatMsgsHTML(){
+  if(!(state.chat || []).length){
+    return '<div class="hint" style="padding:8px 4px">אין הודעות עדיין. שאלו, ענו ובקשו מוצרים — גם באמצע קנייה.</div>';
+  }
+  return state.chat.slice().reverse().map(m => {
+    const mine = fam && m.fromId === fam.memberId;
+    return `
+    <div class="cmsg ${mine ? 'mine' : ''}">
+      <div class="cbubble">
+        ${m.req ? '<span class="creq">🛒 בקשת מוצר</span><br>' : ''}
+        ${esc(m.text)}
+        ${m.req && !mine ? `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">➕ הוסף לרשימה</button>` : ''}
+      </div>
+      <div class="cmeta">${esc(m.from || '')} · ${fmtAgo(m.at)}</div>
+    </div>`;
+  }).join('');
+}
+function openChat(focusInput){
+  if(!fam){ toast('צ\'אט זמין אחרי חיבור משפחה (⚙️ הגדרות)'); return; }
+  markChatSeen();
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>💬 צ'אט — משפחת ${esc(fam.familyName)}</h2>
+    <div class="chatlist" id="chatList">${chatMsgsHTML()}</div>
+    <div class="chatinput">
+      <input id="chatIn" placeholder='הודעה... (למשל: אין גבינה לבנה, להביא קוטג׳?)' onkeydown="if(event.key==='Enter')sendChat(false)">
+    </div>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="ghost" onclick="closeModal()">סגירה</button>
+      <button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="sendChat(true)">🛒 בקשת מוצר</button>
+      <button class="primary" onclick="sendChat(false)">שלח 💬</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+  const cl = document.getElementById('chatList');
+  cl.scrollTop = cl.scrollHeight;
+  if(focusInput === true) setTimeout(() => { const i = $('#chatIn'); if(i) i.focus(); }, 150);
+}
+function pushChatMsg(text, req){
+  state.chat.unshift({
+    id: 'c' + Date.now() + Math.floor(Math.random()*1e4),
+    fromId: fam ? fam.memberId : null,
+    from: fam ? fam.myName : (state.settings.reqName || ''),
+    text: String(text).slice(0, 200),
+    at: Date.now(),
+    req: !!req
+  });
+  if(state.chat.length > 60) state.chat.length = 60;
+  save(); pushList();
+}
+function sendChat(req){
+  const inp = $('#chatIn');
+  const text = (inp && inp.value || '').trim();
+  if(!text){ if(inp) inp.focus(); return; }
+  pushChatMsg(text, req);
+  inp.value = '';
+  const cl = document.getElementById('chatList');
+  if(cl){ cl.innerHTML = chatMsgsHTML(); cl.scrollTop = cl.scrollHeight; }
+  updateChatBadge();
+}
+function chatAddToList(id){
+  const m = (state.chat || []).find(x => x.id === id); if(!m) return;
+  const name = addRequestToList(m.text, m.from);
+  pushChatMsg('✓ הוספתי לרשימה: ' + name, false);
+  const cl = document.getElementById('chatList');
+  if(cl){ cl.innerHTML = chatMsgsHTML(); cl.scrollTop = cl.scrollHeight; }
+}
+/* חלון קופץ להודעה נכנסת */
+function chatPopup(m){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>💬 הודעה מ${esc(m.from || 'בן משפחה')}</h2>
+    <div class="popmsg ${m.req ? 'reqmsg' : ''}">${m.req ? '<span class="creq">🛒 בקשת מוצר</span><br>' : ''}${esc(m.text)}</div>
+    <div class="msub">${fmtAgo(m.at)}</div>
+    <label>תשובה מהירה:</label>
+    <input type="text" id="popReply" placeholder="כתבו תשובה..." onkeydown="if(event.key==='Enter')popSend()">
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">סגור</button>
+      ${m.req ? `<button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="closeModal();chatAddToList('${m.id}')">➕ הוסף לרשימה</button>` : ''}
+      <button class="primary" onclick="popSend()">שלח 💬</button>
+    </div>
+    <button class="qopt" style="margin-top:12px;text-align:center" onclick="openChat(true)">פתיחת הצ'אט המלא 💬</button>`;
+  $('#overlay').classList.add('show');
+  markChatSeen();
+}
+function popSend(){
+  const v = ($('#popReply') && $('#popReply').value || '').trim();
+  if(!v){ $('#popReply').focus(); return; }
+  pushChatMsg(v, false);
+  closeModal();
+  toast('נשלח ✓ 💬');
 }
 function markAdded(it){
   it.addedAt = Date.now();
@@ -2003,7 +2176,10 @@ function factoryReset(){
   save(); closeModal(); render();
   toast('הקטלוג אותחל');
 }
-function closeModal(){ $('#overlay').classList.remove('show'); }
+function closeModal(){
+  $('#overlay').classList.remove('show');
+  $('#modalBox').innerHTML = ''; // ניקוי — שלא יישאר DOM ישן (צ'אט נסתר וכו')
+}
 
 /* ---------- init ---------- */
 $('#settingsBtn').addEventListener('click', openSettings);
