@@ -237,6 +237,11 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 
 .tripline .timer.live{background:#7f1d1d;color:#fecaca;font-size:14px}
 
+.dbstatus{
+  font-size:12.5px;color:var(--muted);background:#f8fafc;border:1px solid var(--line);
+  border-radius:10px;padding:8px 12px;margin-bottom:12px;line-height:1.6;
+}
+
 /* family board */
 .board{background:#fffdf5;border:1.5px solid #fde68a;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:12px}
 .board .btitle{font-weight:700;font-size:15px;margin-bottom:8px;color:#92400e}
@@ -1848,6 +1853,7 @@ function openSettings(){
   }
   box.innerHTML = `
     <h2>⚙️ הגדרות</h2>
+    <div class="dbstatus" id="dbStatus">⏳ בודק חיבור לשרת...</div>
     ${famHtml}
     <div class="msub" style="margin-top:18px">מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.</div>
     <label>שם רושם/ת הרשימה</label>
@@ -1865,6 +1871,23 @@ function openSettings(){
     </div>`;
   $('#overlay').classList.add('show');
   if(fam) refreshFamily();
+  checkDbStatus();
+}
+async function checkDbStatus(){
+  const el = document.getElementById('dbStatus');
+  if(!el) return;
+  try{
+    const res = await apiGet('status', {});
+    if(res && res.ok){
+      el.innerHTML = res.db
+        ? '🗄️ מסד נתונים מרכזי (Neon): <b style="color:var(--green)">מחובר ופעיל ✓</b>'
+        : '🗄️ מסד נתונים מרכזי: <b style="color:var(--amber)">לא מחובר</b> — פועל על אחסון זמני (Blobs). הפעילו את Neon ב-Netlify: Extensions ← Neon.';
+    }else{
+      el.innerHTML = '🗄️ שרת: <b style="color:var(--red)">שגיאה</b> — ' + esc((res && res.error) || '');
+    }
+  }catch(e){
+    el.innerHTML = '🗄️ שרת: <b style="color:var(--red)">לא זמין</b> — האפליקציה פועלת מקומית בלבד (פתחו אותה מהאתר, לא מקובץ).';
+  }
 }
 function membersHTML(){
   return (fam.members || []).map(m => {
