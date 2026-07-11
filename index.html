@@ -245,6 +245,22 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .selectbox{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;font-family:inherit;font-size:15px;outline:none}
 .selectbox:focus{border-color:var(--teal)}
 
+/* path map (S-route) */
+.pathcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 10px 6px;margin-bottom:12px}
+.pathcard .ptitle{font-weight:700;font-size:15px;margin:0 8px 2px}
+.pathcard svg{width:100%;height:auto;display:block}
+.pathcard .station{cursor:pointer}
+.pathcard .station:active circle{opacity:.8}
+.cartmark{animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.catitem{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f1f5f9;width:100%;text-align:right;font-size:15.5px}
+.catitem .cchk{width:26px;height:26px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.catitem.b .cchk{background:var(--green);border-color:var(--green)}
+.catitem.b .cnm{text-decoration:line-through;color:var(--muted)}
+.catitem .cnm{flex:1}
+.catitem .cpr{color:var(--teal-dark);font-weight:700;font-size:13.5px}
+.catitem .cnote{font-size:12px;color:var(--amber)}
+
 /* benchmark */
 .bench{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
 .bench .btitle{font-weight:700;font-size:15.5px;margin-bottom:8px}
@@ -783,6 +799,11 @@ function renderShop(){
       </div>
     </div>`;
   }
+  html += `
+  <div class="pathcard">
+    <div class="ptitle">🗺️ מסלול הקנייה</div>
+    ${pathMapSVG()}
+  </div>`;
   state.cats.forEach(c => {
     const items = c.items.filter(i => i.need);
     if(!items.length) return;
@@ -819,6 +840,99 @@ function renderShop(){
   });
   m.innerHTML = html;
 }
+/* ===== מפת מסלול בצורת S: תחנה לכל קטגוריה, סמן קונה, ספירה 2/5 ===== */
+function pathMapSVG(){
+  const stations = state.cats
+    .map(c => ({ c, items: c.items.filter(i => i.need) }))
+    .filter(x => x.items.length)
+    .map(x => ({
+      id: x.c.id, emoji: x.c.emoji, col: catCol(x.c),
+      done: x.items.filter(i => i.bought).length, total: x.items.length
+    }));
+  if(!stations.length) return '';
+  const allDone = stations.every(s => s.done === s.total);
+  // מיקום הקונה: התחנה הראשונה שעוד לא הושלמה (או הדגל בסוף)
+  let currIdx = stations.findIndex(s => s.done < s.total);
+  if(currIdx === -1) currIdx = stations.length; // בדגל הסיום
+
+  const perRow = 3, W = 360, m = 46, rowH = 92, y0 = 48;
+  const xs = [88, 180, 272];
+  const nNodes = stations.length + 1; // + דגל סיום
+  const rows = Math.ceil(nNodes / perRow);
+  const H = y0 + (rows - 1) * rowH + 52;
+  const pt = i => {
+    const r = Math.floor(i / perRow), k = i % perRow;
+    const xIdx = (r % 2 === 0) ? (perRow - 1 - k) : k; // מתחילים מימין, כמו קריאה בעברית
+    return { x: xs[xIdx], y: y0 + r * rowH };
+  };
+  // ציור הדרך: קו לאורך כל שורה + פניית פרסה מעוגלת בין שורות
+  let d = '';
+  for(let r = 0; r < rows; r++){
+    const y = y0 + r * rowH;
+    const [xa, xb] = (r % 2 === 0) ? [W - m, m] : [m, W - m];
+    d += (r === 0 ? `M ${xa} ${y} ` : '') + `L ${xb} ${y} `;
+    if(r < rows - 1){
+      const sweep = (xb === m) ? 1 : 0;
+      d += `A ${rowH/2} ${rowH/2} 0 0 ${sweep} ${xb} ${y + rowH} `;
+    }
+  }
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <path d="${d}" stroke="#e2e8f0" stroke-width="26" fill="none" stroke-linecap="round"/>
+    <path d="${d}" stroke="#fff" stroke-width="3" stroke-dasharray="9 12" fill="none" stroke-linecap="round"/>`;
+  stations.forEach((s, i) => {
+    const p = pt(i);
+    const complete = s.done === s.total;
+    const isCurr = i === currIdx;
+    const ring = complete ? 'var(--green)' : s.col.ac;
+    const fill = complete ? 'var(--green-soft)' : s.col.bg;
+    svg += `<g class="station" onclick="openCatItems('${s.id}')">`;
+    if(isCurr) svg += `<circle cx="${p.x}" cy="${p.y}" r="29" fill="none" stroke="${s.col.ac}" stroke-width="2" stroke-dasharray="5 5" opacity=".7"/>`;
+    svg += `
+      <circle cx="${p.x}" cy="${p.y}" r="22" fill="${fill}" stroke="${ring}" stroke-width="2.5"/>
+      <text x="${p.x}" y="${p.y + 6}" text-anchor="middle" font-size="18">${complete ? '✅' : s.emoji}</text>
+      <rect x="${p.x - 20}" y="${p.y + 26}" width="40" height="19" rx="9.5" fill="${complete ? 'var(--green)' : s.col.ac}"/>
+      <text x="${p.x}" y="${p.y + 39.5}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff" direction="ltr">${s.done}/${s.total}</text>
+    </g>`;
+    if(isCurr) svg += `<text class="cartmark" x="${p.x}" y="${p.y - 34}" text-anchor="middle" font-size="24">🛒</text>`;
+  });
+  // דגל סיום
+  const f = pt(stations.length);
+  svg += `<g>
+    <circle cx="${f.x}" cy="${f.y}" r="22" fill="${allDone ? 'var(--green-soft)' : '#f1f5f9'}" stroke="${allDone ? 'var(--green)' : '#cbd5e1'}" stroke-width="2.5" ${allDone ? '' : 'stroke-dasharray="4 4"'}/>
+    <text x="${f.x}" y="${f.y + 6}" text-anchor="middle" font-size="18">${allDone ? '🎉' : '🏁'}</text>
+  </g>`;
+  if(currIdx === stations.length) svg += `<text class="cartmark" x="${f.x}" y="${f.y - 34}" text-anchor="middle" font-size="24">🛒</text>`;
+  svg += `</svg>`;
+  return svg;
+}
+function openCatItems(catId){
+  const c = state.cats.find(x => x.id === catId); if(!c) return;
+  const items = c.items.filter(i => i.need);
+  if(!items.length){ closeModal(); return; }
+  const done = items.filter(i => i.bought).length;
+  const col = catCol(c);
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${c.emoji} ${esc(c.name)}
+      <span style="font-size:13px;background:${col.bg};color:${col.ac};border-radius:999px;padding:3px 12px;direction:ltr">${done}/${items.length}</span>
+    </h2>
+    <div class="msub">הקישו על פריט כדי לסמן שנאסף.</div>
+    ${items.map(i => `
+      <button class="catitem ${i.bought ? 'b' : ''}" onclick="catItemTap('${i.id}', '${catId}')">
+        <span class="cchk">${i.bought ? '✓' : ''}</span>
+        <span class="cnm">${esc(i.name)}${i.note ? `<br><span class="cnote">📌 ${esc(i.note)}</span>` : ''}</span>
+        <span class="cpr">${i.price != null ? '₪' + fmtPrice(i.price) : ''}</span>
+      </button>`).join('')}
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
+  $('#overlay').classList.add('show');
+}
+function catItemTap(id, catId){
+  const f = findItem(id); if(!f) return;
+  const opensPrice = !f.it.bought && f.it.price == null; // toggleBought יפתח חלון מחיר
+  toggleBought(id);
+  if(!opensPrice) openCatItems(catId);
+}
+
 function toggleShopCat(id){ shopClosed[id] = !shopClosed[id]; render(); }
 function toggleBought(id){
   const f = findItem(id); if(!f) return;
