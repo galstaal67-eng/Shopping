@@ -178,7 +178,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .resetlink button{font-size:12px;color:var(--soft);font-weight:500;padding:4px 10px}
 
 /* ===== Bubble stage (request view) ===== */
-.bubble-stage{position:relative;height:270px;margin-bottom:10px}
+.bubble-stage{position:relative;height:270px;margin-bottom:10px;overflow:hidden;transition:height .3s ease}
 .bubble{
   position:absolute;border-radius:50%;border:none;box-shadow:0 3px 10px rgba(15,23,42,.14);padding:0;
   transition:left .42s cubic-bezier(.2,.8,.2,1),top .42s cubic-bezier(.2,.8,.2,1),
@@ -1739,9 +1739,10 @@ function bubbleRadius(c){
   const cnt = c.items.filter(i => i.need).length;
   return Math.max(30, Math.min(56, 28 + cnt * 5));
 }
+const BUBBLE_STAGE_H = 270;
 function layoutBubbles(force){
   const stage = $('#bubbleStage'); if(!stage) return;
-  const w = stage.clientWidth || 360, h = stage.clientHeight || 270;
+  const w = stage.clientWidth || 360, h = BUBBLE_STAGE_H;
   const fresh = force || bubblePositions.__w !== w || bubblePositions.__h !== h ||
     !state.cats.every(c => bubblePositions[c.id]);
   if(!fresh) return;
@@ -1775,7 +1776,7 @@ function renderBubbleStage(){
   const dockedId = Object.keys(openCats)[0] || null;
   const stageW = stage.clientWidth || bubblePositions.__w || 360;
   const stageH = bubblePositions.__h || 270;
-  stage.style.height = stageH + 'px';
+  stage.style.height = (dockedId ? 96 : stageH) + 'px';
   const seen = new Set();
   state.cats.forEach(c => {
     seen.add(c.id);
