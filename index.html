@@ -100,6 +100,12 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 8px}
 }
 .item .note-in::placeholder{color:#d8cba8}
 .item.on .note-in{display:block}
+.item .qtybtn{
+  display:none;flex-shrink:0;border:1.5px solid var(--line);border-radius:10px;
+  padding:4px 9px;font-size:12.5px;font-weight:700;color:var(--soft);background:#fff;white-space:nowrap;
+}
+.item.on .qtybtn{display:block}
+.item .qtybtn.has{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-soft)}
 .item .del{color:#e2a0a0;font-size:17px;padding:4px 6px;display:none}
 body.editmode .item .del{display:block}
 body.editmode .item .note-in{display:block}
@@ -291,6 +297,29 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .catitem .cnm{flex:1}
 .catitem .cpr{color:var(--teal-dark);font-weight:700;font-size:13.5px}
 .catitem .cnote{font-size:12px;color:var(--amber)}
+
+/* quantity picker */
+.qtycols{display:flex;gap:10px;margin-top:6px}
+.qtycol{
+  flex:1;max-height:34vh;overflow-y:auto;border:1.5px solid var(--line);border-radius:12px;
+  padding:6px;scroll-snap-type:y proximity;
+}
+.qtycol button{
+  display:block;width:100%;text-align:center;padding:9px 6px;border-radius:9px;
+  font-size:15.5px;color:var(--muted);scroll-snap-align:center;
+}
+.qtycol button.sel{background:var(--teal);color:#fff;font-weight:700}
+.qtycol-label{font-size:12px;font-weight:700;color:var(--soft);text-align:center;margin-bottom:4px}
+.qtybadge{
+  display:inline-block;background:var(--teal-soft);color:var(--teal-dark);border-radius:999px;
+  padding:0 9px;font-size:12.5px;font-weight:700;vertical-align:2px;white-space:nowrap;
+}
+.basisrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
+.basisrow button{
+  border:1.5px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13.5px;background:#fff;
+}
+.basisrow button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);font-weight:700}
+#priceCalc{font-size:13.5px;color:var(--teal-dark);font-weight:700;margin-top:8px;min-height:18px}
 
 /* store picker */
 .storelist{max-height:38vh;overflow-y:auto;margin-top:10px}
@@ -802,9 +831,10 @@ function renderRequest(){
           <button class="chk" onclick="toggleNeed('${it.id}')">${it.need?'✓':''}</button>
           <div class="txt">
             <div class="nm" onclick="toggleNeed('${it.id}')">${esc(it.name)}</div>
-            <input class="note-in" placeholder="הערה (כמות, סוג...)" value="${esc(it.note)}"
+            <input class="note-in" placeholder="הערה (סוג, מותג...)" value="${esc(it.note)}"
                    onchange="setNote('${it.id}', this.value)">
           </div>
+          <button class="qtybtn ${it.qty?'has':''}" onclick="openQtyModal('${it.id}')">${it.qty ? esc(fmtQty(it.qty)) : '⚖️ כמות'}</button>
           <button class="del" onclick="delItem('${it.id}')">🗑</button>
         </div>`;
     });
@@ -820,6 +850,85 @@ function renderRequest(){
   m.innerHTML = html;
 }
 function toggleCat(id){ openCats[id] = !openCats[id]; render(); }
+
+/* ===== בורר כמות/משקל ===== */
+const QTY_UNITS = ['יח\'', 'ק"ג', 'גרם', 'חבילה', 'שקית', 'בקבוק', 'ליטר'];
+const UNIT_AMOUNTS = {
+  'יח\'':  Array.from({length:30}, (_,i) => i + 1),
+  'ק"ג':   [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5],
+  'גרם':   [50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900],
+  'חבילה': Array.from({length:10}, (_,i) => i + 1),
+  'שקית':  Array.from({length:10}, (_,i) => i + 1),
+  'בקבוק': Array.from({length:12}, (_,i) => i + 1),
+  'ליטר':  [0.5, 1, 1.5, 2, 3, 4, 6],
+};
+function amountLabel(a, u){
+  if(u === 'ק"ג'){
+    if(a === 0.25) return 'רבע';
+    if(a === 0.5) return 'חצי';
+    if(a === 0.75) return '¾';
+  }
+  return String(a);
+}
+function fmtQty(q){ return amountLabel(q.a, q.u) + ' ' + q.u; }
+let qtyItemId = null, qtySelA = 1, qtySelU = 'יח\'';
+function openQtyModal(id){
+  const f = findItem(id); if(!f) return;
+  qtyItemId = id;
+  qtySelU = f.it.qty ? f.it.qty.u : 'יח\'';
+  qtySelA = f.it.qty ? f.it.qty.a : UNIT_AMOUNTS[qtySelU][0];
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>⚖️ כמה ${esc(f.it.name)}?</h2>
+    <div class="msub">בחרו כמות ויחידה — הקונה יראה בדיוק כמה להביא.</div>
+    <div class="qtycols">
+      <div style="flex:1">
+        <div class="qtycol-label">כמות</div>
+        <div class="qtycol" id="qtyAmounts"></div>
+      </div>
+      <div style="flex:1">
+        <div class="qtycol-label">יחידה</div>
+        <div class="qtycol" id="qtyUnits">
+          ${QTY_UNITS.map(u => `<button class="${u === qtySelU ? 'sel' : ''}" onclick="pickQtyUnit('${u.replace(/'/g, "\\'")}')">${u}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="ghost" onclick="clearQty()">בלי כמות</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+      <button class="primary" onclick="saveQty()">שמירה</button>
+    </div>`;
+  renderQtyAmounts();
+  $('#overlay').classList.add('show');
+  setTimeout(() => { const s = document.querySelector('#qtyAmounts .sel'); if(s) s.scrollIntoView({block:'center'}); }, 60);
+}
+function renderQtyAmounts(){
+  const el = document.getElementById('qtyAmounts');
+  const amounts = UNIT_AMOUNTS[qtySelU] || [1];
+  if(!amounts.includes(qtySelA)) qtySelA = amounts[0];
+  el.innerHTML = amounts.map(a =>
+    `<button class="${a === qtySelA ? 'sel' : ''}" onclick="pickQtyAmount(${a})">${amountLabel(a, qtySelU)}</button>`).join('');
+}
+function pickQtyUnit(u){
+  qtySelU = u;
+  document.querySelectorAll('#qtyUnits button').forEach(b => b.classList.toggle('sel', b.textContent === u));
+  renderQtyAmounts();
+}
+function pickQtyAmount(a){
+  qtySelA = a;
+  document.querySelectorAll('#qtyAmounts button').forEach(b => b.classList.toggle('sel', b.textContent === amountLabel(a, qtySelU)));
+}
+function saveQty(){
+  const f = findItem(qtyItemId); if(!f) return;
+  f.it.qty = { a: qtySelA, u: qtySelU };
+  save(); closeModal(); render();
+  toast('⚖️ ' + f.it.name + ': ' + fmtQty(f.it.qty));
+}
+function clearQty(){
+  const f = findItem(qtyItemId); if(!f) return;
+  delete f.it.qty;
+  save(); closeModal(); render();
+}
 
 /* ===== לוח מודעות משפחתי ===== */
 function fmtAgo(ts){
@@ -1003,7 +1112,7 @@ function renderShop(){
         <button class="main-tap" onclick="toggleBought('${it.id}')">
           <span class="bigchk">${it.bought?'✓':''}</span>
           <span class="stxt">
-            <span class="snm">${esc(it.name)} ${isNewReq(it) ? `<span class="newtag">🆕 ${esc(it.addedBy || 'נוסף עכשיו')}</span>` : ''}</span>
+            <span class="snm">${esc(it.name)} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''} ${isNewReq(it) ? `<span class="newtag">🆕 ${esc(it.addedBy || 'נוסף עכשיו')}</span>` : ''}</span>
             ${it.note ? `<span class="snote">📌 ${esc(it.note)}</span>` : ''}
           </span>
         </button>
@@ -1099,7 +1208,7 @@ function openCatItems(catId){
     ${items.map(i => `
       <button class="catitem ${i.bought ? 'b' : ''}" onclick="catItemTap('${i.id}', '${catId}')">
         <span class="cchk">${i.bought ? '✓' : ''}</span>
-        <span class="cnm">${esc(i.name)}${i.note ? `<br><span class="cnote">📌 ${esc(i.note)}</span>` : ''}</span>
+        <span class="cnm">${esc(i.name)} ${i.qty ? `<span class="qtybadge">${esc(fmtQty(i.qty))}</span>` : ''}${i.note ? `<br><span class="cnote">📌 ${esc(i.note)}</span>` : ''}</span>
         <span class="cpr">${i.price != null ? '₪' + fmtPrice(i.price) : ''}</span>
       </button>`).join('')}
     <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
@@ -1239,6 +1348,7 @@ function finishTrip(){
     items: all.map(x => ({
       name: x.it.name, cat: x.cat.id, catName: x.cat.name, emoji: x.cat.emoji,
       note: x.it.note || '', bought: !!x.it.bought,
+      ...(x.it.qty ? {qty: x.it.qty} : {}),
       ...(x.it.price != null ? {price: x.it.price} : {})
     })),
   };
@@ -1466,12 +1576,38 @@ function cartTotal(){
   neededItems().forEach(x => { if(x.it.bought && x.it.price != null) t += x.it.price; });
   return t;
 }
+/* בסיסי מחיר לפי סוג היחידה: המחיר על המדף הוא לרוב לק"ג / ל-100 גרם / ליחידה */
+function priceBases(qty){
+  if(!qty) return [];
+  const isWeight = qty.u === 'ק"ג' || qty.u === 'גרם';
+  if(isWeight){
+    return [
+      { k:'total', label:'לכל הכמות (' + fmtQty(qty) + ')' },
+      { k:'kg',    label:'לק"ג' },
+      { k:'100g',  label:'ל-100 גרם' },
+    ];
+  }
+  return [
+    { k:'total', label:'לכל הכמות (' + fmtQty(qty) + ')' },
+    { k:'unit',  label:'ל' + (qty.u === 'יח\'' ? 'יחידה' : qty.u) + ' אחת' },
+  ];
+}
+function priceFromBasis(val, basis, qty){
+  if(!qty || basis === 'total') return val;
+  if(basis === 'kg')   return qty.u === 'ק"ג' ? val * qty.a : val * qty.a / 1000;
+  if(basis === '100g') return qty.u === 'גרם' ? val * qty.a / 100 : val * qty.a * 10;
+  if(basis === 'unit') return val * qty.a;
+  return val;
+}
+let priceBasis = 'total';
 function openPriceModal(id){
   const f = findItem(id); if(!f) return;
   const it = f.it;
+  priceBasis = 'total';
+  const bases = priceBases(it.qty);
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>₪ מחיר — ${esc(it.name)}</h2>
+    <h2>₪ מחיר — ${esc(it.name)} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''}</h2>
     <div class="msub">צלמו את תווית המחיר שעל המדף או על השקית — או הזינו ידנית.</div>
     <button class="camline" onclick="$('#priceFile').click()">📷 צלם / העלה תווית מחיר</button>
     <input type="file" id="priceFile" accept="image/*" capture="environment" style="display:none" onchange="onPriceFile(this)">
@@ -1479,7 +1615,14 @@ function openPriceModal(id){
     <div class="pricechips" id="ocrChips"></div>
     <label>מחיר (₪)</label>
     <input type="text" inputmode="decimal" id="priceIn" value="${it.price!=null ? fmtPrice(it.price) : ''}"
-           placeholder="0.00" style="direction:ltr;text-align:right;font-size:20px;font-weight:700">
+           placeholder="0.00" style="direction:ltr;text-align:right;font-size:20px;font-weight:700"
+           oninput="updatePriceCalc('${it.id}')">
+    ${bases.length ? `
+    <label>המחיר שהזנתם הוא:</label>
+    <div class="basisrow">
+      ${bases.map(b => `<button class="${b.k === 'total' ? 'sel' : ''}" data-k="${b.k}" onclick="pickBasis('${b.k}', '${it.id}')">${b.label}</button>`).join('')}
+    </div>
+    <div id="priceCalc"></div>` : ''}
     ${it.bought ? '' : `
     <div class="checkline">
       <input type="checkbox" id="alsoBought" checked>
@@ -1493,16 +1636,33 @@ function openPriceModal(id){
   $('#overlay').classList.add('show');
   if(it.price == null) setTimeout(() => { const p = $('#priceIn'); if(p) p.focus(); }, 250);
 }
+function pickBasis(k, itemId){
+  priceBasis = k;
+  document.querySelectorAll('.basisrow button').forEach(b => b.classList.toggle('sel', b.dataset.k === k));
+  updatePriceCalc(itemId);
+}
+function updatePriceCalc(itemId){
+  const el = document.getElementById('priceCalc');
+  if(!el) return;
+  const f = findItem(itemId);
+  const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
+  const val = parseFloat(raw);
+  if(!f || !f.it.qty || priceBasis === 'total' || !raw || isNaN(val) || val <= 0){ el.textContent = ''; return; }
+  const total = priceFromBasis(val, priceBasis, f.it.qty);
+  el.textContent = '🧮 סה"כ ל' + fmtQty(f.it.qty) + ': ₪' + fmtPrice(total);
+}
 function savePrice(id){
   const f = findItem(id); if(!f) return;
   const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
   const val = parseFloat(raw);
   if(!raw || isNaN(val) || val <= 0 || val >= 10000){ toast('הזינו מחיר תקין'); return; }
-  f.it.price = Math.round(val * 100) / 100;
+  const total = priceFromBasis(val, priceBasis, f.it.qty);
+  if(total >= 10000){ toast('המחיר המחושב גבוה מדי — בדקו את הבסיס'); return; }
+  f.it.price = Math.round(total * 100) / 100;
   const ab = $('#alsoBought');
   if(ab && ab.checked) f.it.bought = true;
   save(); closeModal(); render();
-  toast('₪' + fmtPrice(f.it.price) + ' נשמר ל"' + f.it.name + '"');
+  toast('₪' + fmtPrice(f.it.price) + ' נשמר ל"' + f.it.name + '"' + (f.it.qty && priceBasis !== 'total' ? ' (' + fmtQty(f.it.qty) + ')' : ''));
 }
 function removePrice(id){
   const f = findItem(id); if(!f) return;
@@ -1571,7 +1731,7 @@ function listAsText(){
     const items = c.items.filter(i => i.need);
     if(!items.length) return;
     out += '\n*' + c.emoji + ' ' + c.name + '*\n';
-    items.forEach(i => { out += '▫️ ' + i.name + (i.note ? ' _(' + i.note + ')_' : '') + '\n'; });
+    items.forEach(i => { out += '▫️ ' + i.name + (i.qty ? ' — ' + fmtQty(i.qty) : '') + (i.note ? ' _(' + i.note + ')_' : '') + '\n'; });
   });
   const url = location.href.split('#')[0];
   out += '\nלרשימה האינטראקטיבית: ' + url;
