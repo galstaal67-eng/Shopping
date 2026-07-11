@@ -97,7 +97,7 @@ main{max-width:640px;margin:0 auto;padding:14px 12px 8px}
 /* ===== Category cards ===== */
 .cat{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
 .cat-head{
-  width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:right;
+  width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:start;
 }
 .cat-head .emoji{font-size:22px}
 .cat-head .name{font-weight:700;font-size:16.5px;flex:1}
@@ -200,7 +200,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .shopcat{margin-bottom:14px}
 .shopcat-head{
   width:100%;font-size:14px;color:var(--muted);font-weight:700;margin:0 0 7px;padding:6px 4px;
-  display:flex;align-items:center;gap:7px;text-align:right;
+  display:flex;align-items:center;gap:7px;text-align:start;
 }
 .shopcat-head .cc{font-size:11.5px;background:#e8edf3;border-radius:999px;padding:1px 8px;color:var(--soft)}
 .shopcat-head .sp{flex:1}
@@ -249,7 +249,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 
 /* history */
 .hcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
-.hhead{width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:right}
+.hhead{width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;text-align:start}
 .hhead .hd{flex:1;min-width:0}
 .hhead .hdate{font-weight:700;font-size:15.5px}
 .hhead .hmeta{font-size:12.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
@@ -325,7 +325,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .pathcard .station:active circle{opacity:.8}
 .cartmark{animation:bob 1.2s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.catitem{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f1f5f9;width:100%;text-align:right;font-size:15.5px}
+.catitem{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f1f5f9;width:100%;text-align:start;font-size:15.5px}
 .catitem .cchk{width:26px;height:26px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
 .catitem.b .cchk{background:var(--green);border-color:var(--green)}
 .catitem.b .cnm{text-decoration:line-through;color:var(--muted)}
@@ -359,7 +359,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 /* store picker */
 .storelist{max-height:38vh;overflow-y:auto;margin-top:10px}
 .storerow{
-  display:flex;align-items:center;gap:8px;width:100%;text-align:right;
+  display:flex;align-items:center;gap:8px;width:100%;text-align:start;
   border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:7px;
   background:#fff;font-size:14.5px;
 }
@@ -380,7 +380,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .bench .btitle{font-weight:700;font-size:15.5px;margin-bottom:8px}
 .benchtbl{width:100%;border-collapse:collapse;font-size:13.5px}
 .benchtbl th,.benchtbl td{padding:6px 8px;text-align:center;border-bottom:1px solid #f1f5f9}
-.benchtbl td:first-child{text-align:right;color:var(--muted)}
+.benchtbl td:first-child{text-align:start;color:var(--muted)}
 .benchtbl th{color:var(--soft);font-size:12px}
 .benchtbl td:nth-child(2){font-weight:700;color:var(--teal-dark)}
 
@@ -396,7 +396,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
   display:flex;align-items:center;gap:4px;overflow:hidden;
 }
 .srow .main-tap{
-  flex:1;display:flex;align-items:center;gap:12px;padding:13px 14px;text-align:right;min-width:0;
+  flex:1;display:flex;align-items:center;gap:12px;padding:13px 14px;text-align:start;min-width:0;
 }
 .srow .bigchk{
   width:30px;height:30px;border-radius:50%;border:2.5px solid #cbd5e1;flex-shrink:0;
@@ -459,7 +459,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .modal .wa-btn{background:var(--wa);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px}
 .modal .ghost{background:#eef2f6;color:var(--muted)}
 .qopt{
-  display:block;width:100%;text-align:right;border:1.5px solid var(--line);border-radius:12px;
+  display:block;width:100%;text-align:start;border:1.5px solid var(--line);border-radius:12px;
   padding:11px 14px;margin-bottom:8px;font-size:14.5px;background:#fff;
 }
 .qopt.sel{border-color:var(--wa-dark);background:#f0fdf4;font-weight:700}
@@ -482,11 +482,11 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 <header>
   <div class="row">
     <div>
-      <h1>🛒 רשימת קניות</h1>
+      <h1>🛒 <span id="appTitle">רשימת קניות</span></h1>
     </div>
     <div style="display:flex;gap:8px">
-      <button class="iconbtn" id="chatBtn" title="צ'אט משפחתי" style="display:none" onclick="openChat(true)">💬<span class="hbadge" id="chatBadge" style="display:none"></span></button>
-      <button class="iconbtn" id="settingsBtn" title="הגדרות">⚙️</button>
+      <button class="iconbtn" id="chatBtn" style="display:none" onclick="openChat(true)">💬<span class="hbadge" id="chatBadge" style="display:none"></span></button>
+      <button class="iconbtn" id="settingsBtn">⚙️</button>
     </div>
   </div>
 </header>
@@ -498,21 +498,21 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
     <span class="cnt" id="summaryCnt"></span>
     <button class="send" id="sendListBtn">
       <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
-      שלח לקונה
+      <span id="sendListText">שלח לקונה</span>
     </button>
   </div>
 </div>
 
 <nav class="tabs">
   <button id="tab-request" class="active" onclick="setView('request')">
-    <span class="ticon">📝</span>מה צריך
+    <span class="ticon">📝</span><span id="tabRequestText">מה צריך</span>
   </button>
   <button id="tab-shop" onclick="setView('shop')">
-    <span class="ticon">🛍️</span>קנייה
+    <span class="ticon">🛍️</span><span id="tabShopText">קנייה</span>
     <span class="badge" id="shopBadge" style="display:none"></span>
   </button>
   <button id="tab-history" onclick="setView('history')">
-    <span class="ticon">🧾</span>היסטוריה
+    <span class="ticon">🧾</span><span id="tabHistoryText">היסטוריה</span>
   </button>
 </nav>
 
@@ -526,65 +526,206 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
    "סימון מוצרים לרכישה"), כולל ההערות המקוריות, ומועשר במוצרים
    נפוצים נוספים. פריטים שהיו מסומנים באקסל מסומנים גם כאן.
 ================================================================ */
+const N = (he,en,ru,ar) => ({he,en,ru,ar});
 const SEED = [
- { id:'veg', name:'ירקות', emoji:'🍅', items:[
-   ['עגבנייה','אדומה',1],['עגבניות שרי','',0],['מלפפון','קשים',1],['פלפל אדום','',0],['פלפל צהוב','',0],
-   ['פלפל חריף','',0],['קישוא','',0],['חציל','',0],['כרובית','ארוזה',0],['ברוקולי','',1],
-   ['כרוב לבן','',0],['כרוב סגול','',1],['שעועית ירוקה','',0],['אפונה','',0],['תירס','',1],
-   ['דלעת','',0],['דלורית','',0],['פטריות','',0],['אבוקדו','',0],['זיתים ירוקים','',0],['צ׳ילי מתוק','',0],
+ { id:'veg', name:N('ירקות','Vegetables','Овощи','خضروات'), emoji:'🍅', items:[
+   [N('עגבנייה','Tomato','Помидор','طماطم'),N('אדומה','red','красный','أحمر'),1],
+   [N('עגבניות שרי','Cherry tomatoes','Помидоры черри','طماطم كرزية'),'',0],
+   [N('מלפפון','Cucumber','Огурец','خيار'),N('קשים','firm','твёрдые','صلب'),1],
+   [N('פלפל אדום','Red pepper','Красный перец','فلفل أحمر'),'',0],
+   [N('פלפל צהוב','Yellow pepper','Жёлтый перец','فلفل أصفر'),'',0],
+   [N('פלפל חריף','Hot pepper','Острый перец','فلفل حار'),'',0],
+   [N('קישוא','Zucchini','Кабачок','كوسة'),'',0],
+   [N('חציל','Eggplant','Баклажан','باذنجان'),'',0],
+   [N('כרובית','Cauliflower','Цветная капуста','قرنبيط'),N('ארוזה','packaged','в упаковке','معبأ'),0],
+   [N('ברוקולי','Broccoli','Брокколи','بروكلي'),'',1],
+   [N('כרוב לבן','White cabbage','Белокочанная капуста','ملفوف أبيض'),'',0],
+   [N('כרוב סגול','Purple cabbage','Краснокочанная капуста','ملفوف أحمر'),'',1],
+   [N('שעועית ירוקה','Green beans','Стручковая фасоль','فاصولياء خضراء'),'',0],
+   [N('אפונה','Peas','Горох','بازلاء'),'',0],
+   [N('תירס','Corn','Кукуруза','ذرة'),'',1],
+   [N('דלעת','Pumpkin','Тыква','يقطين'),'',0],
+   [N('דלורית','Butternut squash','Мускатная тыква','قرع العسل'),'',0],
+   [N('פטריות','Mushrooms','Грибы','فطر'),'',0],
+   [N('אבוקדו','Avocado','Авокадо','أفوكادو'),'',0],
+   [N('זיתים ירוקים','Green olives','Зелёные оливки','زيتون أخضر'),'',0],
+   [N('צ׳ילי מתוק','Sweet chili','Сладкий чили','فلفل حلو'),'',0],
  ]},
- { id:'roots', name:'שורשים ובצלים', emoji:'🥔', items:[
-   ['בצל לבן','בינוניים',1],['בצל סגול','',0],['שום','',0],['תפוח אדמה','',1],['בטטה','',0],
-   ['גזר','',1],['סלק','',0],['צנון','',0],['צנונית','',0],['קולרבי','',0],['שומר','',0],['ג׳ינג׳ר','',0],
+ { id:'roots', name:N('שורשים ובצלים','Roots & Onions','Корнеплоды и лук','جذور وبصل'), emoji:'🥔', items:[
+   [N('בצל לבן','White onion','Белый лук','بصل أبيض'),N('בינוניים','medium','средние','متوسط'),1],
+   [N('בצל סגול','Red onion','Красный лук','بصل أحمر'),'',0],
+   [N('שום','Garlic','Чеснок','ثوم'),'',0],
+   [N('תפוח אדמה','Potato','Картофель','بطاطا'),'',1],
+   [N('בטטה','Sweet potato','Батат','بطاطا حلوة'),'',0],
+   [N('גזר','Carrot','Морковь','جزر'),'',1],
+   [N('סלק','Beet','Свёкла','شمندر'),'',0],
+   [N('צנון','Radish','Редис','فجل'),'',0],
+   [N('צנונית','Daikon','Дайкон','فجل أبيض'),'',0],
+   [N('קולרבי','Kohlrabi','Кольраби','كرنب سلق'),'',0],
+   [N('שומר','Fennel','Фенхель','شمر'),'',0],
+   [N('ג׳ינג׳ר','Ginger','Имбирь','زنجبيل'),'',0],
  ]},
- { id:'herbs', name:'עלים ותבלינים', emoji:'🌿', items:[
-   ['חסה','',0],['עלי תרד','',0],['פטרוזיליה','2 שקיות',1],['כוסברה','2 שקיות',1],
-   ['שמיר','',0],['בצל ירוק','',0],['נענע','',0],['סלרי','',0],
+ { id:'herbs', name:N('עלים ותבלינים','Leafy Greens & Herbs','Зелень и травы','أوراق وأعشاب'), emoji:'🌿', items:[
+   [N('חסה','Lettuce','Салат','خس'),'',0],
+   [N('עלי תרד','Spinach leaves','Листья шпината','أوراق سبانخ'),'',0],
+   [N('פטרוזיליה','Parsley','Петрушка','بقدونس'),N('2 שקיות','2 bags','2 пакета','كيسين'),1],
+   [N('כוסברה','Cilantro','Кинза','كزبرة'),N('2 שקיות','2 bags','2 пакета','كيسين'),1],
+   [N('שמיר','Dill','Укроп','شبت'),'',0],
+   [N('בצל ירוק','Green onion','Зелёный лук','بصل أخضر'),'',0],
+   [N('נענע','Mint','Мята','نعناع'),'',0],
+   [N('סלרי','Celery','Сельдерей','كرفس'),'',0],
  ]},
- { id:'fruit', name:'פירות', emoji:'🍎', items:[
-   ['תפוח','',1],['בננה','בשלות',0],['תפוז','',0],['אגס','',0],['ענבים','',0],['אפרסק','',0],
-   ['שזיף','',0],['משמש','',0],['נקטרינה','',0],['דובדבן','',0],['תות שדה','',0],['אננס','',0],
-   ['מנגו','',0],['פפאיה','',0],['קיווי','',0],['אבטיח','',0],['מלון','',0],['רימון','',0],
-   ['תאנה','',0],['אפרסמון','',0],['שסק','',1],['קלמנטינה','',0],['אשכולית','',0],['לימון','',0],
-   ['תמרים','',0],['אגוזים / שקדים','',0],
+ { id:'fruit', name:N('פירות','Fruit','Фрукты','فواكه'), emoji:'🍎', items:[
+   [N('תפוח','Apple','Яблоко','تفاح'),'',1],
+   [N('בננה','Banana','Банан','موز'),N('בשלות','ripe','спелые','ناضج'),0],
+   [N('תפוז','Orange','Апельсин','برتقال'),'',0],
+   [N('אגס','Pear','Груша','كمثرى'),'',0],
+   [N('ענבים','Grapes','Виноград','عنب'),'',0],
+   [N('אפרסק','Peach','Персик','خوخ'),'',0],
+   [N('שזיף','Plum','Слива','برقوق'),'',0],
+   [N('משמש','Apricot','Абрикос','مشمش'),'',0],
+   [N('נקטרינה','Nectarine','Нектарин','نكتارين'),'',0],
+   [N('דובדבן','Cherry','Черешня','كرز'),'',0],
+   [N('תות שדה','Strawberry','Клубника','فراولة'),'',0],
+   [N('אננס','Pineapple','Ананас','أناناس'),'',0],
+   [N('מנגו','Mango','Манго','مانجو'),'',0],
+   [N('פפאיה','Papaya','Папайя','بابايا'),'',0],
+   [N('קיווי','Kiwi','Киви','كيوي'),'',0],
+   [N('אבטיח','Watermelon','Арбуз','بطيخ'),'',0],
+   [N('מלון','Melon','Дыня','شمام'),'',0],
+   [N('רימון','Pomegranate','Гранат','رمان'),'',0],
+   [N('תאנה','Fig','Инжир','تين'),'',0],
+   [N('אפרסמון','Persimmon','Хурма','كاكي'),'',0],
+   [N('שסק','Loquat','Мушмула','إسكدنيا'),'',1],
+   [N('קלמנטינה','Clementine','Клементин','كليمنتينا'),'',0],
+   [N('אשכולית','Grapefruit','Грейпфрут','جريب فروت'),'',0],
+   [N('לימון','Lemon','Лимон','ليمون'),'',0],
+   [N('תמרים','Dates','Финики','تمر'),'',0],
+   [N('אגוזים / שקדים','Nuts / almonds','Орехи / миндаль','مكسرات / لوز'),'',0],
  ]},
- { id:'meat', name:'בשר ודגים', emoji:'🍗', items:[
-   ['חזה עוף','טרי',1],['כרעיים עוף','',0],['כנפיים','',0],['סטייק פרגית','',0],['בשר בקר טחון','2ק"ג - טרי',0],
-   ['סטייקים','טרי',0],['צלי כתף בקר','',0],['סינטה','',0],['צלעות כבש','',0],['שווארמה הודו','',0],
-   ['פרגיות','',0],['שניצל עוף','',0],['נקניקיות','',0],['קבב בקר','',0],['פילה סלמון','',0],
-   ['דניס טרי','',0],['לברק','',0],['אמנון (מושט)','',0],['טונה בהירה בשימור','',0],['פילה מוסר ים','',0],
-   ['נסיכת הנילוס','',0],['קרפיון','',0],['קציצות דגים מוכנות','',0],
+ { id:'meat', name:N('בשר ודגים','Meat & Fish','Мясо и рыба','لحوم وأسماك'), emoji:'🍗', items:[
+   [N('חזה עוף','Chicken breast','Куриная грудка','صدر دجاج'),N('טרי','fresh','свежая','طازج'),1],
+   [N('כרעיים עוף','Chicken thighs','Куриные бёдра','أفخاذ دجاج'),'',0],
+   [N('כנפיים','Wings','Крылышки','أجنحة دجاج'),'',0],
+   [N('סטייק פרגית','Chicken thigh steak','Стейк из бедра курицы','ستيك فراخ'),'',0],
+   [N('בשר בקר טחון','Ground beef','Говяжий фарш','لحم بقر مفروم'),N('2ק"ג - טרי','2kg - fresh','2кг - свежий','2 كغ - طازج'),0],
+   [N('סטייקים','Steaks','Стейки','ستيك'),N('טרי','fresh','свежие','طازج'),0],
+   [N('צלי כתף בקר','Beef shoulder roast','Говяжья лопатка','كتف بقر للطبخ'),'',0],
+   [N('סינטה','Sirloin','Стейк из вырезки','سنطة'),'',0],
+   [N('צלעות כבש','Lamb chops','Бараньи рёбра','أضلاع خروف'),'',0],
+   [N('שווארמה הודו','Turkey shawarma','Шаурма из индейки','شاورما ديك رومي'),'',0],
+   [N('פרגיות','Chicken thigh fillets','Куриное филе бедра','أفخاذ دجاج مقطعة'),'',0],
+   [N('שניצל עוף','Chicken schnitzel','Куриный шницель','شنيتزل دجاج'),'',0],
+   [N('נקניקיות','Sausages','Сосиски','نقانق'),'',0],
+   [N('קבב בקר','Beef kebab','Говяжий кебаб','كباب لحم بقر'),'',0],
+   [N('פילה סלמון','Salmon fillet','Филе лосося','فيليه سلمون'),'',0],
+   [N('דניס טרי','Fresh sea bream','Свежий дорадо','دنيس طازج'),'',0],
+   [N('לברק','Sea bass','Морской окунь','لقز'),'',0],
+   [N('אמנון (מושט)','Tilapia','Тилапия','بلطي'),'',0],
+   [N('טונה בהירה בשימור','Canned light tuna','Тунец консервированный светлый','تونة خفيفة معلبة'),'',0],
+   [N('פילה מוסר ים','Grouper fillet','Филе групера','فيليه هامور'),'',0],
+   [N('נסיכת הנילוס','Nile perch','Нильский окунь','قاروص النيل'),'',0],
+   [N('קרפיון','Carp','Карп','كارب'),'',0],
+   [N('קציצות דגים מוכנות','Ready-made fish balls','Готовые рыбные котлеты','كرات سمك جاهزة'),'',0],
  ]},
- { id:'dairy', name:'חלב וגבינות', emoji:'🥛', items:[
-   ['חלב','',0],['גבינה לבנה 9%','',0],['גבינת קוטג\' 9%','',0],['גבינה צפתית','',0],['גבינה בולגרית 9%','',0],
-   ['גבינה צהובה','',0],['גבינת שמנת','',1],['גבינת ברי','',1],['גבינה יפה','',0],['מאסדם','200גר',1],
-   ['יוגורט','',0],['יוגורט יווני','',0],['מעדני חלב','',0],['ביצים','',0],['חמאה','',0],
-   ['שמנת מתוקה','',0],['שמנת חמוצה','',0],['קוטג\'','',0],['לאבנה','',0],['מוצרלה','',0],
+ { id:'dairy', name:N('חלב וגבינות','Dairy & Cheese','Молочные продукты и сыры','ألبان وأجبان'), emoji:'🥛', items:[
+   [N('חלב','Milk','Молоко','حليب'),'',0],
+   [N('גבינה לבנה 9%','White cheese 9%','Творожный сыр 9%','جبنة بيضاء 9%'),'',0],
+   [N('גבינת קוטג\' 9%','Cottage cheese 9%','Творог 9%','جبنة قريش 9%'),'',0],
+   [N('גבינה צפתית','Tzfatit cheese','Сыр "Цфатит"','جبنة صفد'),'',0],
+   [N('גבינה בולגרית 9%','Bulgarian cheese 9%','Болгарский сыр 9%','جبنة بلغارية 9%'),'',0],
+   [N('גבינה צהובה','Yellow cheese','Жёлтый сыр','جبنة صفراء'),'',0],
+   [N('גבינת שמנת','Cream cheese','Сливочный сыр','جبنة كريمية'),'',1],
+   [N('גבינת ברי','Brie cheese','Сыр бри','جبنة بري'),'',1],
+   [N('גבינה יפה','Yafa cheese','Сыр "Яфа"','جبنة يافا'),'',0],
+   [N('מאסדם','Masada cheese','Сыр "Масада"','جبنة مسادا'),N('200גר','200g','200г','200غ'),1],
+   [N('יוגורט','Yogurt','Йогурт','لبن زبادي'),'',0],
+   [N('יוגורט יווני','Greek yogurt','Греческий йогурт','زبادي يوناني'),'',0],
+   [N('מעדני חלב','Milk desserts','Молочные десерты','حلويات حليب'),'',0],
+   [N('ביצים','Eggs','Яйца','بيض'),'',0],
+   [N('חמאה','Butter','Масло сливочное','زبدة'),'',0],
+   [N('שמנת מתוקה','Sweet cream','Сладкие сливки','كريمة حلوة'),'',0],
+   [N('שמנת חמוצה','Sour cream','Сметана','كريمة حامضة'),'',0],
+   [N('קוטג\'','Cottage cheese','Творог','جبنة قريش'),'',0],
+   [N('לאבנה','Labneh','Лабне','لبنة'),'',0],
+   [N('מוצרלה','Mozzarella','Моцарелла','موزاريلا'),'',0],
  ]},
- { id:'clean', name:'ניקיון וטואלטיקה', emoji:'🧼', items:[
-   ['סבון נוזלי','',0],['שמפו לשיער רגיל','',1],['מרכך שיער','',0],['משחת שיניים','',0],['נייר טואלט','לא עבה',0],
-   ['נייר סופג','',0],['סמרטוטים לכיור','',0],['סמרטוט רצפה חד״פ','',0],['סמרטוטי מטבח','',0],
-   ['שקיות גדולות לפח אשפה','70/90',0],['שקיות סנדוויץ׳','',0],['מגש אלומיניום','גדול',1],['נוזל כלים','',0],
-   ['אבקת כביסה / ג׳ל','',0],['מרכך כביסה','',0],['אקונומיקה','',0],['נוזל רצפות','',0],
-   ['מגבונים','',0],['דאודורנט','',0],
+ { id:'clean', name:N('ניקיון וטואלטיקה','Cleaning & Toiletries','Бытовая химия и гигиена','تنظيف ومستلزمات'), emoji:'🧼', items:[
+   [N('סבון נוזלי','Liquid soap','Жидкое мыло','صابون سائل'),'',0],
+   [N('שמפו לשיער רגיל','Shampoo, normal hair','Шампунь для нормальных волос','شامبو للشعر العادي'),'',1],
+   [N('מרכך שיער','Hair conditioner','Кондиционер для волос','بلسم للشعر'),'',0],
+   [N('משחת שיניים','Toothpaste','Зубная паста','معجون أسنان'),'',0],
+   [N('נייר טואלט','Toilet paper','Туалетная бумага','ورق تواليت'),N('לא עבה','not thick','не толстая','غير سميك'),0],
+   [N('נייר סופג','Paper towels','Бумажные полотенца','مناديل ورقية'),'',0],
+   [N('סמרטוטים לכיור','Sink cloths','Тряпки для раковины','قماش للمغسلة'),'',0],
+   [N('סמרטוט רצפה חד״פ','Disposable floor cloth','Одноразовая тряпка для пола','قماش أرضية للاستخدام مرة واحدة'),'',0],
+   [N('סמרטוטי מטבח','Kitchen cloths','Кухонные тряпки','قماش مطبخ'),'',0],
+   [N('שקיות גדולות לפח אשפה','Large trash bags','Большие мусорные пакеты','أكياس قمامة كبيرة'),N('70/90','70/90','70/90','70/90'),0],
+   [N('שקיות סנדוויץ׳','Sandwich bags','Пакеты для сэндвичей','أكياس ساندويتش'),'',0],
+   [N('מגש אלומיניום','Aluminum tray','Алюминиевый поднос','صينية ألمنيوم'),N('גדול','large','большой','كبيرة'),1],
+   [N('נוזל כלים','Dish soap','Средство для мытья посуды','سائل جلي'),'',0],
+   [N('אבקת כביסה / ג׳ל','Laundry powder / gel','Стиральный порошок / гель','مسحوق غسيل / جل'),'',0],
+   [N('מרכך כביסה','Fabric softener','Кондиционер для белья','منعم أقمشة'),'',0],
+   [N('אקונומיקה','Bleach','Отбеливатель','مبيض'),'',0],
+   [N('נוזל רצפות','Floor cleaner','Средство для пола','منظف أرضيات'),'',0],
+   [N('מגבונים','Wet wipes','Влажные салфетки','مناديل مبللة'),'',0],
+   [N('דאודורנט','Deodorant','Дезодорант','مزيل عرق'),'',0],
  ]},
- { id:'dry', name:'יבשים ומזווה', emoji:'🥫', items:[
-   ['אורז לבן','',1],['אורז מלא','',0],['אורז מלא שחור','',0],['פסטה מסוגים שונים','',0],['פתיתים','',0],
-   ['קוסקוס','',0],['קינואה','',0],['עדשים ירוקות','',0],['עדשים כתומות','',0],['גרגירי חומוס יבשים','',0],
-   ['שעועית יבשה','',0],['קמח חיטה לבן/מלא','',0],['קמח רגיל','',0],['סוכר לבן/חום','',0],
-   ['מלח שולחן/אטלנטי','',0],['שמן זית','',1],['שמן קנולה/חמניות','',0],['שימורי טונה','',0],
-   ['שימורי תירס','',0],['רסק עגבניות','',0],['חלב עמיד/צמחי','',0],['קפה נמס/מגורען','',0],
-   ['תה בטעמים שונים','',0],['שיבולת שועל','',0],['קורנפלקס/דגני בוקר','',0],['פירורי לחם','',1],
-   ['טחינה גולמית','',0],['דבש/סילאן','',0],['חומץ סינתטי/בלסמי','',0],['רוטב סויה','',0],
-   ['שימורי זיתים','',0],['חמאת בוטנים','',0],['ריבה','',0],['אבקת אפייה / שמרים','',0],
+ { id:'dry', name:N('יבשים ומזווה','Dry Goods & Pantry','Крупы и бакалея','أطعمة جافة ومؤن'), emoji:'🥫', items:[
+   [N('אורז לבן','White rice','Белый рис','أرز أبيض'),'',1],
+   [N('אורז מלא','Brown rice','Бурый рис','أرز بني'),'',0],
+   [N('אורז מלא שחור','Black whole rice','Чёрный нешлифованный рис','أرز أسود كامل'),'',0],
+   [N('פסטה מסוגים שונים','Assorted pasta','Разные виды макарон','معكرونة بأنواع مختلفة'),'',0],
+   [N('פתיתים','Ptitim','Птитим','فتيتيم'),'',0],
+   [N('קוסקוס','Couscous','Кускус','كسكس'),'',0],
+   [N('קינואה','Quinoa','Киноа','كينوا'),'',0],
+   [N('עדשים ירוקות','Green lentils','Зелёная чечевица','عدس أخضر'),'',0],
+   [N('עדשים כתומות','Red lentils','Красная чечевица','عدس أحمر'),'',0],
+   [N('גרגירי חומוס יבשים','Dried chickpeas','Сухой нут','حمص جاف'),'',0],
+   [N('שעועית יבשה','Dried beans','Сухая фасоль','فاصولياء جافة'),'',0],
+   [N('קמח חיטה לבן/מלא','White/whole wheat flour','Мука пшеничная белая/цельнозерновая','طحين أبيض/كامل'),'',0],
+   [N('קמח רגיל','Plain flour','Обычная мука','طحين عادي'),'',0],
+   [N('סוכר לבן/חום','White/brown sugar','Сахар белый/коричневый','سكر أبيض/بني'),'',0],
+   [N('מלח שולחן/אטלנטי','Table/Atlantic salt','Соль столовая/атлантическая','ملح مائدة/أطلسي'),'',0],
+   [N('שמן זית','Olive oil','Оливковое масло','زيت زيتون'),'',1],
+   [N('שמן קנולה/חמניות','Canola/sunflower oil','Масло канола/подсолнечное','زيت كانولا/دوار الشمس'),'',0],
+   [N('שימורי טונה','Canned tuna','Тунец консервированный','تونة معلبة'),'',0],
+   [N('שימורי תירס','Canned corn','Кукуруза консервированная','ذرة معلبة'),'',0],
+   [N('רסק עגבניות','Tomato paste','Томатная паста','معجون طماطم'),'',0],
+   [N('חלב עמיד/צמחי','UHT/plant-based milk','Молоко длительного хранения/растительное','حليب طويل الأمد/نباتي'),'',0],
+   [N('קפה נמס/מגורען','Instant/ground coffee','Кофе растворимый/молотый','قهوة سريعة الذوبان/مطحونة'),'',0],
+   [N('תה בטעמים שונים','Assorted teas','Чай разных вкусов','شاي بنكهات مختلفة'),'',0],
+   [N('שיבולת שועל','Oats','Овсянка','شوفان'),'',0],
+   [N('קורנפלקס/דגני בוקר','Cornflakes/cereal','Кукурузные хлопья','كورن فليكس/حبوب إفطار'),'',0],
+   [N('פירורי לחם','Bread crumbs','Панировочные сухари','فتات خبز'),'',1],
+   [N('טחינה גולמית','Raw tahini','Сырая тахина','طحينة نيئة'),'',0],
+   [N('דבש/סילאן','Honey/date syrup','Мёд/финиковый сироп','عسل/دبس تمر'),'',0],
+   [N('חומץ סינתטי/בלסמי','Synthetic/balsamic vinegar','Уксус синтетический/бальзамический','خل صناعي/بلسمي'),'',0],
+   [N('רוטב סויה','Soy sauce','Соевый соус','صلصة صويا'),'',0],
+   [N('שימורי זיתים','Jarred olives','Оливки консервированные','زيتون معلب'),'',0],
+   [N('חמאת בוטנים','Peanut butter','Арахисовое масло','زبدة الفول السوداني'),'',0],
+   [N('ריבה','Jam','Варенье','مربى'),'',0],
+   [N('אבקת אפייה / שמרים','Baking powder / yeast','Разрыхлитель / дрожжи','بيكنج باودر / خميرة'),'',0],
  ]},
- { id:'bread', name:'לחם ומאפים', emoji:'🍞', items:[
-   ['לחם פרוס','',0],['לחם מלא','',0],['פיתות','',0],['חלה לשבת','',0],['לחמניות','',0],
-   ['טורטיות','',0],['בייגלה','',0],['עוגיות','',0],['קרקרים','',0],
+ { id:'bread', name:N('לחם ומאפים','Bread & Baked Goods','Хлеб и выпечка','خبز ومخبوزات'), emoji:'🍞', items:[
+   [N('לחם פרוס','Sliced bread','Нарезной хлеб','خبز مقطع'),'',0],
+   [N('לחם מלא','Whole wheat bread','Цельнозерновой хлеб','خبز كامل'),'',0],
+   [N('פיתות','Pita bread','Питы','خبز بيتا'),'',0],
+   [N('חלה לשבת','Challah for Shabbat','Хала на субботу','خبز الحلة'),'',0],
+   [N('לחמניות','Rolls','Булочки','خبز صغير'),'',0],
+   [N('טורטיות','Tortillas','Тортильи','تورتيلا'),'',0],
+   [N('בייגלה','Bagele','Бейгале','بيغلة'),'',0],
+   [N('עוגיות','Cookies','Печенье','بسكويت'),'',0],
+   [N('קרקרים','Crackers','Крекеры','بسكويت مالح'),'',0],
  ]},
- { id:'frozen', name:'קפואים ושתייה', emoji:'🧊', items:[
-   ['ירקות קפואים','',0],['בצק עלים/פילו','',0],['גלידה','',0],['מים מינרלים','',0],['סודה','',0],
-   ['מיץ טבעי','',0],['קולה / משקה מוגז','',0],
+ { id:'frozen', name:N('קפואים ושתייה','Frozen & Drinks','Заморозка и напитки','مجمدات ومشروبات'), emoji:'🧊', items:[
+   [N('ירקות קפואים','Frozen vegetables','Замороженные овощи','خضار مجمدة'),'',0],
+   [N('בצק עלים/פילו','Puff/phyllo pastry','Слоёное/фило тесто','عجينة مورقة/فيلو'),'',0],
+   [N('גלידה','Ice cream','Мороженое','آيس كريم'),'',0],
+   [N('מים מינרלים','Mineral water','Минеральная вода','مياه معدنية'),'',0],
+   [N('סודה','Soda water','Содовая','صودا'),'',0],
+   [N('מיץ טבעי','Natural juice','Натуральный сок','عصير طبيعي'),'',0],
+   [N('קולה / משקה מוגז','Cola / soft drink','Кола / газировка','كولا / مشروب غازي'),'',0],
  ]},
 ];
 
@@ -604,6 +745,533 @@ const CAT_COLORS = {
 };
 function catCol(c){ return CAT_COLORS[c.id] || {bg:'#eef2f6', ac:'#64748b'}; }
 
+/* ================================================================
+   i18n — עברית / English / Русский / العربية
+================================================================ */
+const LANG_KEY = 'shopping-app-lang-v1';
+function detectLang(){
+  const p = (navigator.language || 'he').slice(0,2).toLowerCase();
+  return ['he','en','ru','ar'].includes(p) ? p : 'he';
+}
+let lang = localStorage.getItem(LANG_KEY) || detectLang();
+function L(key, vars){
+  let s = (T[lang] && T[lang][key]) ?? T.he[key] ?? key;
+  if(vars) for(const k in vars) s = s.split('{'+k+'}').join(vars[k]);
+  return s;
+}
+function dispName(it){ return (it && typeof it.name === 'object') ? (it.name[lang] || it.name.he) : (it && it.name); }
+function dispNote(it){ return (it && typeof it.note === 'object') ? (it.note[lang] || it.note.he) : (it && it.note) || ''; }
+function dispCat(c){ return (c && typeof c.name === 'object') ? (c.name[lang] || c.name.he) : (c && c.name); }
+function catalogIndex(){
+  const idx = {};
+  state.cats.forEach(c => c.items.forEach(it => {
+    const names = typeof it.name === 'object' ? Object.values(it.name) : [it.name];
+    names.forEach(n => { if(n) idx[n.trim()] = it; });
+  }));
+  return idx;
+}
+function applyDir(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he' || lang === 'ar') ? 'rtl' : 'ltr';
+  document.title = L('appTitle');
+  const elAt = $('#appTitle'); if(elAt) elAt.textContent = L('appTitle');
+  const elCb = $('#chatBtn'); if(elCb) elCb.title = L('btnFamilyChat');
+  const elSb = $('#settingsBtn'); if(elSb) elSb.title = L('btnSettings');
+  const elSl = $('#sendListText'); if(elSl) elSl.textContent = L('sendListBtn');
+  const elTr = $('#tabRequestText'); if(elTr) elTr.textContent = L('tabRequest');
+  const elTs = $('#tabShopText'); if(elTs) elTs.textContent = L('tabShop');
+  const elTh = $('#tabHistoryText'); if(elTh) elTh.textContent = L('tabHistory');
+}
+function setLang(code){
+  lang = code;
+  localStorage.setItem(LANG_KEY, code);
+  applyDir();
+  if($('#overlay').classList.contains('show') && $('#modalBox').dataset.modal === 'settings') openSettings();
+  else render();
+}
+const T = {
+he:{
+appTitle:'רשימת קניות', btnFamilyChat:'צ\'אט משפחתי', btnSettings:'הגדרות', sendListBtn:'שלח לקונה',
+tabRequest:'מה צריך', tabShop:'קנייה', tabHistory:'היסטוריה',
+editCatalog:'✏️ עריכת קטלוג', resetList:'🔄 איפוס רשימה', boardTitle:'📌 לוח מודעות — משפחת {name}',
+addToListTitle:'הוסף לרשימת הקניות', toListBtn:'🛒 לרשימה',
+boardEmpty:'אין הודעות — כתבו משהו למשפחה, למשל: "צריך נייר טואלט"', boardPlaceholder:'כתבו הודעה למשפחה...',
+notePlaceholder:'הערה (סוג, מותג...)', qtyBtn:'⚖️ כמות',
+specialPlaceholder:'בקשה מיוחדת... (למשל: עוגה ליום הולדת)', addToCatPlaceholder:'הוסף מוצר ל{cat}...',
+qtyTitle:'⚖️ כמה {name}?', qtySub:'בחרו כמות ויחידה — הקונה יראה בדיוק כמה להביא.',
+qtyAmountLabel:'כמות', qtyUnitLabel:'יחידה', noQty:'בלי כמות', cancel:'ביטול', save:'שמירה',
+qtySavedToast:'⚖️ {name}: {qty}',
+now:'עכשיו', minAgo:'לפני {m} דק\'', hourAgo:'לפני {h} שע\'', boardPosted:'ההודעה פורסמה בלוח 📌',
+matchedToast:'"{name}" סומן ברשימה ({cat}) ✓', specialNoteBy:'ביקש/ה: {name}',
+addedSpecialToast:'"{name}" נוסף לבקשות מיוחדות ⭐',
+chatUnavailable:'צ\'אט זמין אחרי חיבור משפחה (⚙️ הגדרות)', chatEmpty:'אין הודעות עדיין. שאלו, ענו ובקשו מוצרים — גם באמצע קנייה.',
+productRequestTag:'🛒 בקשת מוצר', addedToList:'✓ נוסף לרשימה', addedToListBy:' ע"י {name}',
+addToListBtn:'➕ הוסף לרשימת הקנייה', chatTitle:'💬 צ\'אט — משפחת {name}',
+chatPlaceholder:'הודעה... (למשל: אין גבינה לבנה, להביא קוטג׳?)', close:'סגירה',
+productRequestBtn:'🛒 בקשת מוצר', sendChatBtn:'שלח 💬', alreadyAdded:'הבקשה כבר נוספה לרשימה ✓',
+addedToListMsg:'✓ הוספתי לרשימה: {name}', popupFrom:'💬 הודעה מ{name}', familyMember:'בן משפחה',
+quickReplyLabel:'תשובה מהירה:', quickReplyPlaceholder:'כתבו תשובה...', closeBtn:'סגור',
+addToListBtn2:'➕ הוסף לרשימה', openFullChat:'פתיחת הצ\'אט המלא 💬', sentToast:'נשלח ✓ 💬',
+addedToListToast:'"{name}" נוסף לרשימה ✓', deleteConfirm:'למחוק את "{name}" מהקטלוג?',
+resetConfirm:'לאפס את הרשימה? כל הסימונים והבקשות המיוחדות יימחקו (הקטלוג יישאר).', resetToast:'הרשימה אופסה 🔄',
+shopEmptyMsg:'הרשימה ריקה. סמנו מוצרים במסך "מה צריך" והם יופיעו כאן לקונה.', goToRequest:'📝 למילוי הרשימה',
+shopTitle:'🛍️ הקנייה שלי', collectedOf:'{done} מתוך {total} נאספו', tripStore:'📍 {chain} {name}',
+cartTotal:'🧾 מצטבר בעגלה', finishBtn:'🏁 סיים', shopperLive:'🔴 {name} בקנייה · ', shopper:'הקונה',
+startTripBtn:'▶️ התחל קנייה', dealsBtn:'🏷️ מבצעים', askAvailable:'יש שאלה? {name} זמין/ה בוואטסאפ:',
+generalQBtn:'💬 שאלה כללית', allDoneTitle:'🎉 כל הפריטים נאספו!', notifyDoneBtn:'💬 עדכן שסיימתי',
+saveHistoryResetBtn:'🏁 שמור בהיסטוריה ואפס', newReqsPrefix:'🔔 בקשות שנוספו בזמן הקנייה:',
+routeTitle:'🗺️ מסלול הקנייה', justAdded:'נוסף עכשיו', priceTitleAttr:'מחיר', askTitleAttr:'שאלה בוואטסאפ',
+tapToMark:'הקישו על פריט כדי לסמן שנאסף.', tripStartedToast:'⏱ הקנייה התחילה{store} — בהצלחה!', inStore:' ב{chain}{name}',
+storeModalTitle:'📍 איפה קונים היום?', storeModalSub:'בחרו מקום מהמאגר — הקנייה תירשם עליו ותיכנס להשוואת הרשתות.',
+storeSearchPlaceholder:'🔍 חיפוש... (למשל: שופרסל)', loadingStores:'⏳ טוען מאגר חנויות...',
+addStoreBtn:'➕ המקום לא במאגר? הוסיפו אותו', startNoStore:'התחל בלי מקום',
+storeNoConn:'⚠️ אין חיבור למאגר — אפשר להוסיף מקום ידנית (יישמר לקנייה הזו) או להתחיל בלי מקום.',
+notFoundAddIt:'לא נמצא "{q}" — הוסיפו אותו למאגר 👇', storesEmptyAddFirst:'המאגר עדיין ריק — הוסיפו את המקום הראשון 👇',
+addStoreTitle:'➕ הוספת מקום קנייה למאגר', addStoreSub:'המקום יישמר במאגר המרכזי ויהיה זמין לכל המשתמשים.',
+chainLabel:'רשת / סוג', storeNameLabel:'שם הסניף / המקום', storeNamePlaceholder:'למשל: ראשון לציון מערב / "המכולת של משה"',
+regionLabel:'אזור', back:'חזרה', saveStartBtn:'שמור והתחל קנייה', fillStoreName:'נא למלא את שם הסניף/המקום',
+savingToStores:'⏳ שומר במאגר...', storeSaveFailed:'השמירה נכשלה', storeAddedToast:'🏪 "{chain} {name}" נוסף למאגר ✓',
+savedThisTripOnly:'נשמר לקנייה הזו (אין חיבור למאגר)', listEmptyToast:'אין פריטים ברשימה',
+finishConfirm:'לסיים את הקנייה ולשמור אותה בהיסטוריה?', savedToHistoryToast:'הקנייה נשמרה בהיסטוריה 🧾',
+resetForNextConfirm:'לאפס את הרשימה לקראת הקנייה הבאה?',
+dealsTitle:'🏷️ מבצעים בחנות', checkingDeals:'⏳ בודק מבצעים...', dealsInRegion:'מבצעים באזורכם:',
+dealsComingSoon:'בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):',
+dealTag:'מבצע',
+benchTitle:'📊 השוואה אזורית — {region}', loadingBench:'⏳ טוען נתוני השוואה...', chainCompareTitle:'🏪 השוואת רשתות',
+loadingChains:'⏳ טוען נתוני רשתות...',
+historyEmpty:'עדיין אין קניות שמורות. במסך הקנייה, לחצו "▶️ התחל קנייה" ובסיום "🏁 סיים" — והקנייה תישמר כאן עם המוצרים, המחירים וזמן הקנייה.',
+collectedCount:'📦 {n}/{total} נאספו', importBtn:'📥 ייבא לרשימה חדשה',
+noChainData:'עדיין אין קניות עם מקום מסומן — בחרו חנות ב"התחל קנייה" וההשוואה תתמלא.',
+chainTh:'רשת', avgCartTh:'סל ממוצע', avgTimeTh:'⏱ ממוצע', purchasesTh:'קניות',
+chainCompareFoot:'⭐ = רשתות שהמשפחה שלכם קונה בהן. השוואה כלל-ארצית אנונימית.',
+noRegionData:'עדיין אין נתונים מאזור {region} — ההשוואה תתמלא ככל שמשפחות באזור ישתמשו באפליקציה.',
+yourFamilyTh:'המשפחה שלכם', regionAvgTh:'ממוצע אזורי', avgCartRow:'🧾 סל ממוצע', avgItemsRow:'📦 פריטים בקנייה',
+avgTimeRow:'⏱ זמן קנייה',
+benchFoot:'מבוסס על {count} קניות באזור (השוואה כללית ואנונימית — לא מול משפחה ספציפית).',
+importedToast:'יובאו {n} פריטים לרשימה ✓', deleteHistoryConfirm:'למחוק את הקנייה הזו מההיסטוריה?',
+kgBasis:'לק"ג', per100g:'ל-100 גרם', perAllQty:'לכל הכמות ({qty})', perUnit:'ל{unit} אחת', unitWord:'יחידה',
+priceModalTitle:'₪ מחיר — {name}', priceSub:'צלמו את תווית המחיר שעל המדף או על השקית — או הזינו ידנית.',
+takePhotoBtn:'📷 צלם / העלה תווית מחיר', priceLabel:'מחיר (₪)', priceIsLabel:'המחיר שהזנתם הוא:',
+markBoughtLabel:'סמן שהפריט נאסף לעגלה 🛒', removePriceBtn:'הסר מחיר', invalidPrice:'הזינו מחיר תקין',
+priceTooHigh:'המחיר המחושב גבוה מדי — בדקו את הבסיס', priceSavedToast:'₪{price} נשמר ל"{name}"{qty}',
+totalForQty:'🧮 סה"כ ל{qty}: ₪{price}', loadingOcrEngine:'⏳ טוען מנוע זיהוי...',
+ocrNoInternet:'⚠️ אין חיבור לאינטרנט — הזינו את המחיר ידנית.', ocrScanning:'🔍 מזהה מחיר בתמונה...',
+ocrNotFound:'לא זוהה מחיר 😕 נסו לצלם קרוב יותר, או הזינו ידנית.', ocrConfirm:'זה המחיר? הקישו עליו:',
+ocrFailed:'⚠️ הזיהוי נכשל — הזינו את המחיר ידנית.',
+listHeader:'🛒 *רשימת קניות* – {date}', interactiveListLink:'לרשימה האינטראקטיבית: {url}',
+listEmptyToast2:'הרשימה ריקה', doneMsg:'✅ סיימתי את הקנייה! הכול נאסף 🛒',
+totalByPrices:'🧾 סה"כ לפי המחירים שהוזנו: ₪{total}', tripDuration:'⏱ זמן קנייה: {dur}',
+canResetNote:'({name}, אפשר לאפס את הרשימה)',
+qMissing:'אין "{name}" 😕 להביא משהו דומה במקום?', qBrandSize:'לגבי "{name}" – איזה מותג / גודל להביא?',
+qHowMuch:'לגבי "{name}" – כמה בדיוק צריך?', qExpensive:'"{name}" יקר היום 💸 לוותר או לקנות בכל זאת?',
+qInStore:'אני בסופר 🛒 יש עוד משהו שצריך להוסיף?', qAlmostDone:'סיימתי כמעט – בטוח שלא שכחת כלום?',
+qToTitle:'💬 שאלה ל{name}', listOwnerDefault:'רושם הרשימה', listOwnerDefaultLong:'מי שרשם את הרשימה',
+regardingItem:'לגבי: {name}', noteInParens:' (הערה: {note})', generalQuestion:'שאלה כללית על הרשימה',
+freeTextLabel:'או ניסוח חופשי:', freeTextPlaceholder:'כתבו הודעה משלכם...', sendToWhomLabel:'למי לשלוח?',
+noPhoneSuffix:' (בלי טלפון)', tipSetPhone:'💡 טיפ: קבעו את מספר הטלפון של רושם הרשימה בהגדרות ⚙️ — וההודעה תיפתח ישר בצ׳אט הנכון.',
+sendWaBtn:'שלח בוואטסאפ', pickQOrWrite:'בחרו שאלה או כתבו הודעה',
+settingsTitle:'⚙️ הגדרות', checkingServer:'⏳ בודק חיבור לשרת...', familyOf:'👨‍👩‍👧 משפחת {name}',
+joinCodeLabel:'קוד הצטרפות: ', shareBtn:'📤 שתף', registeredMembers:'נרשמו למשפחה ({n}):',
+onlyYouHint:'עדיין רק את/ה — שתפו את הקוד כדי שכל המשפחה תצטרף 👆',
+syncHint:'הרשימה מסתנכרנת אוטומטית בין כל בני המשפחה. כשמישהו לוחץ "התחל קנייה" — כולם מקבלים איתות ויכולים לעקוב חי.',
+leaveFamilyBtn:'🚪 התנתק מהמשפחה במכשיר הזה', familyTitle:'👨‍👩‍👧 משפחה',
+familyIntro:'חברו את המשפחה: רשימה משותפת שמסתנכרנת בין הטלפונים, מעקב חי אחרי הקנייה והשוואה אזורית.',
+createFamilyBtn:'➕ צור משפחה', joinFamilyBtn:'🔗 הצטרף עם קוד',
+whoFillsHint:'מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.',
+listOwnerNameLabel:'שם רושם/ת הרשימה', listOwnerNamePlaceholder:'למשל: גל',
+listOwnerPhoneLabel:'מספר וואטסאפ של רושם/ת הרשימה', phonePlaceholder:'050-1234567',
+phoneHint:'אפשר גם בפורמט בינלאומי (9725...). כשמחוברים למשפחה — הקונה יכול לבחור לאיזה בן משפחה לשלוח.',
+factoryResetBtn:'⚠️ אתחול מלא — החזרת הקטלוג המקורי',
+factoryResetHint:'מוחק את כל השינויים, המוצרים שנוספו והסימונים, ומחזיר את הקטלוג של האקסל המקורי.',
+dbConnected:'🗄️ מסד נתונים מרכזי (Neon): <b style="color:var(--green)">מחובר ופעיל ✓</b>',
+dbNotConnected:'🗄️ מסד נתונים מרכזי: <b style="color:var(--amber)">לא מחובר</b> — פועל על אחסון זמני (Blobs). הפעילו את Neon ב-Netlify: Extensions ← Neon.',
+dbError:'🗄️ שרת: <b style="color:var(--red)">שגיאה</b> — {err}',
+dbUnavailable:'🗄️ שרת: <b style="color:var(--red)">לא זמין</b> — האפליקציה פועלת מקומית בלבד (פתחו אותה מהאתר, לא מקובץ).',
+me:'(אני)', noPhone:'בלי טלפון', joinedOn:' · הצטרף/ה {d}', waTo:'וואטסאפ ל{name}', hiWave:'היי 👋',
+languageLabel:'🌐 שפה', createFamilyTitle:'➕ יצירת משפחה', joinFamilyTitle:'🔗 הצטרפות למשפחה',
+createFamilySub:'צרו מנוי משפחתי — תקבלו קוד הצטרפות לשיתוף עם בני המשפחה.',
+joinFamilySub:'הזינו את קוד המשפחה שקיבלתם, ופרטים שלכם.', familyNameLabel:'שם המשפחה',
+familyNamePlaceholder:'למשל: משפחת סטאל', residenceRegionLabel:'אזור מגורים (להשוואה אזורית אנונימית)',
+familyCodeLabel:'קוד משפחה', yourNameLabel:'השם שלך', yourNamePlaceholder:'למשל: גל',
+yourPhoneLabel:'הטלפון הנייד שלך (לוואטסאפ)', createFamilyShortBtn:'צור משפחה', joinFamilyShortBtn:'הצטרף',
+fillNamePrompt:'נא למלא שם', oneMoment:'⏳ רגע...', somethingWrong:'משהו השתבש, נסו שוב',
+fillCodePrompt:'נא להזין קוד', familyCreatedToast:'👨‍👩‍👧 המשפחה נוצרה! קוד: {code}',
+joinedFamilyToast:'🎉 הצטרפת למשפחת {name}', noServerConn:'⚠️ אין חיבור לשרת. שימו לב: זה עובד רק באתר (Netlify), לא בקובץ מקומי.',
+shareCodeMsg:'👨‍👩‍👧 מצטרפים לרשימת הקניות של משפחת {name}!\n1. פותחים: {url}\n2. לוחצים ⚙️ ← "הצטרף עם קוד"\n3. הקוד: *{code}*',
+leaveConfirm:'להתנתק מהמשפחה במכשיר הזה? (הרשימה המשותפת תישאר אצל שאר בני המשפחה)',
+leftFamilyToast:'התנתקת מהמשפחה במכשיר הזה', settingsSavedToast:'ההגדרות נשמרו ✓',
+factoryResetConfirm:'לאתחל את האפליקציה לגמרי? כל השינויים יימחקו.', catalogResetToast:'הקטלוג אותחל',
+boardNotifyToast:'📌 {by}: {text}', chatNotifyToast:'💬 {from}: {text}',
+shoppingStartedToast:'🛍️ {name} התחיל/ה קנייה — צפו בהתקדמות במסך הקנייה!',
+singleRequestToast:'🔔 {by} הוסיף/ה בקשה: {name} ({cat})', multiRequestToast:'🔔 נוספו {n} בקשות חדשות לרשימת הקנייה!',
+region_north:'צפון', region_haifa:'חיפה והקריות', region_sharon:'השרון', region_gushdan:'גוש דן',
+region_jerusalem:'ירושלים והסביבה', region_shfela:'שפלה', region_south:'דרום', region_other:'אחר',
+unit_unit:'יח\'', unit_kg:'ק"ג', unit_gram:'גרם', unit_pack:'חבילה', unit_bag:'שקית', unit_bottle:'בקבוק', unit_liter:'ליטר',
+amt_quarter:'רבע', amt_half:'חצי', specialCat:'בקשות מיוחדות',
+inListCount:'ברשימה: {n} פריטים', myFamilyDefault:'המשפחה שלי',
+},
+en:{
+appTitle:'Shopping List', btnFamilyChat:'Family chat', btnSettings:'Settings', sendListBtn:'Send to shopper',
+tabRequest:'What\'s needed', tabShop:'Shopping', tabHistory:'History',
+editCatalog:'✏️ Edit catalog', resetList:'🔄 Reset list', boardTitle:'📌 Notice board — {name} family',
+addToListTitle:'Add to shopping list', toListBtn:'🛒 To list',
+boardEmpty:'No messages yet — write something to the family, e.g. "need toilet paper"', boardPlaceholder:'Write a message to the family...',
+notePlaceholder:'Note (type, brand...)', qtyBtn:'⚖️ Quantity',
+specialPlaceholder:'Special request... (e.g. birthday cake)', addToCatPlaceholder:'Add item to {cat}...',
+qtyTitle:'⚖️ How much {name}?', qtySub:'Pick a quantity and unit — the shopper will see exactly how much to bring.',
+qtyAmountLabel:'Amount', qtyUnitLabel:'Unit', noQty:'No quantity', cancel:'Cancel', save:'Save',
+qtySavedToast:'⚖️ {name}: {qty}',
+now:'now', minAgo:'{m} min ago', hourAgo:'{h} hr ago', boardPosted:'Message posted to the board 📌',
+matchedToast:'"{name}" marked in the list ({cat}) ✓', specialNoteBy:'Requested by: {name}',
+addedSpecialToast:'"{name}" added to special requests ⭐',
+chatUnavailable:'Chat is available after connecting a family (⚙️ Settings)', chatEmpty:'No messages yet. Ask, answer, and request items — even mid-shop.',
+productRequestTag:'🛒 Product request', addedToList:'✓ Added to list', addedToListBy:' by {name}',
+addToListBtn:'➕ Add to shopping list', chatTitle:'💬 Chat — {name} family',
+chatPlaceholder:'Message... (e.g. no white cheese, bring cottage cheese instead?)', close:'Close',
+productRequestBtn:'🛒 Product request', sendChatBtn:'Send 💬', alreadyAdded:'This request was already added ✓',
+addedToListMsg:'✓ Added to list: {name}', popupFrom:'💬 Message from {name}', familyMember:'family member',
+quickReplyLabel:'Quick reply:', quickReplyPlaceholder:'Write a reply...', closeBtn:'Close',
+addToListBtn2:'➕ Add to list', openFullChat:'Open full chat 💬', sentToast:'Sent ✓ 💬',
+addedToListToast:'"{name}" added to list ✓', deleteConfirm:'Delete "{name}" from the catalog?',
+resetConfirm:'Reset the list? All checks and special requests will be cleared (the catalog stays).', resetToast:'List reset 🔄',
+shopEmptyMsg:'The list is empty. Check off items in the "What\'s needed" tab and they\'ll appear here for the shopper.', goToRequest:'📝 Fill the list',
+shopTitle:'🛍️ My shopping', collectedOf:'{done} of {total} collected', tripStore:'📍 {chain} {name}',
+cartTotal:'🧾 Running cart total', finishBtn:'🏁 Finish', shopperLive:'🔴 {name} is shopping · ', shopper:'the shopper',
+startTripBtn:'▶️ Start shopping', dealsBtn:'🏷️ Deals', askAvailable:'Have a question? {name} is available on WhatsApp:',
+generalQBtn:'💬 General question', allDoneTitle:'🎉 All items collected!', notifyDoneBtn:'💬 Let them know I\'m done',
+saveHistoryResetBtn:'🏁 Save to history & reset', newReqsPrefix:'🔔 Requests added during shopping:',
+routeTitle:'🗺️ Shopping route', justAdded:'just added', priceTitleAttr:'Price', askTitleAttr:'Ask on WhatsApp',
+tapToMark:'Tap an item to mark it collected.', tripStartedToast:'⏱ Shopping started{store} — good luck!', inStore:' at {chain}{name}',
+storeModalTitle:'📍 Where are you shopping today?', storeModalSub:'Pick a place from the directory — the trip will be logged under it and included in chain benchmarks.',
+storeSearchPlaceholder:'🔍 Search... (e.g. Shufersal)', loadingStores:'⏳ Loading store directory...',
+addStoreBtn:'➕ Place not listed? Add it', startNoStore:'Start without a place',
+storeNoConn:'⚠️ No connection to the directory — you can add a place manually (saved for this trip only) or start without one.',
+notFoundAddIt:'"{q}" not found — add it to the directory 👇', storesEmptyAddFirst:'The directory is still empty — add the first place 👇',
+addStoreTitle:'➕ Add a shopping place', addStoreSub:'The place will be saved to the shared directory and available to all users.',
+chainLabel:'Chain / type', storeNameLabel:'Branch / place name', storeNamePlaceholder:'e.g. Downtown branch / "the corner store"',
+regionLabel:'Region', back:'Back', saveStartBtn:'Save & start shopping', fillStoreName:'Please fill in the branch/place name',
+savingToStores:'⏳ Saving to directory...', storeSaveFailed:'Save failed', storeAddedToast:'🏪 "{chain} {name}" added to the directory ✓',
+savedThisTripOnly:'Saved for this trip only (no connection to the directory)', listEmptyToast:'No items in the list',
+finishConfirm:'Finish shopping and save it to history?', savedToHistoryToast:'Trip saved to history 🧾',
+resetForNextConfirm:'Reset the list for the next trip?',
+dealsTitle:'🏷️ Store deals', checkingDeals:'⏳ Checking deals...', dealsInRegion:'Deals in your area:',
+dealsComingSoon:'Coming soon: the store you\'re shopping at will detect you\'re there and broadcast deals straight here. Here\'s a preview (demo):',
+dealTag:'Deal',
+benchTitle:'📊 Regional comparison — {region}', loadingBench:'⏳ Loading comparison data...', chainCompareTitle:'🏪 Chain comparison',
+loadingChains:'⏳ Loading chain data...',
+historyEmpty:'No saved trips yet. On the shopping tab, tap "▶️ Start shopping" and finish with "🏁 Finish" — the trip will be saved here with items, prices and duration.',
+collectedCount:'📦 {n}/{total} collected', importBtn:'📥 Import into a new list',
+noChainData:'No trips with a place tagged yet — pick a store in "Start shopping" and the comparison will fill in.',
+chainTh:'Chain', avgCartTh:'Avg. cart', avgTimeTh:'⏱ Avg. time', purchasesTh:'Trips',
+chainCompareFoot:'⭐ = chains your family shops at. Nationwide, anonymous comparison.',
+noRegionData:'No data from the {region} region yet — the comparison will fill in as families in your area use the app.',
+yourFamilyTh:'Your family', regionAvgTh:'Regional average', avgCartRow:'🧾 Avg. cart', avgItemsRow:'📦 Items per trip',
+avgTimeRow:'⏱ Shopping time',
+benchFoot:'Based on {count} trips in the region (general, anonymous comparison — not against a specific family).',
+importedToast:'{n} items imported to the list ✓', deleteHistoryConfirm:'Delete this trip from history?',
+kgBasis:'per kg', per100g:'per 100g', perAllQty:'for the whole amount ({qty})', perUnit:'per {unit}', unitWord:'unit',
+priceModalTitle:'₪ Price — {name}', priceSub:'Photograph the price tag on the shelf or bag — or enter it manually.',
+takePhotoBtn:'📷 Take / upload a price tag photo', priceLabel:'Price (₪)', priceIsLabel:'The price you entered is:',
+markBoughtLabel:'Mark the item as collected 🛒', removePriceBtn:'Remove price', invalidPrice:'Enter a valid price',
+priceTooHigh:'The calculated price is too high — check the basis', priceSavedToast:'₪{price} saved for "{name}"{qty}',
+totalForQty:'🧮 Total for {qty}: ₪{price}', loadingOcrEngine:'⏳ Loading recognition engine...',
+ocrNoInternet:'⚠️ No internet connection — enter the price manually.', ocrScanning:'🔍 Detecting price in image...',
+ocrNotFound:'No price detected 😕 Try photographing closer, or enter it manually.', ocrConfirm:'Is this the price? Tap it:',
+ocrFailed:'⚠️ Detection failed — enter the price manually.',
+listHeader:'🛒 *Shopping list* – {date}', interactiveListLink:'Interactive list: {url}',
+listEmptyToast2:'The list is empty', doneMsg:'✅ Done shopping! Everything is collected 🛒',
+totalByPrices:'🧾 Total from entered prices: ₪{total}', tripDuration:'⏱ Shopping time: {dur}',
+canResetNote:'({name}, you can reset the list)',
+qMissing:'No "{name}" available 😕 Bring something similar instead?', qBrandSize:'About "{name}" – which brand / size should I bring?',
+qHowMuch:'About "{name}" – how much exactly is needed?', qExpensive:'"{name}" is pricey today 💸 skip it or buy anyway?',
+qInStore:'I\'m at the store 🛒 Anything else to add?', qAlmostDone:'Almost done – sure I didn\'t forget anything?',
+qToTitle:'💬 Question to {name}', listOwnerDefault:'the list owner', listOwnerDefaultLong:'whoever wrote the list',
+regardingItem:'Regarding: {name}', noteInParens:' (note: {note})', generalQuestion:'General question about the list',
+freeTextLabel:'Or write your own:', freeTextPlaceholder:'Write your own message...', sendToWhomLabel:'Send to whom?',
+noPhoneSuffix:' (no phone)', tipSetPhone:'💡 Tip: set the list owner\'s phone number in ⚙️ Settings — and the message will open straight in the right chat.',
+sendWaBtn:'Send on WhatsApp', pickQOrWrite:'Pick a question or write a message',
+settingsTitle:'⚙️ Settings', checkingServer:'⏳ Checking server connection...', familyOf:'👨‍👩‍👧 {name} family',
+joinCodeLabel:'Join code: ', shareBtn:'📤 Share', registeredMembers:'Family members ({n}):',
+onlyYouHint:'Just you so far — share the code so the whole family can join 👆',
+syncHint:'The list syncs automatically across all family members. When someone taps "Start shopping" — everyone gets notified and can follow live.',
+leaveFamilyBtn:'🚪 Leave the family on this device', familyTitle:'👨‍👩‍👧 Family',
+familyIntro:'Connect your family: a shared list that syncs across phones, live shopping tracking and a regional comparison.',
+createFamilyBtn:'➕ Create a family', joinFamilyBtn:'🔗 Join with a code',
+whoFillsHint:'Whoever fills in the list — so the shopper can send questions on WhatsApp.',
+listOwnerNameLabel:'List owner\'s name', listOwnerNamePlaceholder:'e.g. Gal',
+listOwnerPhoneLabel:'List owner\'s WhatsApp number', phonePlaceholder:'050-1234567',
+phoneHint:'International format also works (+972...). When connected to a family, the shopper can pick which member to message.',
+factoryResetBtn:'⚠️ Full reset — restore the original catalog',
+factoryResetHint:'Deletes all changes, added items and checkmarks, and restores the original catalog.',
+dbConnected:'🗄️ Central database (Neon): <b style="color:var(--green)">Connected & active ✓</b>',
+dbNotConnected:'🗄️ Central database: <b style="color:var(--amber)">Not connected</b> — running on temporary storage (Blobs). Enable Neon in Netlify: Extensions ← Neon.',
+dbError:'🗄️ Server: <b style="color:var(--red)">Error</b> — {err}',
+dbUnavailable:'🗄️ Server: <b style="color:var(--red)">Unavailable</b> — the app is running locally only (open it from the website, not a local file).',
+me:'(me)', noPhone:'no phone', joinedOn:' · joined {d}', waTo:'WhatsApp {name}', hiWave:'Hi 👋',
+languageLabel:'🌐 Language', createFamilyTitle:'➕ Create a family', joinFamilyTitle:'🔗 Join a family',
+createFamilySub:'Create a family plan — you\'ll get a join code to share with family members.',
+joinFamilySub:'Enter the family code you received, and your details.', familyNameLabel:'Family name',
+familyNamePlaceholder:'e.g. The Staal Family', residenceRegionLabel:'Home region (for anonymous regional comparison)',
+familyCodeLabel:'Family code', yourNameLabel:'Your name', yourNamePlaceholder:'e.g. Gal',
+yourPhoneLabel:'Your mobile number (for WhatsApp)', createFamilyShortBtn:'Create family', joinFamilyShortBtn:'Join',
+fillNamePrompt:'Please enter a name', oneMoment:'⏳ One moment...', somethingWrong:'Something went wrong, try again',
+fillCodePrompt:'Please enter a code', familyCreatedToast:'👨‍👩‍👧 Family created! Code: {code}',
+joinedFamilyToast:'🎉 Joined the {name} family', noServerConn:'⚠️ No server connection. Note: this only works on the live website (Netlify), not a local file.',
+shareCodeMsg:'👨‍👩‍👧 Join the {name} family shopping list!\n1. Open: {url}\n2. Tap ⚙️ ← "Join with a code"\n3. Code: *{code}*',
+leaveConfirm:'Leave the family on this device? (The shared list will stay with the rest of the family)',
+leftFamilyToast:'Left the family on this device', settingsSavedToast:'Settings saved ✓',
+factoryResetConfirm:'Fully reset the app? All changes will be deleted.', catalogResetToast:'Catalog reset',
+boardNotifyToast:'📌 {by}: {text}', chatNotifyToast:'💬 {from}: {text}',
+shoppingStartedToast:'🛍️ {name} started shopping — follow along on the shopping tab!',
+singleRequestToast:'🔔 {by} added a request: {name} ({cat})', multiRequestToast:'🔔 {n} new requests added to the shopping list!',
+region_north:'North', region_haifa:'Haifa & Krayot', region_sharon:'Sharon', region_gushdan:'Gush Dan',
+region_jerusalem:'Jerusalem area', region_shfela:'Shfela', region_south:'South', region_other:'Other',
+unit_unit:'unit', unit_kg:'kg', unit_gram:'gram', unit_pack:'pack', unit_bag:'bag', unit_bottle:'bottle', unit_liter:'liter',
+amt_quarter:'quarter', amt_half:'half', specialCat:'Special Requests',
+inListCount:'In list: {n} items', myFamilyDefault:'My Family',
+},
+ru:{
+appTitle:'Список покупок', btnFamilyChat:'Семейный чат', btnSettings:'Настройки', sendListBtn:'Отправить покупателю',
+tabRequest:'Что нужно', tabShop:'Покупки', tabHistory:'История',
+editCatalog:'✏️ Редактировать каталог', resetList:'🔄 Сбросить список', boardTitle:'📌 Доска объявлений — семья {name}',
+addToListTitle:'Добавить в список покупок', toListBtn:'🛒 В список',
+boardEmpty:'Пока нет сообщений — напишите семье, например: "нужна туалетная бумага"', boardPlaceholder:'Написать сообщение семье...',
+notePlaceholder:'Примечание (тип, бренд...)', qtyBtn:'⚖️ Количество',
+specialPlaceholder:'Особый запрос... (например: торт на день рождения)', addToCatPlaceholder:'Добавить товар в «{cat}»...',
+qtyTitle:'⚖️ Сколько {name}?', qtySub:'Выберите количество и единицу — покупатель увидит, сколько именно принести.',
+qtyAmountLabel:'Количество', qtyUnitLabel:'Единица', noQty:'Без количества', cancel:'Отмена', save:'Сохранить',
+qtySavedToast:'⚖️ {name}: {qty}',
+now:'сейчас', minAgo:'{m} мин. назад', hourAgo:'{h} ч. назад', boardPosted:'Сообщение опубликовано на доске 📌',
+matchedToast:'«{name}» отмечено в списке ({cat}) ✓', specialNoteBy:'Запросил(а): {name}',
+addedSpecialToast:'«{name}» добавлено в особые запросы ⭐',
+chatUnavailable:'Чат доступен после подключения семьи (⚙️ Настройки)', chatEmpty:'Пока нет сообщений. Спрашивайте, отвечайте и запрашивайте товары — даже во время покупок.',
+productRequestTag:'🛒 Запрос товара', addedToList:'✓ Добавлено в список', addedToListBy:' от {name}',
+addToListBtn:'➕ Добавить в список покупок', chatTitle:'💬 Чат — семья {name}',
+chatPlaceholder:'Сообщение... (например: нет белого сыра, принести творог?)', close:'Закрыть',
+productRequestBtn:'🛒 Запрос товара', sendChatBtn:'Отправить 💬', alreadyAdded:'Этот запрос уже добавлен ✓',
+addedToListMsg:'✓ Добавлено в список: {name}', popupFrom:'💬 Сообщение от {name}', familyMember:'член семьи',
+quickReplyLabel:'Быстрый ответ:', quickReplyPlaceholder:'Напишите ответ...', closeBtn:'Закрыть',
+addToListBtn2:'➕ Добавить в список', openFullChat:'Открыть полный чат 💬', sentToast:'Отправлено ✓ 💬',
+addedToListToast:'«{name}» добавлено в список ✓', deleteConfirm:'Удалить «{name}» из каталога?',
+resetConfirm:'Сбросить список? Все отметки и особые запросы будут удалены (каталог останется).', resetToast:'Список сброшен 🔄',
+shopEmptyMsg:'Список пуст. Отметьте товары на вкладке «Что нужно», и они появятся здесь для покупателя.', goToRequest:'📝 Заполнить список',
+shopTitle:'🛍️ Мои покупки', collectedOf:'{done} из {total} собрано', tripStore:'📍 {chain} {name}',
+cartTotal:'🧾 Сумма в корзине', finishBtn:'🏁 Завершить', shopperLive:'🔴 {name} за покупками · ', shopper:'покупатель',
+startTripBtn:'▶️ Начать покупки', dealsBtn:'🏷️ Акции', askAvailable:'Есть вопрос? {name} доступен(на) в WhatsApp:',
+generalQBtn:'💬 Общий вопрос', allDoneTitle:'🎉 Все товары собраны!', notifyDoneBtn:'💬 Сообщить, что готово',
+saveHistoryResetBtn:'🏁 Сохранить в историю и сбросить', newReqsPrefix:'🔔 Запросы, добавленные во время покупок:',
+routeTitle:'🗺️ Маршрут покупок', justAdded:'только что добавлено', priceTitleAttr:'Цена', askTitleAttr:'Спросить в WhatsApp',
+tapToMark:'Нажмите на товар, чтобы отметить его собранным.', tripStartedToast:'⏱ Покупки начаты{store} — удачи!', inStore:' в {chain}{name}',
+storeModalTitle:'📍 Где сегодня покупки?', storeModalSub:'Выберите место из каталога — покупка будет записана на него и войдёт в сравнение сетей.',
+storeSearchPlaceholder:'🔍 Поиск... (например: Шуферсаль)', loadingStores:'⏳ Загрузка каталога магазинов...',
+addStoreBtn:'➕ Место не в каталоге? Добавьте его', startNoStore:'Начать без места',
+storeNoConn:'⚠️ Нет связи с каталогом — можно добавить место вручную (сохранится только для этой покупки) или начать без него.',
+notFoundAddIt:'«{q}» не найдено — добавьте его в каталог 👇', storesEmptyAddFirst:'Каталог пока пуст — добавьте первое место 👇',
+addStoreTitle:'➕ Добавить место покупок', addStoreSub:'Место будет сохранено в общем каталоге и станет доступно всем пользователям.',
+chainLabel:'Сеть / тип', storeNameLabel:'Название филиала / места', storeNamePlaceholder:'например: филиал в центре / «магазин у дома»',
+regionLabel:'Регион', back:'Назад', saveStartBtn:'Сохранить и начать покупки', fillStoreName:'Пожалуйста, укажите название филиала/места',
+savingToStores:'⏳ Сохранение в каталог...', storeSaveFailed:'Сохранение не удалось', storeAddedToast:'🏪 «{chain} {name}» добавлено в каталог ✓',
+savedThisTripOnly:'Сохранено только для этой покупки (нет связи с каталогом)', listEmptyToast:'В списке нет товаров',
+finishConfirm:'Завершить покупки и сохранить их в историю?', savedToHistoryToast:'Покупка сохранена в историю 🧾',
+resetForNextConfirm:'Сбросить список для следующей покупки?',
+dealsTitle:'🏷️ Акции в магазине', checkingDeals:'⏳ Проверка акций...', dealsInRegion:'Акции в вашем регионе:',
+dealsComingSoon:'Скоро: магазин, где вы находитесь, определит вас и будет транслировать акции прямо сюда. Вот как это будет выглядеть (демо):',
+dealTag:'Акция',
+benchTitle:'📊 Региональное сравнение — {region}', loadingBench:'⏳ Загрузка данных сравнения...', chainCompareTitle:'🏪 Сравнение сетей',
+loadingChains:'⏳ Загрузка данных по сетям...',
+historyEmpty:'Пока нет сохранённых покупок. На вкладке «Покупки» нажмите «▶️ Начать покупки», а по завершении «🏁 Завершить» — покупка сохранится здесь с товарами, ценами и временем.',
+collectedCount:'📦 {n}/{total} собрано', importBtn:'📥 Импортировать в новый список',
+noChainData:'Пока нет покупок с указанным местом — выберите магазин в «Начать покупки», и сравнение заполнится.',
+chainTh:'Сеть', avgCartTh:'Средняя корзина', avgTimeTh:'⏱ Среднее время', purchasesTh:'Покупки',
+chainCompareFoot:'⭐ = сети, где покупает ваша семья. Общенациональное анонимное сравнение.',
+noRegionData:'Пока нет данных по региону {region} — сравнение заполнится по мере использования приложения семьями в вашем регионе.',
+yourFamilyTh:'Ваша семья', regionAvgTh:'Среднее по региону', avgCartRow:'🧾 Средняя корзина', avgItemsRow:'📦 Товаров за покупку',
+avgTimeRow:'⏱ Время покупок',
+benchFoot:'На основе {count} покупок в регионе (общее анонимное сравнение — не с конкретной семьёй).',
+importedToast:'{n} товаров импортировано в список ✓', deleteHistoryConfirm:'Удалить эту покупку из истории?',
+kgBasis:'за кг', per100g:'за 100 г', perAllQty:'за всё количество ({qty})', perUnit:'за {unit}', unitWord:'единицу',
+priceModalTitle:'₪ Цена — {name}', priceSub:'Сфотографируйте ценник на полке или пакете — или введите вручную.',
+takePhotoBtn:'📷 Сфотографировать / загрузить ценник', priceLabel:'Цена (₪)', priceIsLabel:'Введённая цена указана:',
+markBoughtLabel:'Отметить товар как собранный 🛒', removePriceBtn:'Удалить цену', invalidPrice:'Введите корректную цену',
+priceTooHigh:'Рассчитанная цена слишком высока — проверьте базу расчёта', priceSavedToast:'₪{price} сохранено для «{name}»{qty}',
+totalForQty:'🧮 Итого за {qty}: ₪{price}', loadingOcrEngine:'⏳ Загрузка движка распознавания...',
+ocrNoInternet:'⚠️ Нет подключения к интернету — введите цену вручную.', ocrScanning:'🔍 Распознавание цены на изображении...',
+ocrNotFound:'Цена не распознана 😕 Попробуйте сфотографировать ближе или введите вручную.', ocrConfirm:'Это цена? Нажмите на неё:',
+ocrFailed:'⚠️ Распознавание не удалось — введите цену вручную.',
+listHeader:'🛒 *Список покупок* – {date}', interactiveListLink:'Интерактивный список: {url}',
+listEmptyToast2:'Список пуст', doneMsg:'✅ Покупки завершены! Всё собрано 🛒',
+totalByPrices:'🧾 Итого по введённым ценам: ₪{total}', tripDuration:'⏱ Время покупок: {dur}',
+canResetNote:'({name}, можно сбросить список)',
+qMissing:'Нет «{name}» 😕 Принести что-то похожее вместо этого?', qBrandSize:'Насчёт «{name}» – какой бренд / размер принести?',
+qHowMuch:'Насчёт «{name}» – сколько именно нужно?', qExpensive:'«{name}» сегодня дорого 💸 отказаться или всё же купить?',
+qInStore:'Я в магазине 🛒 Нужно добавить что-то ещё?', qAlmostDone:'Почти закончил(а) – точно ничего не забыл(а)?',
+qToTitle:'💬 Вопрос к {name}', listOwnerDefault:'составителю списка', listOwnerDefaultLong:'тому, кто составил список',
+regardingItem:'Насчёт: {name}', noteInParens:' (примечание: {note})', generalQuestion:'Общий вопрос о списке',
+freeTextLabel:'Или напишите своё:', freeTextPlaceholder:'Напишите своё сообщение...', sendToWhomLabel:'Кому отправить?',
+noPhoneSuffix:' (нет телефона)', tipSetPhone:'💡 Совет: укажите номер телефона составителя списка в ⚙️ Настройках — и сообщение сразу откроется в нужном чате.',
+sendWaBtn:'Отправить в WhatsApp', pickQOrWrite:'Выберите вопрос или напишите сообщение',
+settingsTitle:'⚙️ Настройки', checkingServer:'⏳ Проверка соединения с сервером...', familyOf:'👨‍👩‍👧 Семья {name}',
+joinCodeLabel:'Код присоединения: ', shareBtn:'📤 Поделиться', registeredMembers:'Члены семьи ({n}):',
+onlyYouHint:'Пока только вы — поделитесь кодом, чтобы вся семья присоединилась 👆',
+syncHint:'Список синхронизируется автоматически между всеми членами семьи. Когда кто-то нажимает «Начать покупки» — все получают уведомление и могут следить в реальном времени.',
+leaveFamilyBtn:'🚪 Покинуть семью на этом устройстве', familyTitle:'👨‍👩‍👧 Семья',
+familyIntro:'Подключите семью: общий список, синхронизирующийся между телефонами, отслеживание покупок в реальном времени и региональное сравнение.',
+createFamilyBtn:'➕ Создать семью', joinFamilyBtn:'🔗 Присоединиться по коду',
+whoFillsHint:'Тот, кто заполняет список — чтобы покупатель мог отправлять вопросы в WhatsApp.',
+listOwnerNameLabel:'Имя составителя списка', listOwnerNamePlaceholder:'например: Гал',
+listOwnerPhoneLabel:'Номер WhatsApp составителя списка', phonePlaceholder:'050-1234567',
+phoneHint:'Также подходит международный формат (+972...). При подключённой семье покупатель может выбрать, кому написать.',
+factoryResetBtn:'⚠️ Полный сброс — восстановить исходный каталог',
+factoryResetHint:'Удаляет все изменения, добавленные товары и отметки, восстанавливает исходный каталог.',
+dbConnected:'🗄️ Центральная база данных (Neon): <b style="color:var(--green)">Подключена и активна ✓</b>',
+dbNotConnected:'🗄️ Центральная база данных: <b style="color:var(--amber)">Не подключена</b> — работает на временном хранилище (Blobs). Включите Neon в Netlify: Extensions ← Neon.',
+dbError:'🗄️ Сервер: <b style="color:var(--red)">Ошибка</b> — {err}',
+dbUnavailable:'🗄️ Сервер: <b style="color:var(--red)">Недоступен</b> — приложение работает только локально (откройте его с сайта, а не из файла).',
+me:'(я)', noPhone:'нет телефона', joinedOn:' · присоединился(лась) {d}', waTo:'WhatsApp {name}', hiWave:'Привет 👋',
+languageLabel:'🌐 Язык', createFamilyTitle:'➕ Создание семьи', joinFamilyTitle:'🔗 Присоединение к семье',
+createFamilySub:'Создайте семейный план — вы получите код для приглашения членов семьи.',
+joinFamilySub:'Введите полученный код семьи и свои данные.', familyNameLabel:'Название семьи',
+familyNamePlaceholder:'например: Семья Сталь', residenceRegionLabel:'Регион проживания (для анонимного регионального сравнения)',
+familyCodeLabel:'Код семьи', yourNameLabel:'Ваше имя', yourNamePlaceholder:'например: Гал',
+yourPhoneLabel:'Ваш мобильный номер (для WhatsApp)', createFamilyShortBtn:'Создать семью', joinFamilyShortBtn:'Присоединиться',
+fillNamePrompt:'Пожалуйста, введите имя', oneMoment:'⏳ Секунду...', somethingWrong:'Что-то пошло не так, попробуйте снова',
+fillCodePrompt:'Пожалуйста, введите код', familyCreatedToast:'👨‍👩‍👧 Семья создана! Код: {code}',
+joinedFamilyToast:'🎉 Вы присоединились к семье {name}', noServerConn:'⚠️ Нет соединения с сервером. Обратите внимание: это работает только на сайте (Netlify), а не в локальном файле.',
+shareCodeMsg:'👨‍👩‍👧 Присоединяйтесь к списку покупок семьи {name}!\n1. Откройте: {url}\n2. Нажмите ⚙️ ← «Присоединиться по коду»\n3. Код: *{code}*',
+leaveConfirm:'Покинуть семью на этом устройстве? (Общий список останется у остальных членов семьи)',
+leftFamilyToast:'Вы покинули семью на этом устройстве', settingsSavedToast:'Настройки сохранены ✓',
+factoryResetConfirm:'Полностью сбросить приложение? Все изменения будут удалены.', catalogResetToast:'Каталог сброшен',
+boardNotifyToast:'📌 {by}: {text}', chatNotifyToast:'💬 {from}: {text}',
+shoppingStartedToast:'🛍️ {name} начал(а) покупки — следите за прогрессом на вкладке покупок!',
+singleRequestToast:'🔔 {by} добавил(а) запрос: {name} ({cat})', multiRequestToast:'🔔 Добавлено {n} новых запросов в список покупок!',
+region_north:'Север', region_haifa:'Хайфа и Крайот', region_sharon:'Шарон', region_gushdan:'Гуш Дан',
+region_jerusalem:'Иерусалим и окрестности', region_shfela:'Шфела', region_south:'Юг', region_other:'Другое',
+unit_unit:'шт.', unit_kg:'кг', unit_gram:'г', unit_pack:'упаковка', unit_bag:'пакет', unit_bottle:'бутылка', unit_liter:'литр',
+amt_quarter:'четверть', amt_half:'половина', specialCat:'Особые запросы',
+inListCount:'В списке: {n} товаров', myFamilyDefault:'Моя семья',
+},
+ar:{
+appTitle:'قائمة التسوق', btnFamilyChat:'دردشة العائلة', btnSettings:'الإعدادات', sendListBtn:'إرسال إلى المتسوق',
+tabRequest:'المطلوب', tabShop:'التسوق', tabHistory:'السجل',
+editCatalog:'✏️ تعديل الكتالوج', resetList:'🔄 إعادة تعيين القائمة', boardTitle:'📌 لوحة إعلانات — عائلة {name}',
+addToListTitle:'أضف إلى قائمة التسوق', toListBtn:'🛒 إلى القائمة',
+boardEmpty:'لا توجد رسائل بعد — اكتب شيئًا للعائلة، مثل: "نحتاج ورق تواليت"', boardPlaceholder:'اكتب رسالة للعائلة...',
+notePlaceholder:'ملاحظة (النوع، الماركة...)', qtyBtn:'⚖️ الكمية',
+specialPlaceholder:'طلب خاص... (مثل: كعكة عيد ميلاد)', addToCatPlaceholder:'أضف منتجًا إلى {cat}...',
+qtyTitle:'⚖️ كم من {name}؟', qtySub:'اختر الكمية والوحدة — سيرى المتسوق بالضبط كم يجب إحضاره.',
+qtyAmountLabel:'الكمية', qtyUnitLabel:'الوحدة', noQty:'بدون كمية', cancel:'إلغاء', save:'حفظ',
+qtySavedToast:'⚖️ {name}: {qty}',
+now:'الآن', minAgo:'قبل {m} دقيقة', hourAgo:'قبل {h} ساعة', boardPosted:'تم نشر الرسالة على اللوحة 📌',
+matchedToast:'تم وضع علامة على "{name}" في القائمة ({cat}) ✓', specialNoteBy:'طلب من: {name}',
+addedSpecialToast:'تمت إضافة "{name}" إلى الطلبات الخاصة ⭐',
+chatUnavailable:'الدردشة متاحة بعد ربط عائلة (⚙️ الإعدادات)', chatEmpty:'لا توجد رسائل بعد. اسأل، أجب، واطلب منتجات — حتى أثناء التسوق.',
+productRequestTag:'🛒 طلب منتج', addedToList:'✓ تمت الإضافة إلى القائمة', addedToListBy:' بواسطة {name}',
+addToListBtn:'➕ أضف إلى قائمة التسوق', chatTitle:'💬 دردشة — عائلة {name}',
+chatPlaceholder:'رسالة... (مثل: لا يوجد جبنة بيضاء، هل أحضر جبنة قريش بدلاً منها؟)', close:'إغلاق',
+productRequestBtn:'🛒 طلب منتج', sendChatBtn:'إرسال 💬', alreadyAdded:'تمت إضافة هذا الطلب بالفعل ✓',
+addedToListMsg:'✓ تمت الإضافة إلى القائمة: {name}', popupFrom:'💬 رسالة من {name}', familyMember:'أحد أفراد العائلة',
+quickReplyLabel:'رد سريع:', quickReplyPlaceholder:'اكتب ردًا...', closeBtn:'إغلاق',
+addToListBtn2:'➕ أضف إلى القائمة', openFullChat:'فتح الدردشة الكاملة 💬', sentToast:'تم الإرسال ✓ 💬',
+addedToListToast:'تمت إضافة "{name}" إلى القائمة ✓', deleteConfirm:'حذف "{name}" من الكتالوج؟',
+resetConfirm:'إعادة تعيين القائمة؟ سيتم حذف جميع العلامات والطلبات الخاصة (سيبقى الكتالوج).', resetToast:'تمت إعادة تعيين القائمة 🔄',
+shopEmptyMsg:'القائمة فارغة. حدد منتجات في تبويب "المطلوب" وستظهر هنا للمتسوق.', goToRequest:'📝 لملء القائمة',
+shopTitle:'🛍️ تسوقي', collectedOf:'{done} من {total} تم جمعها', tripStore:'📍 {chain} {name}',
+cartTotal:'🧾 المجموع في السلة', finishBtn:'🏁 إنهاء', shopperLive:'🔴 {name} يتسوق الآن · ', shopper:'المتسوق',
+startTripBtn:'▶️ ابدأ التسوق', dealsBtn:'🏷️ عروض', askAvailable:'لديك سؤال؟ {name} متاح على واتساب:',
+generalQBtn:'💬 سؤال عام', allDoneTitle:'🎉 تم جمع جميع المنتجات!', notifyDoneBtn:'💬 أبلغهم أنني انتهيت',
+saveHistoryResetBtn:'🏁 حفظ في السجل وإعادة التعيين', newReqsPrefix:'🔔 طلبات أُضيفت أثناء التسوق:',
+routeTitle:'🗺️ مسار التسوق', justAdded:'أُضيف الآن', priceTitleAttr:'السعر', askTitleAttr:'اسأل على واتساب',
+tapToMark:'اضغط على منتج لتحديده كمجموع.', tripStartedToast:'⏱ بدأ التسوق{store} — بالتوفيق!', inStore:' في {chain}{name}',
+storeModalTitle:'📍 أين تتسوقون اليوم؟', storeModalSub:'اختر مكانًا من الدليل — سيتم تسجيل الرحلة عليه وستُدرج في مقارنة السلاسل.',
+storeSearchPlaceholder:'🔍 بحث... (مثل: شوفرسال)', loadingStores:'⏳ جارٍ تحميل دليل المتاجر...',
+addStoreBtn:'➕ المكان غير مدرج؟ أضفه', startNoStore:'ابدأ بدون مكان',
+storeNoConn:'⚠️ لا يوجد اتصال بالدليل — يمكنك إضافة مكان يدويًا (سيُحفظ لهذه الرحلة فقط) أو البدء بدون مكان.',
+notFoundAddIt:'"{q}" غير موجود — أضفه إلى الدليل 👇', storesEmptyAddFirst:'الدليل لا يزال فارغًا — أضف المكان الأول 👇',
+addStoreTitle:'➕ إضافة مكان تسوق', addStoreSub:'سيُحفظ المكان في الدليل المركزي وسيكون متاحًا لجميع المستخدمين.',
+chainLabel:'السلسلة / النوع', storeNameLabel:'اسم الفرع / المكان', storeNamePlaceholder:'مثل: فرع وسط المدينة / "بقالة الحي"',
+regionLabel:'المنطقة', back:'رجوع', saveStartBtn:'حفظ وابدأ التسوق', fillStoreName:'يرجى إدخال اسم الفرع/المكان',
+savingToStores:'⏳ جارٍ الحفظ في الدليل...', storeSaveFailed:'فشل الحفظ', storeAddedToast:'🏪 تمت إضافة "{chain} {name}" إلى الدليل ✓',
+savedThisTripOnly:'تم الحفظ لهذه الرحلة فقط (لا يوجد اتصال بالدليل)', listEmptyToast:'لا توجد منتجات في القائمة',
+finishConfirm:'إنهاء التسوق وحفظه في السجل؟', savedToHistoryToast:'تم حفظ الرحلة في السجل 🧾',
+resetForNextConfirm:'إعادة تعيين القائمة للرحلة القادمة؟',
+dealsTitle:'🏷️ عروض المتجر', checkingDeals:'⏳ جارٍ التحقق من العروض...', dealsInRegion:'عروض في منطقتك:',
+dealsComingSoon:'قريبًا: سيتعرف المتجر الذي تتواجد فيه عليك وسيبث العروض مباشرة هنا. هكذا سيبدو الأمر (عرض توضيحي):',
+dealTag:'عرض',
+benchTitle:'📊 مقارنة إقليمية — {region}', loadingBench:'⏳ جارٍ تحميل بيانات المقارنة...', chainCompareTitle:'🏪 مقارنة السلاسل',
+loadingChains:'⏳ جارٍ تحميل بيانات السلاسل...',
+historyEmpty:'لا توجد رحلات محفوظة بعد. في تبويب التسوق، اضغط "▶️ ابدأ التسوق" وعند الانتهاء "🏁 إنهاء" — وستُحفظ الرحلة هنا مع المنتجات والأسعار والمدة.',
+collectedCount:'📦 {n}/{total} تم جمعها', importBtn:'📥 استيراد إلى قائمة جديدة',
+noChainData:'لا توجد رحلات بمكان محدد بعد — اختر متجرًا في "ابدأ التسوق" وستُملأ المقارنة.',
+chainTh:'السلسلة', avgCartTh:'متوسط السلة', avgTimeTh:'⏱ متوسط الوقت', purchasesTh:'الرحلات',
+chainCompareFoot:'⭐ = السلاسل التي تتسوق فيها عائلتك. مقارنة وطنية ومجهولة الهوية.',
+noRegionData:'لا توجد بيانات من منطقة {region} بعد — ستُملأ المقارنة كلما استخدمت عائلات في منطقتك التطبيق.',
+yourFamilyTh:'عائلتك', regionAvgTh:'متوسط المنطقة', avgCartRow:'🧾 متوسط السلة', avgItemsRow:'📦 منتجات لكل رحلة',
+avgTimeRow:'⏱ وقت التسوق',
+benchFoot:'استنادًا إلى {count} رحلة في المنطقة (مقارنة عامة ومجهولة الهوية — وليست مقابل عائلة محددة).',
+importedToast:'تم استيراد {n} منتجًا إلى القائمة ✓', deleteHistoryConfirm:'حذف هذه الرحلة من السجل؟',
+kgBasis:'لكل كغ', per100g:'لكل 100 غ', perAllQty:'للكمية الكاملة ({qty})', perUnit:'لكل {unit}', unitWord:'وحدة',
+priceModalTitle:'₪ السعر — {name}', priceSub:'صوّر بطاقة السعر الموجودة على الرف أو الكيس — أو أدخله يدويًا.',
+takePhotoBtn:'📷 صوّر / ارفع بطاقة السعر', priceLabel:'السعر (₪)', priceIsLabel:'السعر الذي أدخلته هو:',
+markBoughtLabel:'حدد المنتج كمجموع في السلة 🛒', removePriceBtn:'إزالة السعر', invalidPrice:'أدخل سعرًا صحيحًا',
+priceTooHigh:'السعر المحسوب مرتفع جدًا — تحقق من الأساس', priceSavedToast:'تم حفظ ₪{price} لـ"{name}"{qty}',
+totalForQty:'🧮 الإجمالي لـ{qty}: ₪{price}', loadingOcrEngine:'⏳ جارٍ تحميل محرك التعرف...',
+ocrNoInternet:'⚠️ لا يوجد اتصال بالإنترنت — أدخل السعر يدويًا.', ocrScanning:'🔍 جارٍ التعرف على السعر في الصورة...',
+ocrNotFound:'لم يتم التعرف على السعر 😕 حاول التصوير عن قرب أكثر، أو أدخله يدويًا.', ocrConfirm:'هل هذا هو السعر؟ اضغط عليه:',
+ocrFailed:'⚠️ فشل التعرف — أدخل السعر يدويًا.',
+listHeader:'🛒 *قائمة التسوق* – {date}', interactiveListLink:'القائمة التفاعلية: {url}',
+listEmptyToast2:'القائمة فارغة', doneMsg:'✅ انتهيت من التسوق! تم جمع كل شيء 🛒',
+totalByPrices:'🧾 الإجمالي حسب الأسعار المُدخلة: ₪{total}', tripDuration:'⏱ وقت التسوق: {dur}',
+canResetNote:'({name}، يمكنك إعادة تعيين القائمة)',
+qMissing:'لا يوجد "{name}" 😕 هل أحضر شيئًا مشابهًا بدلاً منه؟', qBrandSize:'بخصوص "{name}" – ما الماركة / الحجم الذي أحضره؟',
+qHowMuch:'بخصوص "{name}" – كم بالضبط مطلوب؟', qExpensive:'"{name}" غالٍ اليوم 💸 أتخلى عنه أم أشتريه على أي حال؟',
+qInStore:'أنا في المتجر 🛒 هل هناك شيء آخر لإضافته؟', qAlmostDone:'أوشكت على الانتهاء – هل أنت متأكد أنني لم أنسَ شيئًا؟',
+qToTitle:'💬 سؤال إلى {name}', listOwnerDefault:'صاحب القائمة', listOwnerDefaultLong:'من كتب القائمة',
+regardingItem:'بخصوص: {name}', noteInParens:' (ملاحظة: {note})', generalQuestion:'سؤال عام حول القائمة',
+freeTextLabel:'أو اكتب بصياغتك الخاصة:', freeTextPlaceholder:'اكتب رسالتك الخاصة...', sendToWhomLabel:'إلى من ترسل؟',
+noPhoneSuffix:' (بدون هاتف)', tipSetPhone:'💡 نصيحة: حدد رقم هاتف صاحب القائمة في ⚙️ الإعدادات — وستُفتح الرسالة مباشرة في الدردشة الصحيحة.',
+sendWaBtn:'إرسال عبر واتساب', pickQOrWrite:'اختر سؤالًا أو اكتب رسالة',
+settingsTitle:'⚙️ الإعدادات', checkingServer:'⏳ جارٍ التحقق من الاتصال بالخادم...', familyOf:'👨‍👩‍👧 عائلة {name}',
+joinCodeLabel:'رمز الانضمام: ', shareBtn:'📤 مشاركة', registeredMembers:'أفراد العائلة ({n}):',
+onlyYouHint:'أنت فقط حتى الآن — شارك الرمز ليتمكن باقي العائلة من الانضمام 👆',
+syncHint:'تتزامن القائمة تلقائيًا بين جميع أفراد العائلة. عندما يضغط أحدهم "ابدأ التسوق" — يتلقى الجميع إشعارًا ويمكنهم المتابعة مباشرة.',
+leaveFamilyBtn:'🚪 مغادرة العائلة على هذا الجهاز', familyTitle:'👨‍👩‍👧 العائلة',
+familyIntro:'اربط عائلتك: قائمة مشتركة تتزامن بين الهواتف، متابعة مباشرة للتسوق، ومقارنة إقليمية.',
+createFamilyBtn:'➕ إنشاء عائلة', joinFamilyBtn:'🔗 انضم برمز',
+whoFillsHint:'من يملأ القائمة — حتى يتمكن المتسوق من إرسال أسئلة عبر واتساب.',
+listOwnerNameLabel:'اسم صاحب القائمة', listOwnerNamePlaceholder:'مثل: غال',
+listOwnerPhoneLabel:'رقم واتساب صاحب القائمة', phonePlaceholder:'050-1234567',
+phoneHint:'تنسيق دولي متاح أيضًا (+972...). عند الاتصال بعائلة، يمكن للمتسوق اختيار الفرد الذي يرسل إليه.',
+factoryResetBtn:'⚠️ إعادة تعيين كاملة — استعادة الكتالوج الأصلي',
+factoryResetHint:'يحذف جميع التغييرات والمنتجات المضافة والعلامات، ويستعيد الكتالوج الأصلي.',
+dbConnected:'🗄️ قاعدة البيانات المركزية (Neon): <b style="color:var(--green)">متصلة ونشطة ✓</b>',
+dbNotConnected:'🗄️ قاعدة البيانات المركزية: <b style="color:var(--amber)">غير متصلة</b> — تعمل على تخزين مؤقت (Blobs). فعّل Neon في Netlify: Extensions ← Neon.',
+dbError:'🗄️ الخادم: <b style="color:var(--red)">خطأ</b> — {err}',
+dbUnavailable:'🗄️ الخادم: <b style="color:var(--red)">غير متاح</b> — يعمل التطبيق محليًا فقط (افتحه من الموقع، وليس من ملف محلي).',
+me:'(أنا)', noPhone:'بدون هاتف', joinedOn:' · انضم في {d}', waTo:'واتساب {name}', hiWave:'مرحبًا 👋',
+languageLabel:'🌐 اللغة', createFamilyTitle:'➕ إنشاء عائلة', joinFamilyTitle:'🔗 الانضمام إلى عائلة',
+createFamilySub:'أنشئ خطة عائلية — ستحصل على رمز انضمام لمشاركته مع أفراد العائلة.',
+joinFamilySub:'أدخل رمز العائلة الذي استلمته، وبياناتك.', familyNameLabel:'اسم العائلة',
+familyNamePlaceholder:'مثل: عائلة ستال', residenceRegionLabel:'منطقة السكن (لمقارنة إقليمية مجهولة الهوية)',
+familyCodeLabel:'رمز العائلة', yourNameLabel:'اسمك', yourNamePlaceholder:'مثل: غال',
+yourPhoneLabel:'رقم هاتفك المحمول (لواتساب)', createFamilyShortBtn:'إنشاء عائلة', joinFamilyShortBtn:'انضم',
+fillNamePrompt:'يرجى إدخال اسم', oneMoment:'⏳ لحظة...', somethingWrong:'حدث خطأ ما، حاول مرة أخرى',
+fillCodePrompt:'يرجى إدخال رمز', familyCreatedToast:'👨‍👩‍👧 تم إنشاء العائلة! الرمز: {code}',
+joinedFamilyToast:'🎉 انضممت إلى عائلة {name}', noServerConn:'⚠️ لا يوجد اتصال بالخادم. ملاحظة: هذا يعمل فقط على الموقع المباشر (Netlify)، وليس في ملف محلي.',
+shareCodeMsg:'👨‍👩‍👧 انضم إلى قائمة تسوق عائلة {name}!\n1. افتح: {url}\n2. اضغط ⚙️ ← "انضم برمز"\n3. الرمز: *{code}*',
+leaveConfirm:'مغادرة العائلة على هذا الجهاز؟ (ستبقى القائمة المشتركة لدى باقي أفراد العائلة)',
+leftFamilyToast:'غادرت العائلة على هذا الجهاز', settingsSavedToast:'تم حفظ الإعدادات ✓',
+factoryResetConfirm:'إعادة تعيين التطبيق بالكامل؟ سيتم حذف جميع التغييرات.', catalogResetToast:'تمت إعادة تعيين الكتالوج',
+boardNotifyToast:'📌 {by}: {text}', chatNotifyToast:'💬 {from}: {text}',
+shoppingStartedToast:'🛍️ بدأ {name} التسوق — تابع التقدم في تبويب التسوق!',
+singleRequestToast:'🔔 أضاف {by} طلبًا: {name} ({cat})', multiRequestToast:'🔔 تمت إضافة {n} طلبات جديدة إلى قائمة التسوق!',
+region_north:'الشمال', region_haifa:'حيفا والكريوت', region_sharon:'الشارون', region_gushdan:'غوش دان',
+region_jerusalem:'منطقة القدس', region_shfela:'شفيلا', region_south:'الجنوب', region_other:'أخرى',
+unit_unit:'وحدة', unit_kg:'كغ', unit_gram:'غرام', unit_pack:'عبوة', unit_bag:'كيس', unit_bottle:'زجاجة', unit_liter:'لتر',
+amt_quarter:'ربع', amt_half:'نصف', specialCat:'طلبات خاصة',
+inListCount:'في القائمة: {n} منتج', myFamilyDefault:'عائلتي',
+},
+};
+
 const LS_KEY = 'shopping-app-v1';
 let state = null;
 let view = 'request';
@@ -619,7 +1287,7 @@ function freshState(){
       id: 'i' + (uid++), name, note, need: !!need, bought: false
     }))
   }));
-  cats.push({ id:'special', name:'בקשות מיוחדות', emoji:'⭐', special:true, items:[] });
+  cats.push({ id:'special', name:N('בקשות מיוחדות','Special Requests','Особые запросы','طلبات خاصة'), emoji:'⭐', special:true, items:[] });
   return { v:2, cats, settings:{ reqName:'', reqPhone:'' }, trip:{ startedAt:null }, history:[], board:[], chat:[] };
 }
 function load(){
@@ -636,6 +1304,7 @@ function load(){
   if(!Array.isArray(state.history)) state.history = [];
   if(!Array.isArray(state.board)) state.board = [];
   if(!Array.isArray(state.chat)) state.chat = [];
+  state.cats.forEach(c => c.items.forEach(it => { if(it.qty) it.qty.u = normUnit(it.qty.u); }));
   saveLocalOnly(); // בלי לקדם updatedAt — טעינת דף לא "דורסת" שינויים מהענן
 }
 /* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
@@ -644,7 +1313,10 @@ function migrateV1(old){
   const st = freshState();
   if(old.settings) st.settings = old.settings;
   const byName = {};
-  st.cats.forEach(c => c.items.forEach(it => { byName[it.name.trim()] = it; }));
+  st.cats.forEach(c => c.items.forEach(it => {
+    const names = typeof it.name === 'object' ? Object.values(it.name) : [it.name];
+    names.forEach(n => { if(n) byName[n.trim()] = it; });
+  }));
   (old.cats || []).forEach(oc => (oc.items || []).forEach(oi => {
     const name = (oi.name || '').trim();
     if(!name) return;
@@ -677,11 +1349,20 @@ function saveLocalOnly(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
    סנכרון בין מכשירים, מעקב חי אחרי הקנייה והשוואה אזורית.
 ================================================================ */
 const FAM_KEY = 'shopping-family-v1';
-const REGIONS = ['צפון','חיפה והקריות','השרון','גוש דן','ירושלים והסביבה','שפלה','דרום','אחר'];
+const REGION_KEYS = ['north','haifa','sharon','gushdan','jerusalem','shfela','south','other'];
+const LEGACY_REGION_MAP = {
+  'צפון':'north', 'חיפה והקריות':'haifa', 'השרון':'sharon', 'גוש דן':'gushdan',
+  'ירושלים והסביבה':'jerusalem', 'שפלה':'shfela', 'דרום':'south', 'אחר':'other',
+};
+function regionLabel(key){ return L('region_' + key); }
+function normRegion(r){ return REGION_KEYS.includes(r) ? r : (LEGACY_REGION_MAP[r] || 'other'); }
 let fam = null;
 let pushTimer = null;
 
-function famLoad(){ try{ fam = JSON.parse(localStorage.getItem(FAM_KEY)); }catch(e){ fam = null; } }
+function famLoad(){
+  try{ fam = JSON.parse(localStorage.getItem(FAM_KEY)); }catch(e){ fam = null; }
+  if(fam && fam.region){ const nr = normRegion(fam.region); if(nr !== fam.region){ fam.region = nr; famSave(); } }
+}
 function famSave(){ if(fam) localStorage.setItem(FAM_KEY, JSON.stringify(fam)); else localStorage.removeItem(FAM_KEY); }
 async function apiGet(op, params){
   const q = new URLSearchParams(Object.assign({op}, params || {}));
@@ -726,6 +1407,7 @@ function applyRemote(remote){
   const prevBoard = new Set((state.board || []).map(b => b.id));
   const prevChat = new Set((state.chat || []).map(c => c.id));
   state.cats = remote.data.cats || state.cats;
+  state.cats.forEach(c => c.items.forEach(it => { if(it.qty) it.qty.u = normUnit(it.qty.u); }));
   state.trip = remote.data.trip || { startedAt:null };
   if(Array.isArray(remote.data.board)) state.board = remote.data.board;
   if(Array.isArray(remote.data.chat)) state.chat = remote.data.chat;
@@ -737,7 +1419,7 @@ function applyRemote(remote){
   if(freshMsgs.length){
     if(navigator.vibrate) navigator.vibrate(150);
     const b = freshMsgs[0];
-    toast('📌 ' + (b.by || 'בן משפחה') + ': ' + b.text.slice(0, 60), 5000);
+    toast(L('boardNotifyToast', {by: b.by || L('familyMember'), text: b.text.slice(0, 60)}), 5000);
   }
   // הודעת צ'אט חדשה מבן משפחה → חלון קופץ (או רענון הצ'אט אם הוא פתוח)
   const freshChat = (state.chat || []).filter(c =>
@@ -751,13 +1433,13 @@ function applyRemote(remote){
       markChatSeen();
     }else if($('#overlay').classList.contains('show')){
       const c = freshChat[0];
-      toast('💬 ' + (c.from || '') + ': ' + c.text.slice(0, 50), 5000);
+      toast(L('chatNotifyToast', {from: c.from || '', text: c.text.slice(0, 50)}), 5000);
     }else{
       chatPopup(freshChat[0]);
     }
   }
   if(!prevTrip && state.trip.startedAt && fam && state.trip.shopperId && state.trip.shopperId !== fam.memberId){
-    toast('🛍️ ' + (state.trip.shopperName || 'הקונה') + ' התחיל/ה קנייה — צפו בהתקדמות במסך הקנייה!');
+    toast(L('shoppingStartedToast', {name: state.trip.shopperName || L('shopper')}));
   }
   // התראה לקונה: בקשות שנוספו מרחוק בזמן הקנייה
   if(state.trip.startedAt && isShopper()){
@@ -768,9 +1450,9 @@ function applyRemote(remote){
       if(navigator.vibrate) navigator.vibrate(200);
       if(fresh.length === 1){
         const x = fresh[0];
-        toast('🔔 ' + (x.it.addedBy || 'בן משפחה') + ' הוסיף/ה בקשה: ' + x.it.name + ' (' + x.cat.name + ')', 5000);
+        toast(L('singleRequestToast', {by: x.it.addedBy || L('familyMember'), name: dispName(x.it), cat: dispCat(x.cat)}), 5000);
       }else{
-        toast('🔔 נוספו ' + fresh.length + ' בקשות חדשות לרשימת הקנייה!', 5000);
+        toast(L('multiRequestToast', {n: fresh.length}), 5000);
       }
     }
   }
@@ -831,7 +1513,7 @@ function render(){
   const showSummary = view === 'request' && neededItems().length > 0;
   $('#summaryBar').style.display = showSummary ? 'flex' : 'none';
   document.body.classList.toggle('has-summary', showSummary);
-  if(view === 'request') $('#summaryCnt').innerHTML = `ברשימה: <b>${neededItems().length}</b> פריטים`;
+  if(view === 'request') $('#summaryCnt').innerHTML = L('inListCount', {n: '<b>' + neededItems().length + '</b>'});
 }
 function updateBadge(){
   const left = neededItems().filter(x => !x.it.bought).length;
@@ -847,26 +1529,26 @@ function renderRequest(){
   const m = $('#main');
   let html = `
   <div class="toolbar">
-    <button class="pill" id="editPill" onclick="toggleEdit()">✏️ עריכת קטלוג</button>
-    <button class="pill warn" onclick="resetAll()">🔄 איפוס רשימה</button>
+    <button class="pill" id="editPill" onclick="toggleEdit()">${esc(L('editCatalog'))}</button>
+    <button class="pill warn" onclick="resetAll()">${esc(L('resetList'))}</button>
   </div>`;
   if(fam){
     html += `
     <div class="board">
-      <div class="btitle">📌 לוח מודעות — משפחת ${esc(fam.familyName)}</div>
+      <div class="btitle">${esc(L('boardTitle', {name: fam.familyName}))}</div>
       ${(state.board || []).length ? (state.board || []).map(b => `
         <div class="bmsg">
           <div class="btxt">${esc(b.text)}</div>
           <div class="bmeta">
             <span>${esc(b.by || '')} · ${fmtAgo(b.at)}</span>
             <span class="bacts">
-              <button class="bact" title="הוסף לרשימת הקניות" onclick="boardToList('${b.id}')">🛒 לרשימה</button>
+              <button class="bact" title="${esc(L('addToListTitle'))}" onclick="boardToList('${b.id}')">${esc(L('toListBtn'))}</button>
               ${(!fam || b.byId === fam.memberId) ? `<button class="bact bdel" onclick="delBoard('${b.id}')">🗑</button>` : ''}
             </span>
           </div>
-        </div>`).join('') : '<div class="bempty">אין הודעות — כתבו משהו למשפחה, למשל: "צריך נייר טואלט"</div>'}
+        </div>`).join('') : `<div class="bempty">${esc(L('boardEmpty'))}</div>`}
       <div class="addrow" style="background:none;padding:8px 0 0">
-        <input id="boardIn" placeholder="כתבו הודעה למשפחה..." onkeydown="if(event.key==='Enter')postBoard()">
+        <input id="boardIn" placeholder="${esc(L('boardPlaceholder'))}" onkeydown="if(event.key==='Enter')postBoard()">
         <button onclick="postBoard()">📌</button>
       </div>
     </div>`;
@@ -875,11 +1557,12 @@ function renderRequest(){
     const cnt = c.items.filter(i => i.need).length;
     const open = openCats[c.id] || c.special;
     const col = catCol(c);
+    const cname = dispCat(c);
     html += `
     <div class="cat ${open?'open':''} ${c.special?'special':''}" id="cat-${c.id}">
       <button class="cat-head" style="background:${col.bg}" onclick="toggleCat('${c.id}')">
         <span class="emoji">${c.emoji}</span>
-        <span class="name" style="color:${col.ac}">${esc(c.name)}</span>
+        <span class="name" style="color:${col.ac}">${esc(cname)}</span>
         <span class="count ${cnt?'':'zero'}" ${cnt?`style="color:${col.ac};background:rgba(255,255,255,.8)"`:''}>${cnt}</span>
         <span class="chev" style="color:${col.ac}">◀</span>
       </button>
@@ -889,17 +1572,17 @@ function renderRequest(){
         <div class="item ${it.need?'on':''}" id="row-${it.id}">
           <button class="chk" onclick="toggleNeed('${it.id}')">${it.need?'✓':''}</button>
           <div class="txt">
-            <div class="nm" onclick="toggleNeed('${it.id}')">${esc(it.name)}</div>
-            <input class="note-in" placeholder="הערה (סוג, מותג...)" value="${esc(it.note)}"
+            <div class="nm" onclick="toggleNeed('${it.id}')">${esc(dispName(it))}</div>
+            <input class="note-in" placeholder="${esc(L('notePlaceholder'))}" value="${esc(dispNote(it))}"
                    onchange="setNote('${it.id}', this.value)">
           </div>
-          <button class="qtybtn ${it.qty?'has':''}" onclick="openQtyModal('${it.id}')">${it.qty ? esc(fmtQty(it.qty)) : '⚖️ כמות'}</button>
+          <button class="qtybtn ${it.qty?'has':''}" onclick="openQtyModal('${it.id}')">${it.qty ? esc(fmtQty(it.qty)) : esc(L('qtyBtn'))}</button>
           <button class="del" onclick="delItem('${it.id}')">🗑</button>
         </div>`;
     });
     html += `
         <div class="addrow">
-          <input id="add-${c.id}" placeholder="${c.special ? 'בקשה מיוחדת... (למשל: עוגה ליום הולדת)' : 'הוסף מוצר ל'+esc(c.name)+'...'}"
+          <input id="add-${c.id}" placeholder="${c.special ? esc(L('specialPlaceholder')) : esc(L('addToCatPlaceholder', {cat: cname}))}"
                  onkeydown="if(event.key==='Enter')addItem('${c.id}')">
           <button onclick="addItem('${c.id}')">➕</button>
         </div>
@@ -911,51 +1594,54 @@ function renderRequest(){
 function toggleCat(id){ openCats[id] = !openCats[id]; render(); }
 
 /* ===== בורר כמות/משקל ===== */
-const QTY_UNITS = ['יח\'', 'ק"ג', 'גרם', 'חבילה', 'שקית', 'בקבוק', 'ליטר'];
+const UNIT_KEYS = ['unit', 'kg', 'gram', 'pack', 'bag', 'bottle', 'liter'];
+const LEGACY_UNIT_MAP = { 'יח\'':'unit', 'ק"ג':'kg', 'גרם':'gram', 'חבילה':'pack', 'שקית':'bag', 'בקבוק':'bottle', 'ליטר':'liter' };
+function normUnit(u){ return UNIT_KEYS.includes(u) ? u : (LEGACY_UNIT_MAP[u] || 'unit'); }
+function unitLabel(u){ return L('unit_' + u); }
 const UNIT_AMOUNTS = {
-  'יח\'':  Array.from({length:30}, (_,i) => i + 1),
-  'ק"ג':   [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5],
-  'גרם':   [50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900],
-  'חבילה': Array.from({length:10}, (_,i) => i + 1),
-  'שקית':  Array.from({length:10}, (_,i) => i + 1),
-  'בקבוק': Array.from({length:12}, (_,i) => i + 1),
-  'ליטר':  [0.5, 1, 1.5, 2, 3, 4, 6],
+  unit:   Array.from({length:30}, (_,i) => i + 1),
+  kg:     [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5],
+  gram:   [50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900],
+  pack:   Array.from({length:10}, (_,i) => i + 1),
+  bag:    Array.from({length:10}, (_,i) => i + 1),
+  bottle: Array.from({length:12}, (_,i) => i + 1),
+  liter:  [0.5, 1, 1.5, 2, 3, 4, 6],
 };
 function amountLabel(a, u){
-  if(u === 'ק"ג'){
-    if(a === 0.25) return 'רבע';
-    if(a === 0.5) return 'חצי';
+  if(u === 'kg'){
+    if(a === 0.25) return L('amt_quarter');
+    if(a === 0.5) return L('amt_half');
     if(a === 0.75) return '¾';
   }
   return String(a);
 }
-function fmtQty(q){ return amountLabel(q.a, q.u) + ' ' + q.u; }
-let qtyItemId = null, qtySelA = 1, qtySelU = 'יח\'';
+function fmtQty(q){ const u = normUnit(q.u); return amountLabel(q.a, u) + ' ' + unitLabel(u); }
+let qtyItemId = null, qtySelA = 1, qtySelU = 'unit';
 function openQtyModal(id){
   const f = findItem(id); if(!f) return;
   qtyItemId = id;
-  qtySelU = f.it.qty ? f.it.qty.u : 'יח\'';
+  qtySelU = f.it.qty ? normUnit(f.it.qty.u) : 'unit';
   qtySelA = f.it.qty ? f.it.qty.a : UNIT_AMOUNTS[qtySelU][0];
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>⚖️ כמה ${esc(f.it.name)}?</h2>
-    <div class="msub">בחרו כמות ויחידה — הקונה יראה בדיוק כמה להביא.</div>
+    <h2>${esc(L('qtyTitle', {name: dispName(f.it)}))}</h2>
+    <div class="msub">${esc(L('qtySub'))}</div>
     <div class="qtycols">
       <div style="flex:1">
-        <div class="qtycol-label">כמות</div>
+        <div class="qtycol-label">${esc(L('qtyAmountLabel'))}</div>
         <div class="qtycol" id="qtyAmounts"></div>
       </div>
       <div style="flex:1">
-        <div class="qtycol-label">יחידה</div>
+        <div class="qtycol-label">${esc(L('qtyUnitLabel'))}</div>
         <div class="qtycol" id="qtyUnits">
-          ${QTY_UNITS.map(u => `<button class="${u === qtySelU ? 'sel' : ''}" onclick="pickQtyUnit('${u.replace(/'/g, "\\'")}')">${u}</button>`).join('')}
+          ${UNIT_KEYS.map(u => `<button class="${u === qtySelU ? 'sel' : ''}" data-u="${u}" onclick="pickQtyUnit('${u}')">${esc(unitLabel(u))}</button>`).join('')}
         </div>
       </div>
     </div>
     <div class="btnrow">
-      <button class="ghost" onclick="clearQty()">בלי כמות</button>
-      <button class="ghost" onclick="closeModal()">ביטול</button>
-      <button class="primary" onclick="saveQty()">שמירה</button>
+      <button class="ghost" onclick="clearQty()">${esc(L('noQty'))}</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      <button class="primary" onclick="saveQty()">${esc(L('save'))}</button>
     </div>`;
   renderQtyAmounts();
   $('#overlay').classList.add('show');
@@ -966,11 +1652,11 @@ function renderQtyAmounts(){
   const amounts = UNIT_AMOUNTS[qtySelU] || [1];
   if(!amounts.includes(qtySelA)) qtySelA = amounts[0];
   el.innerHTML = amounts.map(a =>
-    `<button class="${a === qtySelA ? 'sel' : ''}" onclick="pickQtyAmount(${a})">${amountLabel(a, qtySelU)}</button>`).join('');
+    `<button class="${a === qtySelA ? 'sel' : ''}" onclick="pickQtyAmount(${a})">${esc(amountLabel(a, qtySelU))}</button>`).join('');
 }
 function pickQtyUnit(u){
   qtySelU = u;
-  document.querySelectorAll('#qtyUnits button').forEach(b => b.classList.toggle('sel', b.textContent === u));
+  document.querySelectorAll('#qtyUnits button').forEach(b => b.classList.toggle('sel', b.dataset.u === u));
   renderQtyAmounts();
 }
 function pickQtyAmount(a){
@@ -981,7 +1667,7 @@ function saveQty(){
   const f = findItem(qtyItemId); if(!f) return;
   f.it.qty = { a: qtySelA, u: qtySelU };
   save(); closeModal(); render();
-  toast('⚖️ ' + f.it.name + ': ' + fmtQty(f.it.qty));
+  toast(L('qtySavedToast', {name: dispName(f.it), qty: fmtQty(f.it.qty)}));
 }
 function clearQty(){
   const f = findItem(qtyItemId); if(!f) return;
@@ -993,10 +1679,10 @@ function clearQty(){
 function fmtAgo(ts){
   if(!ts) return '';
   const m = Math.floor((Date.now() - ts) / 60000);
-  if(m < 1) return 'עכשיו';
-  if(m < 60) return 'לפני ' + m + ' דק\'';
+  if(m < 1) return L('now');
+  if(m < 60) return L('minAgo', {m});
   const h = Math.floor(m / 60);
-  if(h < 24) return 'לפני ' + h + ' שע\'';
+  if(h < 24) return L('hourAgo', {h});
   const d = new Date(ts);
   return d.getDate() + '/' + (d.getMonth() + 1);
 }
@@ -1013,7 +1699,7 @@ function postBoard(){
   });
   if(state.board.length > 30) state.board.length = 30;
   save(); pushList(); render();
-  toast('ההודעה פורסמה בלוח 📌');
+  toast(L('boardPosted'));
 }
 function delBoard(id){
   state.board = state.board.filter(b => b.id !== id);
@@ -1030,22 +1716,20 @@ function extractProductName(text){
 /* הוספת בקשה לרשימה: אם המוצר בקטלוג — מסומן בקטגוריה שלו; אחרת לבקשות מיוחדות */
 function addRequestToList(rawText, byName){
   const name = extractProductName(rawText);
-  let found = null, foundCat = null;
-  for(const c of state.cats){
-    const it = c.items.find(i => i.name.trim() === name);
-    if(it){ found = it; foundCat = c; break; }
-  }
+  const idx = catalogIndex();
+  const found = idx[name];
   if(found){
+    const foundCat = state.cats.find(c => c.items.includes(found));
     found.need = true; found.bought = false; markAdded(found);
     if(byName) found.addedBy = byName;
-    toast('"' + name + '" סומן ברשימה (' + foundCat.name + ') ✓');
+    toast(L('matchedToast', {name: dispName(found), cat: dispCat(foundCat)}));
   }else{
     const sp = state.cats.find(c => c.id === 'special');
-    const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note: byName ? 'ביקש/ה: ' + byName : '', need:true, bought:false };
+    const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note: byName ? L('specialNoteBy', {name: byName}) : '', need:true, bought:false };
     markAdded(item);
     if(byName) item.addedBy = byName;
     sp.items.push(item);
-    toast('"' + name + '" נוסף לבקשות מיוחדות ⭐');
+    toast(L('addedSpecialToast', {name}));
   }
   save(); pushList(); render();
   return name;
@@ -1076,37 +1760,37 @@ function updateChatBadge(){
 }
 function chatMsgsHTML(){
   if(!(state.chat || []).length){
-    return '<div class="hint" style="padding:8px 4px">אין הודעות עדיין. שאלו, ענו ובקשו מוצרים — גם באמצע קנייה.</div>';
+    return `<div class="hint" style="padding:8px 4px">${esc(L('chatEmpty'))}</div>`;
   }
   return state.chat.slice().reverse().map(m => {
     const mine = fam && m.fromId === fam.memberId;
     return `
     <div class="cmsg ${mine ? 'mine' : ''}">
       <div class="cbubble">
-        ${m.req ? '<span class="creq">🛒 בקשת מוצר</span><br>' : ''}
+        ${m.req ? `<span class="creq">${esc(L('productRequestTag'))}</span><br>` : ''}
         ${esc(m.text)}
         ${m.req ? (m.added
-          ? `<br><span class="cadded">✓ נוסף לרשימה${m.addedByName ? ' ע"י ' + esc(m.addedByName) : ''}</span>`
-          : `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">➕ הוסף לרשימת הקנייה</button>`) : ''}
+          ? `<br><span class="cadded">${esc(L('addedToList'))}${m.addedByName ? esc(L('addedToListBy', {name: m.addedByName})) : ''}</span>`
+          : `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">${esc(L('addToListBtn'))}</button>`) : ''}
       </div>
       <div class="cmeta">${esc(m.from || '')} · ${fmtAgo(m.at)}</div>
     </div>`;
   }).join('');
 }
 function openChat(focusInput){
-  if(!fam){ toast('צ\'אט זמין אחרי חיבור משפחה (⚙️ הגדרות)'); return; }
+  if(!fam){ toast(L('chatUnavailable')); return; }
   markChatSeen();
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>💬 צ'אט — משפחת ${esc(fam.familyName)}</h2>
+    <h2>${esc(L('chatTitle', {name: fam.familyName}))}</h2>
     <div class="chatlist" id="chatList">${chatMsgsHTML()}</div>
     <div class="chatinput">
-      <input id="chatIn" placeholder='הודעה... (למשל: אין גבינה לבנה, להביא קוטג׳?)' onkeydown="if(event.key==='Enter')sendChat(false)">
+      <input id="chatIn" placeholder="${esc(L('chatPlaceholder'))}" onkeydown="if(event.key==='Enter')sendChat(false)">
     </div>
     <div class="btnrow" style="margin-top:10px">
-      <button class="ghost" onclick="closeModal()">סגירה</button>
-      <button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="sendChat(true)">🛒 בקשת מוצר</button>
-      <button class="primary" onclick="sendChat(false)">שלח 💬</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('close'))}</button>
+      <button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="sendChat(true)">${esc(L('productRequestBtn'))}</button>
+      <button class="primary" onclick="sendChat(false)">${esc(L('sendChatBtn'))}</button>
     </div>`;
   $('#overlay').classList.add('show');
   const cl = document.getElementById('chatList');
@@ -1137,11 +1821,11 @@ function sendChat(req){
 }
 function chatAddToList(id){
   const m = (state.chat || []).find(x => x.id === id); if(!m) return;
-  if(m.added){ toast('הבקשה כבר נוספה לרשימה ✓'); return; }
+  if(m.added){ toast(L('alreadyAdded')); return; }
   const name = addRequestToList(m.text, m.from);
   m.added = true;
   m.addedByName = fam ? fam.myName : '';
-  pushChatMsg('✓ הוספתי לרשימה: ' + name, false);
+  pushChatMsg(L('addedToListMsg', {name}), false);
   const cl = document.getElementById('chatList');
   if(cl){ cl.innerHTML = chatMsgsHTML(); cl.scrollTop = cl.scrollHeight; }
 }
@@ -1149,17 +1833,17 @@ function chatAddToList(id){
 function chatPopup(m){
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>💬 הודעה מ${esc(m.from || 'בן משפחה')}</h2>
-    <div class="popmsg ${m.req ? 'reqmsg' : ''}">${m.req ? '<span class="creq">🛒 בקשת מוצר</span><br>' : ''}${esc(m.text)}</div>
+    <h2>${esc(L('popupFrom', {name: m.from || L('familyMember')}))}</h2>
+    <div class="popmsg ${m.req ? 'reqmsg' : ''}">${m.req ? `<span class="creq">${esc(L('productRequestTag'))}</span><br>` : ''}${esc(m.text)}</div>
     <div class="msub">${fmtAgo(m.at)}</div>
-    <label>תשובה מהירה:</label>
-    <input type="text" id="popReply" placeholder="כתבו תשובה..." onkeydown="if(event.key==='Enter')popSend()">
+    <label>${esc(L('quickReplyLabel'))}</label>
+    <input type="text" id="popReply" placeholder="${esc(L('quickReplyPlaceholder'))}" onkeydown="if(event.key==='Enter')popSend()">
     <div class="btnrow">
-      <button class="ghost" onclick="closeModal()">סגור</button>
-      ${m.req ? `<button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="closeModal();chatAddToList('${m.id}')">➕ הוסף לרשימה</button>` : ''}
-      <button class="primary" onclick="popSend()">שלח 💬</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('closeBtn'))}</button>
+      ${m.req ? `<button class="ghost" style="border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e" onclick="closeModal();chatAddToList('${m.id}')">${esc(L('addToListBtn2'))}</button>` : ''}
+      <button class="primary" onclick="popSend()">${esc(L('sendChatBtn'))}</button>
     </div>
-    <button class="qopt" style="margin-top:12px;text-align:center" onclick="openChat(true)">פתיחת הצ'אט המלא 💬</button>`;
+    <button class="qopt" style="margin-top:12px;text-align:center" onclick="openChat(true)">${esc(L('openFullChat'))}</button>`;
   $('#overlay').classList.add('show');
   markChatSeen();
 }
@@ -1168,7 +1852,7 @@ function popSend(){
   if(!v){ $('#popReply').focus(); return; }
   pushChatMsg(v, false);
   closeModal();
-  toast('נשלח ✓ 💬');
+  toast(L('sentToast'));
 }
 function markAdded(it){
   it.addedAt = Date.now();
@@ -1198,23 +1882,23 @@ function addItem(catId){
   inp.value = '';
   save(); render();
   const again = $('#add-' + catId); if(again) again.focus();
-  toast('"' + name + '" נוסף לרשימה ✓');
+  toast(L('addedToListToast', {name}));
 }
 function delItem(id){
   const f = findItem(id); if(!f) return;
-  if(!confirm('למחוק את "' + f.it.name + '" מהקטלוג?')) return;
+  if(!confirm(L('deleteConfirm', {name: dispName(f.it)}))) return;
   f.cat.items = f.cat.items.filter(i => i.id !== id);
   save(); render();
 }
 function toggleEdit(){ document.body.classList.toggle('editmode'); render(); }
 function resetAll(){
-  if(!confirm('לאפס את הרשימה? כל הסימונים והבקשות המיוחדות יימחקו (הקטלוג יישאר).')) return;
+  if(!confirm(L('resetConfirm'))) return;
   state.cats.forEach(c => {
     if(c.special) c.items = [];
     else c.items.forEach(it => { it.need = false; it.bought = false; delete it.price; });
   });
   save(); render();
-  toast('הרשימה אופסה 🔄');
+  toast(L('resetToast'));
 }
 
 /* ===== shopper view ===== */
@@ -1225,58 +1909,58 @@ function renderShop(){
     m.innerHTML = `
       <div class="empty">
         <div class="big">🛒</div>
-        <p>הרשימה ריקה. סמנו מוצרים במסך "מה צריך" והם יופיעו כאן לקונה.</p>
-        <button class="gobtn" onclick="setView('request')">📝 למילוי הרשימה</button>
+        <p>${esc(L('shopEmptyMsg'))}</p>
+        <button class="gobtn" onclick="setView('request')">${esc(L('goToRequest'))}</button>
       </div>`;
     return;
   }
   const done = all.filter(x => x.it.bought).length;
   const pct = Math.round(done / all.length * 100);
-  const who = state.settings.reqName || 'מי שרשם את הרשימה';
+  const who = state.settings.reqName || L('listOwnerDefaultLong');
   const total = cartTotal();
   let html = `
   <div class="progress-card">
     <div class="toprow">
-      <span class="title">🛍️ הקנייה שלי</span>
-      <span class="nums"><b>${done}</b> מתוך ${all.length} נאספו</span>
+      <span class="title">${esc(L('shopTitle'))}</span>
+      <span class="nums">${L('collectedOf', {done: '<b>' + done + '</b>', total: all.length})}</span>
     </div>
-    ${state.trip.startedAt && state.trip.store ? `<div class="tripstore">📍 ${esc(state.trip.store.chain)} ${esc(state.trip.store.name || '')}</div>` : ''}
+    ${state.trip.startedAt && state.trip.store ? `<div class="tripstore">${esc(L('tripStore', {chain: state.trip.store.chain, name: state.trip.store.name || ''}))}</div>` : ''}
     <div class="bar"><div style="width:${pct}%"></div></div>
-    ${total > 0 ? `<div class="carttotal"><span>🧾 מצטבר בעגלה</span><b>₪${fmtPrice(total)}</b></div>` : ''}
+    ${total > 0 ? `<div class="carttotal"><span>${esc(L('cartTotal'))}</span><b>₪${fmtPrice(total)}</b></div>` : ''}
     <div class="tripline">
       ${state.trip.startedAt
         ? (isShopper()
           ? `<div class="timer">⏱ <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>
-             <button class="finishbtn" onclick="finishTrip()">🏁 סיים</button>`
-          : `<div class="timer live">🔴 ${esc(state.trip.shopperName || 'הקונה')} בקנייה · <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>`)
-        : `<button class="startbtn" onclick="startTrip()">▶️ התחל קנייה</button>`}
-      <button class="dealsbtn" onclick="openDeals()">🏷️ מבצעים</button>
+             <button class="finishbtn" onclick="finishTrip()">${esc(L('finishBtn'))}</button>`
+          : `<div class="timer live">${esc(L('shopperLive', {name: state.trip.shopperName || L('shopper')}))}<span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>`)
+        : `<button class="startbtn" onclick="startTrip()">${esc(L('startTripBtn'))}</button>`}
+      <button class="dealsbtn" onclick="openDeals()">${esc(L('dealsBtn'))}</button>
     </div>
     <div class="who">
-      <span>יש שאלה? ${esc(who)} זמין/ה בוואטסאפ:</span>
-      <button class="askbtn" onclick="askGeneral()">💬 שאלה כללית</button>
+      <span>${esc(L('askAvailable', {name: who}))}</span>
+      <button class="askbtn" onclick="askGeneral()">${esc(L('generalQBtn'))}</button>
     </div>
   </div>`;
   if(done === all.length){
     html += `
     <div class="done-banner">
-      <div class="t">🎉 כל הפריטים נאספו!</div>
+      <div class="t">${esc(L('allDoneTitle'))}</div>
       <div class="actions">
-        <button class="wa-b" onclick="notifyDone()">💬 עדכן שסיימתי</button>
-        <button class="rs-b" onclick="finishTrip()">🏁 שמור בהיסטוריה ואפס</button>
+        <button class="wa-b" onclick="notifyDone()">${esc(L('notifyDoneBtn'))}</button>
+        <button class="rs-b" onclick="finishTrip()">${esc(L('saveHistoryResetBtn'))}</button>
       </div>
     </div>`;
   }
   const newReqs = newRequests();
   if(newReqs.length){
     html += `
-    <div class="newreq">🔔 בקשות שנוספו בזמן הקנייה:
-      ${newReqs.map(x => `<b>${esc(x.it.name)}</b> (${esc(x.cat.name)}${x.it.addedBy ? ' · ' + esc(x.it.addedBy) : ''})`).join(', ')}
+    <div class="newreq">${esc(L('newReqsPrefix'))}
+      ${newReqs.map(x => `<b>${esc(dispName(x.it))}</b> (${esc(dispCat(x.cat))}${x.it.addedBy ? ' · ' + esc(x.it.addedBy) : ''})`).join(', ')}
     </div>`;
   }
   html += `
   <div class="pathcard">
-    <div class="ptitle">🗺️ מסלול הקנייה</div>
+    <div class="ptitle">${esc(L('routeTitle'))}</div>
     ${pathMapSVG()}
   </div>`;
   state.cats.forEach(c => {
@@ -1288,7 +1972,7 @@ function renderShop(){
     html += `
     <div class="shopcat ${closed?'closed':''}" id="shopcat-${c.id}">
       <button class="shopcat-head" style="background:${col.bg};color:${col.ac};border-radius:10px" onclick="toggleShopCat('${c.id}')">
-        ${c.emoji} ${esc(c.name)} <span class="cc" style="background:rgba(255,255,255,.8);color:${col.ac}">${cdone}/${items.length}</span>
+        ${c.emoji} ${esc(dispCat(c))} <span class="cc" style="background:rgba(255,255,255,.8);color:${col.ac}">${cdone}/${items.length}</span>
         <span class="sp"></span><span class="chev" style="color:${col.ac}">◀</span>
       </button>
       <div class="shopcat-items">`;
@@ -1299,14 +1983,14 @@ function renderShop(){
         <button class="main-tap" onclick="toggleBought('${it.id}')">
           <span class="bigchk">${it.bought?'✓':''}</span>
           <span class="stxt">
-            <span class="snm">${esc(it.name)} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''} ${isNewReq(it) ? `<span class="newtag">🆕 ${esc(it.addedBy || 'נוסף עכשיו')}</span>` : ''}</span>
-            ${it.note ? `<span class="snote">📌 ${esc(it.note)}</span>` : ''}
+            <span class="snm">${esc(dispName(it))} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''} ${isNewReq(it) ? `<span class="newtag">🆕 ${esc(it.addedBy || L('justAdded'))}</span>` : ''}</span>
+            ${dispNote(it) ? `<span class="snote">📌 ${esc(dispNote(it))}</span>` : ''}
           </span>
         </button>
-        <button class="price ${it.price!=null?'has':''}" title="מחיר" onclick="openPriceModal('${it.id}')">
+        <button class="price ${it.price!=null?'has':''}" title="${esc(L('priceTitleAttr'))}" onclick="openPriceModal('${it.id}')">
           ${it.price!=null ? '₪'+fmtPrice(it.price) : '₪ +'}
         </button>
-        <button class="ask" title="שאלה בוואטסאפ" onclick="askAbout('${it.id}')">
+        <button class="ask" title="${esc(L('askTitleAttr'))}" onclick="askAbout('${it.id}')">
           <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
         </button>
       </div>`;
@@ -1388,17 +2072,17 @@ function openCatItems(catId){
   const col = catCol(c);
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>${c.emoji} ${esc(c.name)}
+    <h2>${c.emoji} ${esc(dispCat(c))}
       <span style="font-size:13px;background:${col.bg};color:${col.ac};border-radius:999px;padding:3px 12px;direction:ltr">${done}/${items.length}</span>
     </h2>
-    <div class="msub">הקישו על פריט כדי לסמן שנאסף.</div>
+    <div class="msub">${esc(L('tapToMark'))}</div>
     ${items.map(i => `
       <button class="catitem ${i.bought ? 'b' : ''}" onclick="catItemTap('${i.id}', '${catId}')">
         <span class="cchk">${i.bought ? '✓' : ''}</span>
-        <span class="cnm">${esc(i.name)} ${i.qty ? `<span class="qtybadge">${esc(fmtQty(i.qty))}</span>` : ''}${i.note ? `<br><span class="cnote">📌 ${esc(i.note)}</span>` : ''}</span>
+        <span class="cnm">${esc(dispName(i))} ${i.qty ? `<span class="qtybadge">${esc(fmtQty(i.qty))}</span>` : ''}${dispNote(i) ? `<br><span class="cnote">📌 ${esc(dispNote(i))}</span>` : ''}</span>
         <span class="cpr">${i.price != null ? '₪' + fmtPrice(i.price) : ''}</span>
       </button>`).join('')}
-    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('close'))}</button></div>`;
   $('#overlay').classList.add('show');
 }
 function catItemTap(id, catId){
@@ -1436,7 +2120,7 @@ function actuallyStartTrip(store){
   };
   save(); closeModal(); render();
   pushList(); // דחיפה מיידית כדי שבני המשפחה יקבלו את האיתות מהר
-  toast('⏱ הקנייה התחילה' + (store ? ' ב' + store.chain + (store.name ? ' ' + store.name : '') : '') + ' — בהצלחה!');
+  toast(L('tripStartedToast', {store: store ? L('inStore', {chain: store.chain, name: store.name ? ' ' + store.name : ''}) : ''}));
 }
 
 /* ===== מאגר מקומות קנייה ===== */
@@ -1445,14 +2129,14 @@ let storeCache = [];
 async function openStoreModal(){
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>📍 איפה קונים היום?</h2>
-    <div class="msub">בחרו מקום מהמאגר — הקנייה תירשם עליו ותיכנס להשוואת הרשתות.</div>
-    <input type="text" id="storeSearch" placeholder="🔍 חיפוש... (למשל: שופרסל)" oninput="renderStoreList(this.value)">
-    <div id="storeList" class="storelist"><div class="hint">⏳ טוען מאגר חנויות...</div></div>
-    <button class="camline" onclick="showAddStore()">➕ המקום לא במאגר? הוסיפו אותו</button>
+    <h2>${esc(L('storeModalTitle'))}</h2>
+    <div class="msub">${esc(L('storeModalSub'))}</div>
+    <input type="text" id="storeSearch" placeholder="${esc(L('storeSearchPlaceholder'))}" oninput="renderStoreList(this.value)">
+    <div id="storeList" class="storelist"><div class="hint">${esc(L('loadingStores'))}</div></div>
+    <button class="camline" onclick="showAddStore()">${esc(L('addStoreBtn'))}</button>
     <div class="btnrow">
-      <button class="ghost" onclick="closeModal()">ביטול</button>
-      <button class="ghost" onclick="actuallyStartTrip(null)">התחל בלי מקום</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      <button class="ghost" onclick="actuallyStartTrip(null)">${esc(L('startNoStore'))}</button>
     </div>`;
   $('#overlay').classList.add('show');
   try{
@@ -1461,7 +2145,7 @@ async function openStoreModal(){
     renderStoreList('');
   }catch(e){
     const el = document.getElementById('storeList');
-    if(el) el.innerHTML = '<div class="hint">⚠️ אין חיבור למאגר — אפשר להוסיף מקום ידנית (יישמר לקנייה הזו) או להתחיל בלי מקום.</div>';
+    if(el) el.innerHTML = `<div class="hint">${esc(L('storeNoConn'))}</div>`;
   }
 }
 function renderStoreList(q){
@@ -1470,13 +2154,13 @@ function renderStoreList(q){
   q = (q || '').trim();
   const list = storeCache.filter(s => !q || (s.chain + ' ' + s.name).includes(q)).slice(0, 30);
   if(!list.length){
-    el.innerHTML = `<div class="hint">${storeCache.length ? 'לא נמצא "' + esc(q) + '" — הוסיפו אותו למאגר 👇' : 'המאגר עדיין ריק — הוסיפו את המקום הראשון 👇'}</div>`;
+    el.innerHTML = `<div class="hint">${esc(storeCache.length ? L('notFoundAddIt', {q}) : L('storesEmptyAddFirst'))}</div>`;
     return;
   }
   el.innerHTML = list.map(s => `
     <button class="storerow" onclick="chooseStore('${esc(s.id)}')">
       🏪 <b>${esc(s.chain)}</b> ${esc(s.name)}
-      ${s.region ? `<span class="sregion">📍 ${esc(s.region)}</span>` : ''}
+      ${s.region ? `<span class="sregion">📍 ${esc(regionLabel(normRegion(s.region)))}</span>` : ''}
     </button>`).join('');
 }
 function chooseStore(id){
@@ -1486,18 +2170,18 @@ function chooseStore(id){
 function showAddStore(){
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>➕ הוספת מקום קנייה למאגר</h2>
-    <div class="msub">המקום יישמר במאגר המרכזי ויהיה זמין לכל המשתמשים.</div>
-    <label>רשת / סוג</label>
+    <h2>${esc(L('addStoreTitle'))}</h2>
+    <div class="msub">${esc(L('addStoreSub'))}</div>
+    <label>${esc(L('chainLabel'))}</label>
     <select id="stChain" class="selectbox">${CHAINS.map(c => `<option>${c}</option>`).join('')}</select>
-    <label>שם הסניף / המקום</label>
-    <input type="text" id="stName" placeholder='למשל: ראשון לציון מערב / "המכולת של משה"'>
-    <label>אזור</label>
-    <select id="stRegion" class="selectbox">${REGIONS.map(r => `<option ${fam && fam.region === r ? 'selected' : ''}>${r}</option>`).join('')}</select>
+    <label>${esc(L('storeNameLabel'))}</label>
+    <input type="text" id="stName" placeholder="${esc(L('storeNamePlaceholder'))}">
+    <label>${esc(L('regionLabel'))}</label>
+    <select id="stRegion" class="selectbox">${REGION_KEYS.map(r => `<option value="${r}" ${fam && fam.region === r ? 'selected' : ''}>${esc(regionLabel(r))}</option>`).join('')}</select>
     <div class="ocr-status" id="stStatus"></div>
     <div class="btnrow">
-      <button class="ghost" onclick="openStoreModal()">חזרה</button>
-      <button class="primary" onclick="submitStore()">שמור והתחל קנייה</button>
+      <button class="ghost" onclick="openStoreModal()">${esc(L('back'))}</button>
+      <button class="primary" onclick="submitStore()">${esc(L('saveStartBtn'))}</button>
     </div>`;
 }
 async function submitStore(){
@@ -1505,26 +2189,26 @@ async function submitStore(){
   const name = ($('#stName').value || '').trim();
   const region = $('#stRegion').value;
   const st = $('#stStatus');
-  if(!name){ st.textContent = 'נא למלא את שם הסניף/המקום'; return; }
-  st.textContent = '⏳ שומר במאגר...';
+  if(!name){ st.textContent = L('fillStoreName'); return; }
+  st.textContent = L('savingToStores');
   try{
     const res = await apiPost('addStore', { chain, name, region, by: fam ? fam.myName : '' });
     if(res && res.ok && res.store){
       actuallyStartTrip({ id: res.store.id, chain: res.store.chain, name: res.store.name });
-      toast('🏪 "' + chain + ' ' + name + '" נוסף למאגר ✓');
+      toast(L('storeAddedToast', {chain, name}));
       return;
     }
-    st.textContent = '⚠️ ' + ((res && res.error) || 'השמירה נכשלה');
+    st.textContent = '⚠️ ' + ((res && res.error) || L('storeSaveFailed'));
   }catch(e){
     // אין שרת — נשמר לקנייה הזו בלבד
     actuallyStartTrip({ id: null, chain, name });
-    toast('נשמר לקנייה הזו (אין חיבור למאגר)');
+    toast(L('savedThisTripOnly'));
   }
 }
 function finishTrip(){
   const all = neededItems();
-  if(!all.length){ toast('אין פריטים ברשימה'); return; }
-  if(!confirm('לסיים את הקנייה ולשמור אותה בהיסטוריה?')) return;
+  if(!all.length){ toast(L('listEmptyToast')); return; }
+  if(!confirm(L('finishConfirm'))) return;
   const rec = {
     id: 'h' + Date.now(),
     date: new Date().toISOString(),
@@ -1533,8 +2217,8 @@ function finishTrip(){
     store: state.trip.store || null,
     shopperName: state.trip.shopperName || '',
     items: all.map(x => ({
-      name: x.it.name, cat: x.cat.id, catName: x.cat.name, emoji: x.cat.emoji,
-      note: x.it.note || '', bought: !!x.it.bought,
+      name: dispName(x.it), cat: x.cat.id, catName: dispCat(x.cat), emoji: x.cat.emoji,
+      note: dispNote(x.it), bought: !!x.it.bought,
       ...(x.it.qty ? {qty: x.it.qty} : {}),
       ...(x.it.addedBy ? {addedBy: x.it.addedBy} : {}),
       ...(x.it.price != null ? {price: x.it.price} : {})
@@ -1547,8 +2231,8 @@ function finishTrip(){
   if(fam){
     apiPost('finishTrip', { familyId: fam.familyId, region: fam.region, record: rec }).catch(() => {});
   }
-  toast('הקנייה נשמרה בהיסטוריה 🧾');
-  if(confirm('לאפס את הרשימה לקראת הקנייה הבאה?')){
+  toast(L('savedToHistoryToast'));
+  if(confirm(L('resetForNextConfirm'))){
     state.cats.forEach(c => {
       if(c.special) c.items = [];
       else c.items.forEach(it => { it.need = false; it.bought = false; delete it.price; });
@@ -1563,23 +2247,46 @@ setInterval(() => {
 }, 1000);
 
 /* ===== deals (demo — store integration planned) ===== */
-const DEMO_DEALS = [
-  {e:'🍅', n:'עגבניות שרי — 1+1', d:'מארז שני במתנה', t:'1+1'},
-  {e:'🧀', n:'גבינה צהובה — 20% הנחה', d:'במעדנייה, עד סוף השבוע', t:'-20%'},
-  {e:'🧻', n:'נייר טואלט 32 גלילים', d:'₪34.90 במקום ₪44.90', t:'מבצע'},
-  {e:'🫒', n:'שמן זית כתית מעולה', d:'השני ב-50% הנחה', t:'2ב50%'},
-  {e:'☕', n:'קפה נמס 200 גרם', d:'₪19.90 לחברי מועדון', t:'מועדון'},
-];
+const DEMO_DEALS = {
+  he:[
+    {e:'🍅', n:'עגבניות שרי — 1+1', d:'מארז שני במתנה', t:'1+1'},
+    {e:'🧀', n:'גבינה צהובה — 20% הנחה', d:'במעדנייה, עד סוף השבוע', t:'-20%'},
+    {e:'🧻', n:'נייר טואלט 32 גלילים', d:'₪34.90 במקום ₪44.90', t:'מבצע'},
+    {e:'🫒', n:'שמן זית כתית מעולה', d:'השני ב-50% הנחה', t:'2ב50%'},
+    {e:'☕', n:'קפה נמס 200 גרם', d:'₪19.90 לחברי מועדון', t:'מועדון'},
+  ],
+  en:[
+    {e:'🍅', n:'Cherry tomatoes — 1+1', d:'Second pack free', t:'1+1'},
+    {e:'🧀', n:'Yellow cheese — 20% off', d:'At the deli, until end of week', t:'-20%'},
+    {e:'🧻', n:'Toilet paper, 32 rolls', d:'₪34.90 instead of ₪44.90', t:'Deal'},
+    {e:'🫒', n:'Extra virgin olive oil', d:'Second bottle 50% off', t:'2-for-50%'},
+    {e:'☕', n:'Instant coffee 200g', d:'₪19.90 for club members', t:'Club'},
+  ],
+  ru:[
+    {e:'🍅', n:'Помидоры черри — 1+1', d:'Второй набор в подарок', t:'1+1'},
+    {e:'🧀', n:'Жёлтый сыр — скидка 20%', d:'В гастрономе, до конца недели', t:'-20%'},
+    {e:'🧻', n:'Туалетная бумага, 32 рулона', d:'₪34.90 вместо ₪44.90', t:'Акция'},
+    {e:'🫒', n:'Оливковое масло extra virgin', d:'Вторая бутылка со скидкой 50%', t:'2 по 50%'},
+    {e:'☕', n:'Растворимый кофе 200 г', d:'₪19.90 для членов клуба', t:'Клуб'},
+  ],
+  ar:[
+    {e:'🍅', n:'طماطم كرزية — 1+1', d:'العبوة الثانية مجانًا', t:'1+1'},
+    {e:'🧀', n:'جبنة صفراء — خصم 20%', d:'في قسم الأجبان، حتى نهاية الأسبوع', t:'-20%'},
+    {e:'🧻', n:'ورق تواليت، 32 لفة', d:'₪34.90 بدلاً من ₪44.90', t:'عرض'},
+    {e:'🫒', n:'زيت زيتون بكر ممتاز', d:'الثانية بخصم 50%', t:'2 مقابل 50%'},
+    {e:'☕', n:'قهوة سريعة الذوبان 200 غ', d:'₪19.90 لأعضاء النادي', t:'نادي'},
+  ],
+};
 async function openDeals(){
   const box = $('#modalBox');
-  const dealHTML = (e, n, dsc, t) => `
+  const dealHTML = (e, n, dsc, tag) => `
     <div class="deal">
       <span class="demoji">${e || '🏷️'}</span>
       <span class="dtxt"><span class="dname">${esc(n)}</span><br><span class="ddesc">${esc(dsc || '')}</span></span>
-      <span class="dtag">${esc(t || 'מבצע')}</span>
+      <span class="dtag">${esc(tag || L('dealTag'))}</span>
     </div>`;
-  box.innerHTML = `<h2>🏷️ מבצעים בחנות</h2><div class="msub">⏳ בודק מבצעים...</div>
-    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
+  box.innerHTML = `<h2>${esc(L('dealsTitle'))}</h2><div class="msub">${esc(L('checkingDeals'))}</div>
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('close'))}</button></div>`;
   $('#overlay').classList.add('show');
   // מבצעים אמיתיים מה-DB המרכזי; אם אין — הדגמה
   let real = [];
@@ -1589,12 +2296,12 @@ async function openDeals(){
   }catch(e){}
   if(!$('#overlay').classList.contains('show')) return;
   box.innerHTML = `
-    <h2>🏷️ מבצעים בחנות</h2>
+    <h2>${esc(L('dealsTitle'))}</h2>
     ${real.length
-      ? `<div class="msub">מבצעים באזורכם:</div>` + real.map(d => dealHTML(d.emoji, d.title, (d.store ? d.store + ' · ' : '') + (d.description || ''), d.tag)).join('')
-      : `<div class="msub">בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):</div>`
-        + DEMO_DEALS.map(d => dealHTML(d.e, d.n, d.d, d.t)).join('')}
-    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
+      ? `<div class="msub">${esc(L('dealsInRegion'))}</div>` + real.map(d => dealHTML(d.emoji, d.title, (d.store ? d.store + ' · ' : '') + (d.description || ''), d.tag)).join('')
+      : `<div class="msub">${esc(L('dealsComingSoon'))}</div>`
+        + (DEMO_DEALS[lang] || DEMO_DEALS.he).map(d => dealHTML(d.e, d.n, d.d, d.t)).join('')}
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('close'))}</button></div>`;
 }
 
 /* ===== history view ===== */
@@ -1605,17 +2312,17 @@ function renderHistory(){
   if(fam){
     html += `
     <div class="bench">
-      <div class="btitle">📊 השוואה אזורית — ${esc(fam.region)}</div>
-      <div id="benchBody" class="hint">⏳ טוען נתוני השוואה...</div>
-      <div class="btitle" style="margin-top:14px">🏪 השוואת רשתות</div>
-      <div id="benchChains" class="hint">⏳ טוען נתוני רשתות...</div>
+      <div class="btitle">${esc(L('benchTitle', {region: regionLabel(fam.region)}))}</div>
+      <div id="benchBody" class="hint">${esc(L('loadingBench'))}</div>
+      <div class="btitle" style="margin-top:14px">${esc(L('chainCompareTitle'))}</div>
+      <div id="benchChains" class="hint">${esc(L('loadingChains'))}</div>
     </div>`;
   }
   if(!state.history.length){
     m.innerHTML = html + `
       <div class="empty">
         <div class="big">🧾</div>
-        <p>עדיין אין קניות שמורות. במסך הקנייה, לחצו "▶️ התחל קנייה" ובסיום "🏁 סיים" — והקנייה תישמר כאן עם המוצרים, המחירים וזמן הקנייה.</p>
+        <p>${esc(L('historyEmpty'))}</p>
       </div>`;
     if(fam){ loadBenchmark(); loadBenchmarkChains(); loadHistoryCloud(); }
     return;
@@ -1634,7 +2341,7 @@ function renderHistory(){
           <span class="hdate">${ds}</span>
           <span class="hmeta">
             ${rec.store ? `<span>📍 ${esc(rec.store.chain)} ${esc(rec.store.name || '')}</span>` : ''}
-            <span>📦 ${bought}/${rec.items.length} נאספו</span>
+            <span>${esc(L('collectedCount', {n: bought, total: rec.items.length}))}</span>
             ${rec.total > 0 ? `<span>🧾 ₪${fmtPrice(rec.total)}</span>` : ''}
             ${rec.durationMs != null ? `<span>⏱ ${fmtDur(rec.durationMs)}</span>` : ''}
           </span>
@@ -1648,7 +2355,7 @@ function renderHistory(){
             <span class="hp">${i.price != null ? '₪' + fmtPrice(i.price) : (i.bought ? '✓' : '—')}</span>
           </div>`).join('')}
         <div class="hactions">
-          <button class="imp" onclick="importPurchase('${rec.id}')">📥 ייבא לרשימה חדשה</button>
+          <button class="imp" onclick="importPurchase('${rec.id}')">${esc(L('importBtn'))}</button>
           <button class="delh" onclick="delHist('${rec.id}')">🗑</button>
         </div>
       </div>
@@ -1663,14 +2370,14 @@ async function loadBenchmarkChains(){
     const el = document.getElementById('benchChains');
     if(!el || !res || !res.ok) return;
     if(!res.chains || !res.chains.length){
-      el.textContent = 'עדיין אין קניות עם מקום מסומן — בחרו חנות ב"התחל קנייה" וההשוואה תתמלא.';
+      el.textContent = L('noChainData');
       return;
     }
     // הרשתות שהמשפחה קונה בהן — לסימון בטבלה
     const myChains = new Set(state.history.filter(h => h.store && h.store.chain).map(h => h.store.chain));
     el.innerHTML = `
       <table class="benchtbl">
-        <tr><th>רשת</th><th>סל ממוצע</th><th>⏱ ממוצע</th><th>קניות</th></tr>
+        <tr><th>${esc(L('chainTh'))}</th><th>${esc(L('avgCartTh'))}</th><th>${esc(L('avgTimeTh'))}</th><th>${esc(L('purchasesTh'))}</th></tr>
         ${res.chains.map(c => `
         <tr${myChains.has(c.chain) ? ' class="mychain"' : ''}>
           <td>${myChains.has(c.chain) ? '⭐ ' : ''}${esc(c.chain)}</td>
@@ -1679,7 +2386,7 @@ async function loadBenchmarkChains(){
           <td>${c.count}</td>
         </tr>`).join('')}
       </table>
-      <div class="hint" style="margin-top:6px">⭐ = רשתות שהמשפחה שלכם קונה בהן. השוואה כלל-ארצית אנונימית.</div>`;
+      <div class="hint" style="margin-top:6px">${esc(L('chainCompareFoot'))}</div>`;
   }catch(e){}
 }
 function toggleHist(id){ histOpen[id] = !histOpen[id]; render(); }
@@ -1708,7 +2415,7 @@ async function loadBenchmark(){
     const el = document.getElementById('benchBody');
     if(!el || !res || !res.ok) return;
     if(!res.count){
-      el.textContent = 'עדיין אין נתונים מאזור ' + fam.region + ' — ההשוואה תתמלא ככל שמשפחות באזור ישתמשו באפליקציה.';
+      el.textContent = L('noRegionData', {region: regionLabel(fam.region)});
       return;
     }
     const mine = state.history;
@@ -1719,23 +2426,20 @@ async function loadBenchmark(){
     const myAvgItems = mine.length ? mine.reduce((a,h) => a + h.items.length, 0) / mine.length : 0;
     el.innerHTML = `
       <table class="benchtbl">
-        <tr><th></th><th>המשפחה שלכם</th><th>ממוצע אזורי</th></tr>
-        <tr><td>🧾 סל ממוצע</td><td>${myAvgTotal ? '₪' + fmtPrice(myAvgTotal) : '—'}</td><td>${res.avgTotal ? '₪' + fmtPrice(res.avgTotal) : '—'}</td></tr>
-        <tr><td>📦 פריטים בקנייה</td><td>${myAvgItems ? Math.round(myAvgItems) : '—'}</td><td>${res.avgItems ? Math.round(res.avgItems) : '—'}</td></tr>
-        <tr><td>⏱ זמן קנייה</td><td>${myAvgDur ? fmtDur(myAvgDur) : '—'}</td><td>${res.avgDurationMs ? fmtDur(res.avgDurationMs) : '—'}</td></tr>
+        <tr><th></th><th>${esc(L('yourFamilyTh'))}</th><th>${esc(L('regionAvgTh'))}</th></tr>
+        <tr><td>${esc(L('avgCartRow'))}</td><td>${myAvgTotal ? '₪' + fmtPrice(myAvgTotal) : '—'}</td><td>${res.avgTotal ? '₪' + fmtPrice(res.avgTotal) : '—'}</td></tr>
+        <tr><td>${esc(L('avgItemsRow'))}</td><td>${myAvgItems ? Math.round(myAvgItems) : '—'}</td><td>${res.avgItems ? Math.round(res.avgItems) : '—'}</td></tr>
+        <tr><td>${esc(L('avgTimeRow'))}</td><td>${myAvgDur ? fmtDur(myAvgDur) : '—'}</td><td>${res.avgDurationMs ? fmtDur(res.avgDurationMs) : '—'}</td></tr>
       </table>
-      <div class="hint" style="margin-top:6px">מבוסס על ${res.count} קניות באזור (השוואה כללית ואנונימית — לא מול משפחה ספציפית).</div>`;
+      <div class="hint" style="margin-top:6px">${esc(L('benchFoot', {count: res.count}))}</div>`;
   }catch(e){}
 }
 function importPurchase(id){
   const rec = state.history.find(h => h.id === id); if(!rec) return;
+  const idx = catalogIndex();
   let n = 0;
   rec.items.forEach(hi => {
-    let found = null;
-    for(const c of state.cats){
-      const it = c.items.find(i => i.name.trim() === hi.name.trim());
-      if(it){ found = it; break; }
-    }
+    const found = idx[hi.name.trim()];
     if(found){
       found.need = true; found.bought = false; delete found.price;
       if(hi.note) found.note = hi.note;
@@ -1749,10 +2453,10 @@ function importPurchase(id){
     n++;
   });
   save(); setView('request');
-  toast('יובאו ' + rec.items.length + ' פריטים לרשימה ✓');
+  toast(L('importedToast', {n: rec.items.length}));
 }
 function delHist(id){
-  if(!confirm('למחוק את הקנייה הזו מההיסטוריה?')) return;
+  if(!confirm(L('deleteHistoryConfirm'))) return;
   state.history = state.history.filter(h => h.id !== id);
   save(); render();
 }
@@ -1767,23 +2471,25 @@ function cartTotal(){
 /* בסיסי מחיר לפי סוג היחידה: המחיר על המדף הוא לרוב לק"ג / ל-100 גרם / ליחידה */
 function priceBases(qty){
   if(!qty) return [];
-  const isWeight = qty.u === 'ק"ג' || qty.u === 'גרם';
+  const u = normUnit(qty.u);
+  const isWeight = u === 'kg' || u === 'gram';
   if(isWeight){
     return [
-      { k:'total', label:'לכל הכמות (' + fmtQty(qty) + ')' },
-      { k:'kg',    label:'לק"ג' },
-      { k:'100g',  label:'ל-100 גרם' },
+      { k:'total', label:L('perAllQty', {qty: fmtQty(qty)}) },
+      { k:'kg',    label:L('kgBasis') },
+      { k:'100g',  label:L('per100g') },
     ];
   }
   return [
-    { k:'total', label:'לכל הכמות (' + fmtQty(qty) + ')' },
-    { k:'unit',  label:'ל' + (qty.u === 'יח\'' ? 'יחידה' : qty.u) + ' אחת' },
+    { k:'total', label:L('perAllQty', {qty: fmtQty(qty)}) },
+    { k:'unit',  label:L('perUnit', {unit: u === 'unit' ? L('unitWord') : unitLabel(u)}) },
   ];
 }
 function priceFromBasis(val, basis, qty){
   if(!qty || basis === 'total') return val;
-  if(basis === 'kg')   return qty.u === 'ק"ג' ? val * qty.a : val * qty.a / 1000;
-  if(basis === '100g') return qty.u === 'גרם' ? val * qty.a / 100 : val * qty.a * 10;
+  const u = normUnit(qty.u);
+  if(basis === 'kg')   return u === 'kg' ? val * qty.a : val * qty.a / 1000;
+  if(basis === '100g') return u === 'gram' ? val * qty.a / 100 : val * qty.a * 10;
   if(basis === 'unit') return val * qty.a;
   return val;
 }
@@ -1795,31 +2501,31 @@ function openPriceModal(id){
   const bases = priceBases(it.qty);
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>₪ מחיר — ${esc(it.name)} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''}</h2>
-    <div class="msub">צלמו את תווית המחיר שעל המדף או על השקית — או הזינו ידנית.</div>
-    <button class="camline" onclick="$('#priceFile').click()">📷 צלם / העלה תווית מחיר</button>
+    <h2>${esc(L('priceModalTitle', {name: dispName(it)}))} ${it.qty ? `<span class="qtybadge">${esc(fmtQty(it.qty))}</span>` : ''}</h2>
+    <div class="msub">${esc(L('priceSub'))}</div>
+    <button class="camline" onclick="$('#priceFile').click()">${esc(L('takePhotoBtn'))}</button>
     <input type="file" id="priceFile" accept="image/*" capture="environment" style="display:none" onchange="onPriceFile(this)">
     <div class="ocr-status" id="ocrStatus"></div>
     <div class="pricechips" id="ocrChips"></div>
-    <label>מחיר (₪)</label>
+    <label>${esc(L('priceLabel'))}</label>
     <input type="text" inputmode="decimal" id="priceIn" value="${it.price!=null ? fmtPrice(it.price) : ''}"
            placeholder="0.00" style="direction:ltr;text-align:right;font-size:20px;font-weight:700"
            oninput="updatePriceCalc('${it.id}')">
     ${bases.length ? `
-    <label>המחיר שהזנתם הוא:</label>
+    <label>${esc(L('priceIsLabel'))}</label>
     <div class="basisrow">
-      ${bases.map(b => `<button class="${b.k === 'total' ? 'sel' : ''}" data-k="${b.k}" onclick="pickBasis('${b.k}', '${it.id}')">${b.label}</button>`).join('')}
+      ${bases.map(b => `<button class="${b.k === 'total' ? 'sel' : ''}" data-k="${b.k}" onclick="pickBasis('${b.k}', '${it.id}')">${esc(b.label)}</button>`).join('')}
     </div>
     <div id="priceCalc"></div>` : ''}
     ${it.bought ? '' : `
     <div class="checkline">
       <input type="checkbox" id="alsoBought" checked>
-      <label for="alsoBought" style="margin:0;font-weight:500;color:var(--ink)">סמן שהפריט נאסף לעגלה 🛒</label>
+      <label for="alsoBought" style="margin:0;font-weight:500;color:var(--ink)">${esc(L('markBoughtLabel'))}</label>
     </div>`}
     <div class="btnrow">
-      <button class="ghost" onclick="closeModal()">ביטול</button>
-      ${it.price!=null ? `<button class="ghost" style="color:var(--red)" onclick="removePrice('${it.id}')">הסר מחיר</button>` : ''}
-      <button class="primary" onclick="savePrice('${it.id}')">שמירה</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      ${it.price!=null ? `<button class="ghost" style="color:var(--red)" onclick="removePrice('${it.id}')">${esc(L('removePriceBtn'))}</button>` : ''}
+      <button class="primary" onclick="savePrice('${it.id}')">${esc(L('save'))}</button>
     </div>`;
   $('#overlay').classList.add('show');
   if(it.price == null) setTimeout(() => { const p = $('#priceIn'); if(p) p.focus(); }, 250);
@@ -1837,20 +2543,20 @@ function updatePriceCalc(itemId){
   const val = parseFloat(raw);
   if(!f || !f.it.qty || priceBasis === 'total' || !raw || isNaN(val) || val <= 0){ el.textContent = ''; return; }
   const total = priceFromBasis(val, priceBasis, f.it.qty);
-  el.textContent = '🧮 סה"כ ל' + fmtQty(f.it.qty) + ': ₪' + fmtPrice(total);
+  el.textContent = L('totalForQty', {qty: fmtQty(f.it.qty), price: fmtPrice(total)});
 }
 function savePrice(id){
   const f = findItem(id); if(!f) return;
   const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
   const val = parseFloat(raw);
-  if(!raw || isNaN(val) || val <= 0 || val >= 10000){ toast('הזינו מחיר תקין'); return; }
+  if(!raw || isNaN(val) || val <= 0 || val >= 10000){ toast(L('invalidPrice')); return; }
   const total = priceFromBasis(val, priceBasis, f.it.qty);
-  if(total >= 10000){ toast('המחיר המחושב גבוה מדי — בדקו את הבסיס'); return; }
+  if(total >= 10000){ toast(L('priceTooHigh')); return; }
   f.it.price = Math.round(total * 100) / 100;
   const ab = $('#alsoBought');
   if(ab && ab.checked) f.it.bought = true;
   save(); closeModal(); render();
-  toast('₪' + fmtPrice(f.it.price) + ' נשמר ל"' + f.it.name + '"' + (f.it.qty && priceBasis !== 'total' ? ' (' + fmtQty(f.it.qty) + ')' : ''));
+  toast(L('priceSavedToast', {price: fmtPrice(f.it.price), name: dispName(f.it), qty: (f.it.qty && priceBasis !== 'total' ? ' (' + fmtQty(f.it.qty) + ')' : '')}));
 }
 function removePrice(id){
   const f = findItem(id); if(!f) return;
@@ -1889,23 +2595,23 @@ async function onPriceFile(inp){
   if(!file) return;
   const st = $('#ocrStatus'), chips = $('#ocrChips');
   chips.innerHTML = '';
-  st.textContent = '⏳ טוען מנוע זיהוי...';
+  st.textContent = L('loadingOcrEngine');
   try{ await loadTesseract(); }
-  catch(e){ st.textContent = '⚠️ אין חיבור לאינטרנט — הזינו את המחיר ידנית.'; return; }
-  st.textContent = '🔍 מזהה מחיר בתמונה...';
+  catch(e){ st.textContent = L('ocrNoInternet'); return; }
+  st.textContent = L('ocrScanning');
   try{
     const r = await Tesseract.recognize(file, 'eng');
     const cands = extractPrices(r.data.text || '');
     if(!cands.length){
-      st.textContent = 'לא זוהה מחיר 😕 נסו לצלם קרוב יותר, או הזינו ידנית.';
+      st.textContent = L('ocrNotFound');
       return;
     }
-    st.textContent = 'זה המחיר? הקישו עליו:';
+    st.textContent = L('ocrConfirm');
     chips.innerHTML = cands.map(v =>
       `<button onclick="$('#priceIn').value='${fmtPrice(v)}'">₪${fmtPrice(v)}</button>`).join('');
     if(cands.length === 1) $('#priceIn').value = fmtPrice(cands[0]);
   }catch(e){
-    st.textContent = '⚠️ הזיהוי נכשל — הזינו את המחיר ידנית.';
+    st.textContent = L('ocrFailed');
   }
   inp.value = '';
 }
@@ -1914,19 +2620,19 @@ async function onPriceFile(inp){
 function listAsText(){
   const d = new Date();
   const ds = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-  let out = '🛒 *רשימת קניות* – ' + ds + '\n';
+  let out = L('listHeader', {date: ds}) + '\n';
   state.cats.forEach(c => {
     const items = c.items.filter(i => i.need);
     if(!items.length) return;
-    out += '\n*' + c.emoji + ' ' + c.name + '*\n';
-    items.forEach(i => { out += '▫️ ' + i.name + (i.qty ? ' — ' + fmtQty(i.qty) : '') + (i.note ? ' _(' + i.note + ')_' : '') + '\n'; });
+    out += '\n*' + c.emoji + ' ' + dispCat(c) + '*\n';
+    items.forEach(i => { out += '▫️ ' + dispName(i) + (i.qty ? ' — ' + fmtQty(i.qty) : '') + (dispNote(i) ? ' _(' + dispNote(i) + ')_' : '') + '\n'; });
   });
   const url = location.href.split('#')[0];
-  out += '\nלרשימה האינטראקטיבית: ' + url;
+  out += '\n' + L('interactiveListLink', {url});
   return out;
 }
 function sendList(){
-  if(!neededItems().length){ toast('הרשימה ריקה'); return; }
+  if(!neededItems().length){ toast(L('listEmptyToast2')); return; }
   openWA(listAsText(), '');
 }
 function askGeneral(){ openQuestionModal(null); }
@@ -1939,47 +2645,43 @@ function notifyDone(){
   const total = cartTotal();
   const dur = state.trip.startedAt ? fmtDur(Date.now() - state.trip.startedAt) : null;
   const st = state.trip.store;
-  openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒'
-    + (st ? '\n📍 ' + st.chain + (st.name ? ' ' + st.name : '') : '')
-    + (total > 0 ? '\n🧾 סה"כ לפי המחירים שהוזנו: ₪' + fmtPrice(total) : '')
-    + (dur ? '\n⏱ זמן קנייה: ' + dur : '')
-    + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);
+  openWA(L('doneMsg')
+    + (st ? '\n' + L('tripStore', {chain: st.chain, name: st.name ? ' ' + st.name : ''}) : '')
+    + (total > 0 ? '\n' + L('totalByPrices', {total: fmtPrice(total)}) : '')
+    + (dur ? '\n' + L('tripDuration', {dur}) : '')
+    + (name ? '\n' + L('canResetNote', {name}) : ''), state.settings.reqPhone);
 }
 
 /* ---------- question modal ---------- */
 let qSelected = 0;
 function openQuestionModal(item){
+  const iname = item ? dispName(item) : '';
   const templates = item ? [
-    'אין "' + item.name + '" 😕 להביא משהו דומה במקום?',
-    'לגבי "' + item.name + '" – איזה מותג / גודל להביא?',
-    'לגבי "' + item.name + '" – כמה בדיוק צריך?',
-    '"' + item.name + '" יקר היום 💸 לוותר או לקנות בכל זאת?',
-  ] : [
-    'אני בסופר 🛒 יש עוד משהו שצריך להוסיף?',
-    'סיימתי כמעט – בטוח שלא שכחת כלום?',
-  ];
+    L('qMissing', {name: iname}), L('qBrandSize', {name: iname}),
+    L('qHowMuch', {name: iname}), L('qExpensive', {name: iname}),
+  ] : [ L('qInStore'), L('qAlmostDone') ];
   const hasPhone = !!state.settings.reqPhone;
   qSelected = 0;
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>💬 שאלה ל${esc(state.settings.reqName || 'רושם הרשימה')}</h2>
-    <div class="msub">${item ? 'לגבי: <b>' + esc(item.name) + '</b>' + (item.note ? ' (הערה: ' + esc(item.note) + ')' : '') : 'שאלה כללית על הרשימה'}</div>
-    ${templates.map((t,i) => `<button class="qopt ${i===0?'sel':''}" data-i="${i}" onclick="pickQ(${i})">${esc(t)}</button>`).join('')}
-    <label>או ניסוח חופשי:</label>
-    <textarea id="qFree" rows="2" placeholder="כתבו הודעה משלכם..." oninput="pickQ(-1)"></textarea>
+    <h2>${esc(L('qToTitle', {name: state.settings.reqName || L('listOwnerDefault')}))}</h2>
+    <div class="msub">${item ? L('regardingItem', {name: '<b>'+esc(iname)+'</b>'}) + (dispNote(item) ? esc(L('noteInParens', {note: dispNote(item)})) : '') : esc(L('generalQuestion'))}</div>
+    ${templates.map((tpl,i) => `<button class="qopt ${i===0?'sel':''}" data-i="${i}" onclick="pickQ(${i})">${esc(tpl)}</button>`).join('')}
+    <label>${esc(L('freeTextLabel'))}</label>
+    <textarea id="qFree" rows="2" placeholder="${esc(L('freeTextPlaceholder'))}" oninput="pickQ(-1)"></textarea>
     ${famOthers().length ? `
-    <label>למי לשלוח?</label>
+    <label>${esc(L('sendToWhomLabel'))}</label>
     <select id="qTarget" class="selectbox">
-      ${famOthers().map(m => `<option value="${esc(m.phone || '')}">${esc(m.name)}${m.phone ? '' : ' (בלי טלפון)'}</option>`).join('')}
+      ${famOthers().map(m => `<option value="${esc(m.phone || '')}">${esc(m.name)}${m.phone ? '' : esc(L('noPhoneSuffix'))}</option>`).join('')}
       ${state.settings.reqPhone && !famOthers().some(m => normPhone(m.phone) === normPhone(state.settings.reqPhone))
-        ? `<option value="${esc(state.settings.reqPhone)}">${esc(state.settings.reqName || 'רושם הרשימה')}</option>` : ''}
+        ? `<option value="${esc(state.settings.reqPhone)}">${esc(state.settings.reqName || L('listOwnerDefault'))}</option>` : ''}
     </select>` : ''}
-    ${hasPhone || famOthers().length ? '' : '<div class="hint">💡 טיפ: קבעו את מספר הטלפון של רושם הרשימה בהגדרות ⚙️ — וההודעה תיפתח ישר בצ׳אט הנכון.</div>'}
+    ${hasPhone || famOthers().length ? '' : `<div class="hint">${esc(L('tipSetPhone'))}</div>`}
     <div class="btnrow">
-      <button class="ghost" onclick="closeModal()">ביטול</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
       <button class="wa-btn" onclick="sendQ()">
         <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
-        שלח בוואטסאפ
+        ${esc(L('sendWaBtn'))}
       </button>
     </div>`;
   box.dataset.templates = JSON.stringify(templates);
@@ -1997,7 +2699,7 @@ function sendQ(){
   const templates = JSON.parse($('#modalBox').dataset.templates || '[]');
   const free = ($('#qFree') && $('#qFree').value.trim()) || '';
   let msg = qSelected === -1 ? free : (templates[qSelected] || free);
-  if(!msg){ toast('בחרו שאלה או כתבו הודעה'); return; }
+  if(!msg){ toast(L('pickQOrWrite')); return; }
   msg = '🛒 ' + msg;
   const target = $('#qTarget') ? $('#qTarget').value : state.settings.reqPhone;
   closeModal();
@@ -2008,49 +2710,57 @@ function sendQ(){
 function openSettings(){
   const s = state.settings;
   const box = $('#modalBox');
+  box.dataset.modal = 'settings';
   let famHtml;
   if(fam){
     famHtml = `
     <div class="famcard">
-      <div class="famtitle">👨‍👩‍👧 משפחת ${esc(fam.familyName)} <span class="famregion">📍 ${esc(fam.region)}</span></div>
+      <div class="famtitle">${esc(L('familyOf', {name: fam.familyName}))} <span class="famregion">📍 ${esc(regionLabel(fam.region))}</span></div>
       <div class="famcode-line">
-        קוד הצטרפות: <span class="famcode">${esc(fam.code)}</span>
-        <button class="minibtn" onclick="shareFamilyCode()">📤 שתף</button>
+        ${esc(L('joinCodeLabel'))}<span class="famcode">${esc(fam.code)}</span>
+        <button class="minibtn" onclick="shareFamilyCode()">${esc(L('shareBtn'))}</button>
       </div>
-      <div class="mtitle">נרשמו למשפחה (${(fam.members || []).length}):</div>
+      <div class="mtitle">${esc(L('registeredMembers', {n: (fam.members || []).length}))}</div>
       <div class="members" id="famMembers">${membersHTML()}</div>
-      ${(fam.members || []).length < 2 ? '<div class="hint">עדיין רק את/ה — שתפו את הקוד כדי שכל המשפחה תצטרף 👆</div>' : ''}
-      <div class="hint">הרשימה מסתנכרנת אוטומטית בין כל בני המשפחה. כשמישהו לוחץ "התחל קנייה" — כולם מקבלים איתות ויכולים לעקוב חי.</div>
-      <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">🚪 התנתק מהמשפחה במכשיר הזה</button>
+      ${(fam.members || []).length < 2 ? `<div class="hint">${esc(L('onlyYouHint'))}</div>` : ''}
+      <div class="hint">${esc(L('syncHint'))}</div>
+      <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">${esc(L('leaveFamilyBtn'))}</button>
     </div>`;
   }else{
     famHtml = `
     <div class="famcard">
-      <div class="famtitle">👨‍👩‍👧 משפחה</div>
-      <div class="hint" style="margin-bottom:10px">חברו את המשפחה: רשימה משותפת שמסתנכרנת בין הטלפונים, מעקב חי אחרי הקנייה והשוואה אזורית.</div>
+      <div class="famtitle">${esc(L('familyTitle'))}</div>
+      <div class="hint" style="margin-bottom:10px">${esc(L('familyIntro'))}</div>
       <div class="btnrow" style="margin-top:0">
-        <button class="primary" onclick="openFamilyForm('create')">➕ צור משפחה</button>
-        <button class="ghost" onclick="openFamilyForm('join')">🔗 הצטרף עם קוד</button>
+        <button class="primary" onclick="openFamilyForm('create')">${esc(L('createFamilyBtn'))}</button>
+        <button class="ghost" onclick="openFamilyForm('join')">${esc(L('joinFamilyBtn'))}</button>
       </div>
     </div>`;
   }
+  const LANG_NAMES = {he:'עברית', en:'English', ru:'Русский', ar:'العربية'};
+  const langHtml = `
+    <div class="msub" style="margin-top:0">${esc(L('languageLabel'))}</div>
+    <div class="basisrow" style="margin-bottom:6px">
+      ${Object.keys(LANG_NAMES).map(code => `<button class="${code===lang?'sel':''}" onclick="setLang('${code}')">${LANG_NAMES[code]}</button>`).join('')}
+    </div>`;
   box.innerHTML = `
-    <h2>⚙️ הגדרות</h2>
-    <div class="dbstatus" id="dbStatus">⏳ בודק חיבור לשרת...</div>
+    <h2>${esc(L('settingsTitle'))}</h2>
+    ${langHtml}
+    <div class="dbstatus" id="dbStatus">${esc(L('checkingServer'))}</div>
     ${famHtml}
-    <div class="msub" style="margin-top:18px">מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.</div>
-    <label>שם רושם/ת הרשימה</label>
-    <input type="text" id="setName" value="${esc(s.reqName)}" placeholder="למשל: גל">
-    <label>מספר וואטסאפ של רושם/ת הרשימה</label>
-    <input type="tel" id="setPhone" value="${esc(s.reqPhone)}" placeholder="050-1234567" style="direction:ltr;text-align:right">
-    <div class="hint">אפשר גם בפורמט בינלאומי (9725...). כשמחוברים למשפחה — הקונה יכול לבחור לאיזה בן משפחה לשלוח.</div>
+    <div class="msub" style="margin-top:18px">${esc(L('whoFillsHint'))}</div>
+    <label>${esc(L('listOwnerNameLabel'))}</label>
+    <input type="text" id="setName" value="${esc(s.reqName)}" placeholder="${esc(L('listOwnerNamePlaceholder'))}">
+    <label>${esc(L('listOwnerPhoneLabel'))}</label>
+    <input type="tel" id="setPhone" value="${esc(s.reqPhone)}" placeholder="${esc(L('phonePlaceholder'))}" style="direction:ltr;text-align:right">
+    <div class="hint">${esc(L('phoneHint'))}</div>
     <div class="btnrow">
-      <button class="ghost" onclick="closeModal()">ביטול</button>
-      <button class="primary" onclick="saveSettings()">שמירה</button>
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      <button class="primary" onclick="saveSettings()">${esc(L('save'))}</button>
     </div>
     <div class="danger-zone">
-      <button onclick="factoryReset()">⚠️ אתחול מלא — החזרת הקטלוג המקורי</button>
-      <div class="hint" style="margin-top:6px">מוחק את כל השינויים, המוצרים שנוספו והסימונים, ומחזיר את הקטלוג של האקסל המקורי.</div>
+      <button onclick="factoryReset()">${esc(L('factoryResetBtn'))}</button>
+      <div class="hint" style="margin-top:6px">${esc(L('factoryResetHint'))}</div>
     </div>`;
   $('#overlay').classList.add('show');
   if(fam) refreshFamily();
@@ -2062,14 +2772,12 @@ async function checkDbStatus(){
   try{
     const res = await apiGet('status', {});
     if(res && res.ok){
-      el.innerHTML = res.db
-        ? '🗄️ מסד נתונים מרכזי (Neon): <b style="color:var(--green)">מחובר ופעיל ✓</b>'
-        : '🗄️ מסד נתונים מרכזי: <b style="color:var(--amber)">לא מחובר</b> — פועל על אחסון זמני (Blobs). הפעילו את Neon ב-Netlify: Extensions ← Neon.';
+      el.innerHTML = res.db ? L('dbConnected') : L('dbNotConnected');
     }else{
-      el.innerHTML = '🗄️ שרת: <b style="color:var(--red)">שגיאה</b> — ' + esc((res && res.error) || '');
+      el.innerHTML = L('dbError', {err: esc((res && res.error) || '')});
     }
   }catch(e){
-    el.innerHTML = '🗄️ שרת: <b style="color:var(--red)">לא זמין</b> — האפליקציה פועלת מקומית בלבד (פתחו אותה מהאתר, לא מקובץ).';
+    el.innerHTML = L('dbUnavailable');
   }
 }
 function membersHTML(){
@@ -2079,10 +2787,10 @@ function membersHTML(){
     return `
     <div class="member">
       <span class="mavatar">${esc((m.name || '?').trim().charAt(0))}</span>
-      <span class="mname">${esc(m.name)}${me ? ' <span class="metag">(אני)</span>' : ''}
-        <span class="mphone">${esc(m.phone || 'בלי טלפון')}${joined ? ' · הצטרף/ה ' + joined.getDate() + '/' + (joined.getMonth()+1) : ''}</span>
+      <span class="mname">${esc(m.name)}${me ? ' <span class="metag">' + esc(L('me')) + '</span>' : ''}
+        <span class="mphone">${esc(m.phone || L('noPhone'))}${joined ? esc(L('joinedOn', {d: joined.getDate() + '/' + (joined.getMonth()+1)})) : ''}</span>
       </span>
-      ${(!me && m.phone) ? `<button class="mwa" onclick="openWA('היי 👋', '${esc(m.phone)}')" title="וואטסאפ ל${esc(m.name)}">💬</button>` : ''}
+      ${(!me && m.phone) ? `<button class="mwa" onclick="openWA('${esc(L('hiWave'))}', '${esc(m.phone)}')" title="${esc(L('waTo', {name: m.name}))}">💬</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -2092,7 +2800,7 @@ async function refreshFamily(){
     if(res && res.ok && res.family){
       fam.members = res.family.members;
       fam.familyName = res.family.name;
-      fam.region = res.family.region;
+      fam.region = normRegion(res.family.region);
       famSave();
       const el = document.getElementById('famMembers');
       if(el) el.innerHTML = membersHTML();
@@ -2102,27 +2810,25 @@ async function refreshFamily(){
 function openFamilyForm(mode){
   const box = $('#modalBox');
   box.innerHTML = `
-    <h2>${mode === 'create' ? '➕ יצירת משפחה' : '🔗 הצטרפות למשפחה'}</h2>
-    <div class="msub">${mode === 'create'
-      ? 'צרו מנוי משפחתי — תקבלו קוד הצטרפות לשיתוף עם בני המשפחה.'
-      : 'הזינו את קוד המשפחה שקיבלתם, ופרטים שלכם.'}</div>
+    <h2>${mode === 'create' ? esc(L('createFamilyTitle')) : esc(L('joinFamilyTitle'))}</h2>
+    <div class="msub">${mode === 'create' ? esc(L('createFamilySub')) : esc(L('joinFamilySub'))}</div>
     ${mode === 'create' ? `
-      <label>שם המשפחה</label>
-      <input type="text" id="famName" placeholder="למשל: משפחת סטאל">
-      <label>אזור מגורים (להשוואה אזורית אנונימית)</label>
-      <select id="famRegion" class="selectbox">${REGIONS.map(r => `<option>${r}</option>`).join('')}</select>
+      <label>${esc(L('familyNameLabel'))}</label>
+      <input type="text" id="famName" placeholder="${esc(L('familyNamePlaceholder'))}">
+      <label>${esc(L('residenceRegionLabel'))}</label>
+      <select id="famRegion" class="selectbox">${REGION_KEYS.map(r => `<option value="${r}">${esc(regionLabel(r))}</option>`).join('')}</select>
     ` : `
-      <label>קוד משפחה</label>
-      <input type="text" id="famCode" placeholder="למשל: X7K2ML" style="direction:ltr;text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase" maxlength="6">
+      <label>${esc(L('familyCodeLabel'))}</label>
+      <input type="text" id="famCode" placeholder="X7K2ML" style="direction:ltr;text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase" maxlength="6">
     `}
-    <label>השם שלך</label>
-    <input type="text" id="famMyName" placeholder="למשל: גל">
-    <label>הטלפון הנייד שלך (לוואטסאפ)</label>
-    <input type="tel" id="famMyPhone" placeholder="050-1234567" style="direction:ltr;text-align:right">
+    <label>${esc(L('yourNameLabel'))}</label>
+    <input type="text" id="famMyName" placeholder="${esc(L('yourNamePlaceholder'))}">
+    <label>${esc(L('yourPhoneLabel'))}</label>
+    <input type="tel" id="famMyPhone" placeholder="${esc(L('phonePlaceholder'))}" style="direction:ltr;text-align:right">
     <div class="ocr-status" id="famStatus"></div>
     <div class="btnrow">
-      <button class="ghost" onclick="openSettings()">חזרה</button>
-      <button class="primary" onclick="submitFamily('${mode}')">${mode === 'create' ? 'צור משפחה' : 'הצטרף'}</button>
+      <button class="ghost" onclick="openSettings()">${esc(L('back'))}</button>
+      <button class="primary" onclick="submitFamily('${mode}')">${mode === 'create' ? esc(L('createFamilyShortBtn')) : esc(L('joinFamilyShortBtn'))}</button>
     </div>`;
   $('#overlay').classList.add('show');
 }
@@ -2130,23 +2836,23 @@ async function submitFamily(mode){
   const myName = ($('#famMyName').value || '').trim();
   const myPhone = ($('#famMyPhone').value || '').trim();
   const st = $('#famStatus');
-  if(!myName){ st.textContent = 'נא למלא שם'; return; }
-  st.textContent = '⏳ רגע...';
+  if(!myName){ st.textContent = L('fillNamePrompt'); return; }
+  st.textContent = L('oneMoment');
   try{
     let res;
     if(mode === 'create'){
-      const familyName = ($('#famName').value || '').trim() || 'המשפחה שלי';
+      const familyName = ($('#famName').value || '').trim() || L('myFamilyDefault');
       const region = $('#famRegion').value;
       res = await apiPost('createFamily', { familyName, region, userName: myName, phone: myPhone });
     }else{
       const code = ($('#famCode').value || '').trim().toUpperCase();
-      if(!code){ st.textContent = 'נא להזין קוד'; return; }
+      if(!code){ st.textContent = L('fillCodePrompt'); return; }
       res = await apiPost('joinFamily', { code, userName: myName, phone: myPhone });
     }
-    if(!res || !res.ok){ st.textContent = '⚠️ ' + ((res && res.error) || 'משהו השתבש, נסו שוב'); return; }
+    if(!res || !res.ok){ st.textContent = '⚠️ ' + ((res && res.error) || L('somethingWrong')); return; }
     fam = {
       familyId: res.family.id, memberId: res.memberId, code: res.family.code,
-      familyName: res.family.name, region: res.family.region,
+      familyName: res.family.name, region: normRegion(res.family.region),
       members: res.family.members, myName
     };
     famSave();
@@ -2154,37 +2860,34 @@ async function submitFamily(mode){
     if(mode === 'create') pushList(); else await pullList();
     save();
     closeModal(); render();
-    toast(mode === 'create' ? '👨‍👩‍👧 המשפחה נוצרה! קוד: ' + fam.code : '🎉 הצטרפת למשפחת ' + fam.familyName);
+    toast(mode === 'create' ? L('familyCreatedToast', {code: fam.code}) : L('joinedFamilyToast', {name: fam.familyName}));
     if(mode === 'create') setTimeout(openSettings, 600);
   }catch(e){
-    st.textContent = '⚠️ אין חיבור לשרת. שימו לב: זה עובד רק באתר (Netlify), לא בקובץ מקומי.';
+    st.textContent = L('noServerConn');
   }
 }
 function shareFamilyCode(){
-  openWA('👨‍👩‍👧 מצטרפים לרשימת הקניות של משפחת ' + fam.familyName + '!\n'
-    + '1. פותחים: ' + location.origin + '\n'
-    + '2. לוחצים ⚙️ ← "הצטרף עם קוד"\n'
-    + '3. הקוד: *' + fam.code + '*', '');
+  openWA(L('shareCodeMsg', {name: fam.familyName, url: location.origin, code: fam.code}), '');
 }
 function leaveFamily(){
-  if(!confirm('להתנתק מהמשפחה במכשיר הזה? (הרשימה המשותפת תישאר אצל שאר בני המשפחה)')) return;
+  if(!confirm(L('leaveConfirm'))) return;
   fam = null; famSave();
   closeModal(); render();
-  toast('התנתקת מהמשפחה במכשיר הזה');
+  toast(L('leftFamilyToast'));
 }
 function saveSettings(){
   state.settings.reqName = $('#setName').value.trim();
   state.settings.reqPhone = $('#setPhone').value.trim();
   save(); closeModal(); render();
-  toast('ההגדרות נשמרו ✓');
+  toast(L('settingsSavedToast'));
 }
 function factoryReset(){
-  if(!confirm('לאתחל את האפליקציה לגמרי? כל השינויים יימחקו.')) return;
+  if(!confirm(L('factoryResetConfirm'))) return;
   const s = state.settings;
   state = freshState();
   state.settings = s;
   save(); closeModal(); render();
-  toast('הקטלוג אותחל');
+  toast(L('catalogResetToast'));
 }
 function closeModal(){
   $('#overlay').classList.remove('show');
@@ -2195,6 +2898,7 @@ function closeModal(){
 $('#settingsBtn').addEventListener('click', openSettings);
 $('#sendListBtn').addEventListener('click', sendList);
 $('#overlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+applyDir();
 famLoad();
 load();
 render();
