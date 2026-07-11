@@ -1796,7 +1796,7 @@ function renderRequest(){
   }
   state.cats.forEach(c => {
     const cnt = c.items.filter(i => i.need).length;
-    const open = openCats[c.id] || c.special;
+    const open = !!openCats[c.id];
     const col = catCol(c);
     const cname = dispCat(c);
     html += `
@@ -1832,7 +1832,7 @@ function renderRequest(){
   });
   m.innerHTML = html;
 }
-function toggleCat(id){ openCats[id] = !openCats[id]; render(); }
+function toggleCat(id){ openCats = openCats[id] ? {} : { [id]: true }; render(); }
 
 /* ===== בורר כמות/משקל ===== */
 const UNIT_KEYS = ['unit', 'kg', 'gram', 'pack', 'bag', 'bottle', 'liter'];
