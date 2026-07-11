@@ -943,6 +943,8 @@ sendViaAppBtn:'📱 באפליקציה', sendViaWaBtn:'💬 בוואטסאפ', s
 listSendMsg:'{name} שלח/ה לך את רשימת הקניות 🛒', sentInAppToast:'נשלח באפליקציה ל{name} ✓',
 listSendTag:'🛒 רשימת קניות', openListBtn:'🛍️ פתח את הרשימה',
 listSendPopupTitle:'🛒 {name} שלח/ה לך רשימת קניות', listSendPopupBody:'הרשימה מוכנה — אפשר לגשת אליה ולהתחיל לקנות.',
+totalGeneric:'סכום כולל ששילמתי', perUnitGeneric:'ליחידה', basisAmountLabel:'כמה קניתם? ({unit})',
+enterAmountPrompt:'הזינו כמה קניתם',
 },
 en:{
 appTitle:'Shopping List', btnFamilyChat:'Family chat', btnSettings:'Settings', sendListBtn:'Send to shopper',
@@ -1076,6 +1078,8 @@ sendViaAppBtn:'📱 In the app', sendViaWaBtn:'💬 On WhatsApp', sendViaBothBtn
 listSendMsg:'{name} sent you the shopping list 🛒', sentInAppToast:'Sent in-app to {name} ✓',
 listSendTag:'🛒 Shopping list', openListBtn:'🛍️ Open the list',
 listSendPopupTitle:'🛒 {name} sent you a shopping list', listSendPopupBody:'The list is ready — you can open it and start shopping.',
+totalGeneric:'Total amount I paid', perUnitGeneric:'Per unit', basisAmountLabel:'How much did you buy? ({unit})',
+enterAmountPrompt:'Enter how much you bought',
 },
 ru:{
 appTitle:'Список покупок', btnFamilyChat:'Семейный чат', btnSettings:'Настройки', sendListBtn:'Отправить покупателю',
@@ -1209,6 +1213,8 @@ sendViaAppBtn:'📱 В приложении', sendViaWaBtn:'💬 В WhatsApp', s
 listSendMsg:'{name} отправил(а) вам список покупок 🛒', sentInAppToast:'Отправлено в приложении {name} ✓',
 listSendTag:'🛒 Список покупок', openListBtn:'🛍️ Открыть список',
 listSendPopupTitle:'🛒 {name} отправил(а) вам список покупок', listSendPopupBody:'Список готов — можно открыть его и начать покупки.',
+totalGeneric:'Общая сумма, которую я заплатил(а)', perUnitGeneric:'За единицу', basisAmountLabel:'Сколько вы купили? ({unit})',
+enterAmountPrompt:'Укажите, сколько вы купили',
 },
 ar:{
 appTitle:'قائمة التسوق', btnFamilyChat:'دردشة العائلة', btnSettings:'الإعدادات', sendListBtn:'إرسال إلى المتسوق',
@@ -1342,6 +1348,8 @@ sendViaAppBtn:'📱 عبر التطبيق', sendViaWaBtn:'💬 عبر واتسا
 listSendMsg:'أرسل لك {name} قائمة التسوق 🛒', sentInAppToast:'تم الإرسال عبر التطبيق إلى {name} ✓',
 listSendTag:'🛒 قائمة تسوق', openListBtn:'🛍️ فتح القائمة',
 listSendPopupTitle:'🛒 أرسل لك {name} قائمة تسوق', listSendPopupBody:'القائمة جاهزة — يمكنك فتحها والبدء بالتسوق.',
+totalGeneric:'المبلغ الإجمالي الذي دفعته', perUnitGeneric:'لكل وحدة', basisAmountLabel:'كم اشتريت؟ ({unit})',
+enterAmountPrompt:'أدخل كمية الشراء',
 },
 zh:{
 appTitle:'购物清单', btnFamilyChat:'家庭聊天', btnSettings:'设置', sendListBtn:'发送给采购人',
@@ -1475,6 +1483,8 @@ sendViaAppBtn:'📱 应用内发送', sendViaWaBtn:'💬 通过WhatsApp', sendVi
 listSendMsg:'{name}把购物清单发给你了 🛒', sentInAppToast:'已通过应用内发送给{name} ✓',
 listSendTag:'🛒 购物清单', openListBtn:'🛍️ 打开清单',
 listSendPopupTitle:'🛒 {name}给你发了购物清单', listSendPopupBody:'清单已准备好 — 你可以打开它并开始购物。',
+totalGeneric:'我支付的总金额', perUnitGeneric:'每个', basisAmountLabel:'你买了多少？（{unit}）',
+enterAmountPrompt:'请输入购买数量',
 },
 };
 
@@ -2734,28 +2744,32 @@ function cartTotal(){
 }
 /* בסיסי מחיר לפי סוג היחידה: המחיר על המדף הוא לרוב לק"ג / ל-100 גרם / ליחידה */
 function priceBases(qty){
-  if(!qty) return [];
-  const u = normUnit(qty.u);
-  const isWeight = u === 'kg' || u === 'gram';
-  if(isWeight){
-    return [
-      { k:'total', label:L('perAllQty', {qty: fmtQty(qty)}) },
-      { k:'kg',    label:L('kgBasis') },
-      { k:'100g',  label:L('per100g') },
-    ];
-  }
   return [
-    { k:'total', label:L('perAllQty', {qty: fmtQty(qty)}) },
-    { k:'unit',  label:L('perUnit', {unit: u === 'unit' ? L('unitWord') : unitLabel(u)}) },
+    { k:'total', label: qty ? L('perAllQty', {qty: fmtQty(qty)}) : L('totalGeneric') },
+    { k:'kg',    label: L('kgBasis') },
+    { k:'100g',  label: L('per100g') },
+    { k:'unit',  label: L('perUnitGeneric') },
   ];
 }
-function priceFromBasis(val, basis, qty){
-  if(!qty || basis === 'total') return val;
+function defaultBasisAmount(basis, qty){
+  if(!qty) return '';
   const u = normUnit(qty.u);
-  if(basis === 'kg')   return u === 'kg' ? val * qty.a : val * qty.a / 1000;
-  if(basis === '100g') return u === 'gram' ? val * qty.a / 100 : val * qty.a * 10;
-  if(basis === 'unit') return val * qty.a;
+  if(basis === 'kg' && u === 'kg') return qty.a;
+  if(basis === '100g' && u === 'gram') return qty.a;
+  if(basis === 'unit' && u === 'unit') return qty.a;
+  return '';
+}
+function priceFromBasis(val, basis, amount){
+  if(basis === 'total') return val;
+  const a = parseFloat(String(amount).replace(',', '.'));
+  if(!a || isNaN(a) || a <= 0) return null;
+  if(basis === 'kg')   return val * a;
+  if(basis === '100g') return val * a / 100;
+  if(basis === 'unit') return val * a;
   return val;
+}
+function basisAmountUnitLabel(basis){
+  return basis === 'kg' ? unitLabel('kg') : basis === '100g' ? unitLabel('gram') : unitLabel('unit');
 }
 let priceBasis = 'total';
 function openPriceModal(id){
@@ -2775,12 +2789,15 @@ function openPriceModal(id){
     <input type="text" inputmode="decimal" id="priceIn" value="${it.price!=null ? fmtPrice(it.price) : ''}"
            placeholder="0.00" style="direction:ltr;text-align:right;font-size:20px;font-weight:700"
            oninput="updatePriceCalc('${it.id}')">
-    ${bases.length ? `
     <label>${esc(L('priceIsLabel'))}</label>
     <div class="basisrow">
       ${bases.map(b => `<button class="${b.k === 'total' ? 'sel' : ''}" data-k="${b.k}" onclick="pickBasis('${b.k}', '${it.id}')">${esc(b.label)}</button>`).join('')}
     </div>
-    <div id="priceCalc"></div>` : ''}
+    <div id="basisAmountRow" style="display:none">
+      <label id="basisAmountLabel"></label>
+      <input type="text" inputmode="decimal" id="basisAmountIn" placeholder="1" style="direction:ltr" oninput="updatePriceCalc('${it.id}')">
+    </div>
+    <div id="priceCalc"></div>
     ${it.bought ? '' : `
     <div class="checkline">
       <input type="checkbox" id="alsoBought" checked>
@@ -2797,30 +2814,53 @@ function openPriceModal(id){
 function pickBasis(k, itemId){
   priceBasis = k;
   document.querySelectorAll('.basisrow button').forEach(b => b.classList.toggle('sel', b.dataset.k === k));
+  const row = document.getElementById('basisAmountRow');
+  const labelEl = document.getElementById('basisAmountLabel');
+  const inp = document.getElementById('basisAmountIn');
+  if(k === 'total'){
+    row.style.display = 'none';
+  }else{
+    row.style.display = 'block';
+    labelEl.textContent = L('basisAmountLabel', {unit: basisAmountUnitLabel(k)});
+    if(!inp.value){
+      const f = findItem(itemId);
+      const def = f ? defaultBasisAmount(k, f.it.qty) : '';
+      if(def) inp.value = def;
+    }
+  }
   updatePriceCalc(itemId);
 }
 function updatePriceCalc(itemId){
   const el = document.getElementById('priceCalc');
   if(!el) return;
-  const f = findItem(itemId);
   const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
   const val = parseFloat(raw);
-  if(!f || !f.it.qty || priceBasis === 'total' || !raw || isNaN(val) || val <= 0){ el.textContent = ''; return; }
-  const total = priceFromBasis(val, priceBasis, f.it.qty);
-  el.textContent = L('totalForQty', {qty: fmtQty(f.it.qty), price: fmtPrice(total)});
+  if(priceBasis === 'total' || !raw || isNaN(val) || val <= 0){ el.textContent = ''; return; }
+  const amountIn = document.getElementById('basisAmountIn');
+  const amount = amountIn ? amountIn.value : '';
+  const total = priceFromBasis(val, priceBasis, amount);
+  if(total == null){ el.textContent = ''; return; }
+  el.textContent = L('totalForQty', {qty: amount + ' ' + basisAmountUnitLabel(priceBasis), price: fmtPrice(total)});
 }
 function savePrice(id){
   const f = findItem(id); if(!f) return;
   const raw = ($('#priceIn').value || '').replace(',', '.').replace(/[^\d.]/g, '');
   const val = parseFloat(raw);
   if(!raw || isNaN(val) || val <= 0 || val >= 10000){ toast(L('invalidPrice')); return; }
-  const total = priceFromBasis(val, priceBasis, f.it.qty);
+  let total;
+  if(priceBasis === 'total'){
+    total = val;
+  }else{
+    const amountIn = document.getElementById('basisAmountIn');
+    total = priceFromBasis(val, priceBasis, amountIn ? amountIn.value : '');
+    if(total == null){ toast(L('enterAmountPrompt')); return; }
+  }
   if(total >= 10000){ toast(L('priceTooHigh')); return; }
   f.it.price = Math.round(total * 100) / 100;
   const ab = $('#alsoBought');
   if(ab && ab.checked) f.it.bought = true;
   save(); closeModal(); render();
-  toast(L('priceSavedToast', {price: fmtPrice(f.it.price), name: dispName(f.it), qty: (f.it.qty && priceBasis !== 'total' ? ' (' + fmtQty(f.it.qty) + ')' : '')}));
+  toast(L('priceSavedToast', {price: fmtPrice(f.it.price), name: dispName(f.it), qty: ''}));
 }
 function removePrice(id){
   const f = findItem(id); if(!f) return;
