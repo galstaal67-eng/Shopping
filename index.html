@@ -1492,7 +1492,7 @@ const LS_KEY = 'shopping-app-v1';
 let state = null;
 let view = 'request';
 let openCats = {};
-let shopClosed = {};
+let shopOpenCat = null;
 
 /* ---------- state ---------- */
 function freshState(){
@@ -2234,7 +2234,7 @@ function renderShop(){
     const items = c.items.filter(i => i.need);
     if(!items.length) return;
     const cdone = items.filter(i => i.bought).length;
-    const closed = shopClosed[c.id];
+    const closed = c.id !== shopOpenCat;
     const col = catCol(c);
     html += `
     <div class="shopcat ${closed?'closed':''}" id="shopcat-${c.id}">
@@ -2359,7 +2359,7 @@ function catItemTap(id, catId){
   if(!opensPrice) openCatItems(catId);
 }
 
-function toggleShopCat(id){ shopClosed[id] = !shopClosed[id]; render(); }
+function toggleShopCat(id){ shopOpenCat = (shopOpenCat === id) ? null : id; render(); }
 function toggleBought(id){
   const f = findItem(id); if(!f) return;
   f.it.bought = !f.it.bought;
