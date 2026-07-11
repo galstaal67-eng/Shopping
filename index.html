@@ -174,6 +174,48 @@ body.editmode .item .note-in{display:block}
 .pill.primary{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
 .pill.warn{color:var(--red)}
 body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);font-weight:700}
+.resetlink{text-align:center;margin:0 0 12px}
+.resetlink button{font-size:12px;color:var(--soft);font-weight:500;padding:4px 10px}
+
+/* ===== Bubble stage (request view) ===== */
+.bubble-stage{position:relative;height:270px;margin-bottom:10px}
+.bubble{
+  position:absolute;border-radius:50%;border:none;box-shadow:0 3px 10px rgba(15,23,42,.14);padding:0;
+  transition:left .42s cubic-bezier(.2,.8,.2,1),top .42s cubic-bezier(.2,.8,.2,1),
+    width .42s cubic-bezier(.2,.8,.2,1),height .42s cubic-bezier(.2,.8,.2,1),opacity .3s,filter .3s;
+}
+.bubble .b-inner{
+  width:100%;height:100%;border-radius:50%;overflow:hidden;padding:2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+}
+.bubble .b-emoji{font-size:var(--emo-size,22px);line-height:1}
+.bubble .b-name{font-size:10.5px;font-weight:700;text-align:center;line-height:1.15;padding:0 4px;max-width:100%}
+.bubble .b-count{
+  position:absolute;top:-2px;inset-inline-end:-2px;background:#fff;border-radius:999px;min-width:18px;height:18px;
+  padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;
+  box-shadow:0 1px 4px rgba(0,0,0,.18);
+}
+.bubble.dim{opacity:.16;filter:saturate(.6)}
+.bubble.b-empty:not(.docked) .b-count{display:none}
+.bubble.docked{z-index:5;box-shadow:0 4px 14px rgba(15,23,42,.22)}
+.comet{position:fixed;width:14px;height:14px;border-radius:50%;pointer-events:none;z-index:90}
+
+.docked-panel{
+  max-height:0;opacity:0;overflow:hidden;background:var(--card);border-radius:var(--radius);
+  box-shadow:var(--shadow);transition:max-height .35s ease,opacity .3s ease;
+}
+.docked-panel.show{max-height:3000px;opacity:1;margin-bottom:12px}
+.docked-head{display:flex;align-items:center;gap:8px;padding:13px 14px;border-radius:var(--radius) var(--radius) 0 0}
+.docked-head .dp-title{font-weight:700;font-size:16.5px;flex:1}
+.docked-head .dp-close{font-size:15px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.6)}
+.docked-body{border-top:1px solid var(--line)}
+.docked-empty{padding:16px 14px;color:var(--soft);font-size:13.5px;text-align:center}
+
+/* add-product sheet */
+.chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{border:1.5px solid transparent;border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:700;white-space:nowrap}
+.chip.sel{border-color:currentColor}
+.chip.suggested{box-shadow:0 0 0 2px rgba(13,148,136,.35)}
 
 /* ===== Sticky summary bar (request view) ===== */
 .summary{
@@ -815,6 +857,8 @@ he:{
 appTitle:'רשימת קניות', btnFamilyChat:'צ\'אט משפחתי', btnSettings:'הגדרות', sendListBtn:'שלח לקונה',
 tabRequest:'מה צריך', tabShop:'קנייה', tabHistory:'היסטוריה',
 editCatalog:'✏️ עריכת קטלוג', resetList:'🔄 איפוס רשימה', boardTitle:'📌 לוח מודעות — משפחת {name}',
+addProductBtn:'➕ הוספת מוצר', addProductPlaceholder:'מה להוסיף? (למשל: עגבניות שרי)', chooseCategoryLabel:'בחרו קטגוריה:',
+addProductConfirm:'הוספה ✓', catEmpty:'אין עדיין מוצרים בקטגוריה הזו.',
 addToListTitle:'הוסף לרשימת הקניות', toListBtn:'🛒 לרשימה',
 boardEmpty:'אין הודעות — כתבו משהו למשפחה, למשל: "צריך נייר טואלט"', boardPlaceholder:'כתבו הודעה למשפחה...',
 notePlaceholder:'הערה (סוג, מותג...)', qtyBtn:'⚖️ כמות',
@@ -950,6 +994,8 @@ en:{
 appTitle:'Shopping List', btnFamilyChat:'Family chat', btnSettings:'Settings', sendListBtn:'Send to shopper',
 tabRequest:'What\'s needed', tabShop:'Shopping', tabHistory:'History',
 editCatalog:'✏️ Edit catalog', resetList:'🔄 Reset list', boardTitle:'📌 Notice board — {name} family',
+addProductBtn:'➕ Add product', addProductPlaceholder:'What to add? (e.g. cherry tomatoes)', chooseCategoryLabel:'Choose a category:',
+addProductConfirm:'Add ✓', catEmpty:'No items in this category yet.',
 addToListTitle:'Add to shopping list', toListBtn:'🛒 To list',
 boardEmpty:'No messages yet — write something to the family, e.g. "need toilet paper"', boardPlaceholder:'Write a message to the family...',
 notePlaceholder:'Note (type, brand...)', qtyBtn:'⚖️ Quantity',
@@ -1085,6 +1131,8 @@ ru:{
 appTitle:'Список покупок', btnFamilyChat:'Семейный чат', btnSettings:'Настройки', sendListBtn:'Отправить покупателю',
 tabRequest:'Что нужно', tabShop:'Покупки', tabHistory:'История',
 editCatalog:'✏️ Редактировать каталог', resetList:'🔄 Сбросить список', boardTitle:'📌 Доска объявлений — семья {name}',
+addProductBtn:'➕ Добавить товар', addProductPlaceholder:'Что добавить? (например: черри помидоры)', chooseCategoryLabel:'Выберите категорию:',
+addProductConfirm:'Добавить ✓', catEmpty:'В этой категории пока нет товаров.',
 addToListTitle:'Добавить в список покупок', toListBtn:'🛒 В список',
 boardEmpty:'Пока нет сообщений — напишите семье, например: "нужна туалетная бумага"', boardPlaceholder:'Написать сообщение семье...',
 notePlaceholder:'Примечание (тип, бренд...)', qtyBtn:'⚖️ Количество',
@@ -1220,6 +1268,8 @@ ar:{
 appTitle:'قائمة التسوق', btnFamilyChat:'دردشة العائلة', btnSettings:'الإعدادات', sendListBtn:'إرسال إلى المتسوق',
 tabRequest:'المطلوب', tabShop:'التسوق', tabHistory:'السجل',
 editCatalog:'✏️ تعديل الكتالوج', resetList:'🔄 إعادة تعيين القائمة', boardTitle:'📌 لوحة إعلانات — عائلة {name}',
+addProductBtn:'➕ إضافة منتج', addProductPlaceholder:'ماذا تريد أن تضيف؟ (مثل: طماطم كرزية)', chooseCategoryLabel:'اختر الفئة:',
+addProductConfirm:'إضافة ✓', catEmpty:'لا توجد منتجات في هذه الفئة بعد.',
 addToListTitle:'أضف إلى قائمة التسوق', toListBtn:'🛒 إلى القائمة',
 boardEmpty:'لا توجد رسائل بعد — اكتب شيئًا للعائلة، مثل: "نحتاج ورق تواليت"', boardPlaceholder:'اكتب رسالة للعائلة...',
 notePlaceholder:'ملاحظة (النوع، الماركة...)', qtyBtn:'⚖️ الكمية',
@@ -1643,13 +1693,27 @@ function setView(v){ view = v; window.scrollTo(0,0); render(); }
 /* ===== request view ===== */
 function renderRequest(){
   const m = $('#main');
-  let html = `
-  <div class="toolbar">
-    <button class="pill" id="editPill" onclick="toggleEdit()">${esc(L('editCatalog'))}</button>
-    <button class="pill warn" onclick="resetAll()">${esc(L('resetList'))}</button>
-  </div>`;
-  if(fam){
-    html += `
+  if(m.dataset.mode !== 'request'){
+    m.dataset.mode = 'request';
+    m.innerHTML = `
+    <div class="toolbar">
+      <button class="pill" id="editPill" onclick="toggleEdit()">${esc(L('editCatalog'))}</button>
+      <button class="pill primary" onclick="openAddSheet()">${esc(L('addProductBtn'))}</button>
+    </div>
+    <div id="boardWrap"></div>
+    <div class="bubble-stage" id="bubbleStage"></div>
+    <div class="docked-panel" id="dockedPanel"></div>
+    <div class="resetlink"><button onclick="resetAll()">${esc(L('resetList'))}</button></div>`;
+    bubblePositions = {};
+  }
+  renderBoard();
+  renderBubbleStage();
+  renderDockedPanel();
+}
+function renderBoard(){
+  const wrap = $('#boardWrap'); if(!wrap) return;
+  if(!fam){ wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
     <div class="board">
       <div class="btitle">${esc(L('boardTitle', {name: fam.familyName}))}</div>
       ${(state.board || []).length ? (state.board || []).map(b => `
@@ -1668,21 +1732,106 @@ function renderRequest(){
         <button onclick="postBoard()">📌</button>
       </div>
     </div>`;
-  }
+}
+/* ===== בועות קטגוריה (מסך "מה צריך") ===== */
+let bubblePositions = {};
+function bubbleRadius(c){
+  const cnt = c.items.filter(i => i.need).length;
+  return Math.max(30, Math.min(56, 28 + cnt * 5));
+}
+function layoutBubbles(force){
+  const stage = $('#bubbleStage'); if(!stage) return;
+  const w = stage.clientWidth || 360, h = stage.clientHeight || 270;
+  const fresh = force || bubblePositions.__w !== w || bubblePositions.__h !== h ||
+    !state.cats.every(c => bubblePositions[c.id]);
+  if(!fresh) return;
+  const cats = state.cats.slice().sort((a,b) => bubbleRadius(b) - bubbleRadius(a));
+  const placed = [];
+  cats.forEach(c => {
+    const r = bubbleRadius(c);
+    let best = null, bestOverlap = Infinity;
+    for(let i = 0; i < 140; i++){
+      const x = r + Math.random() * Math.max(1, w - 2*r);
+      const y = r + Math.random() * Math.max(1, h - 2*r);
+      if(placed.length === 0){ best = {x,y}; break; }
+      let minDist = Infinity, overlap = 0;
+      placed.forEach(p => {
+        const d = Math.hypot(x - p.x, y - p.y) - (r + p.r + 10);
+        minDist = Math.min(minDist, d);
+        if(d < 0) overlap += -d;
+      });
+      if(minDist > 0){ best = {x,y}; break; }
+      if(overlap < bestOverlap){ bestOverlap = overlap; best = {x,y}; }
+    }
+    placed.push({id:c.id, x:best.x, y:best.y, r});
+  });
+  const next = {__w:w, __h:h};
+  placed.forEach(p => { next[p.id] = p; });
+  bubblePositions = next;
+}
+function renderBubbleStage(){
+  const stage = $('#bubbleStage'); if(!stage) return;
+  layoutBubbles(false);
+  const dockedId = Object.keys(openCats)[0] || null;
+  const stageW = stage.clientWidth || bubblePositions.__w || 360;
+  const stageH = bubblePositions.__h || 270;
+  stage.style.height = stageH + 'px';
+  const seen = new Set();
   state.cats.forEach(c => {
-    const cnt = c.items.filter(i => i.need).length;
-    const open = !!openCats[c.id];
+    seen.add(c.id);
+    let el = document.getElementById('bub-' + c.id);
+    if(!el){
+      el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'bubble';
+      el.id = 'bub-' + c.id;
+      el.innerHTML = `<span class="b-count"></span><div class="b-inner"><span class="b-emoji"></span><span class="b-name"></span></div>`;
+      stage.appendChild(el);
+    }
+    el.onclick = () => toggleCat(c.id);
     const col = catCol(c);
-    const cname = dispCat(c);
-    html += `
-    <div class="cat ${open?'open':''} ${c.special?'special':''}" id="cat-${c.id}">
-      <button class="cat-head" style="background:${col.bg}" onclick="toggleCat('${c.id}')">
-        <span class="emoji">${c.emoji}</span>
-        <span class="name" style="color:${col.ac}">${esc(cname)}</span>
-        <span class="count ${cnt?'':'zero'}" ${cnt?`style="color:${col.ac};background:rgba(255,255,255,.8)"`:''}>${cnt}</span>
-        <span class="chev" style="color:${col.ac}">◀</span>
-      </button>
-      <div class="cat-body">`;
+    const cnt = c.items.filter(i => i.need).length;
+    const docked = dockedId === c.id;
+    const r = docked ? 38 : bubbleRadius(c);
+    const pos = bubblePositions[c.id] || {x: stageW/2, y: r + 4};
+    const cx = docked ? stageW/2 : pos.x;
+    const cy = docked ? (r + 6) : pos.y;
+    el.classList.toggle('docked', docked);
+    el.classList.toggle('dim', !!dockedId && !docked);
+    el.classList.toggle('b-empty', cnt === 0);
+    el.style.background = col.bg;
+    el.style.color = col.ac;
+    el.style.width = el.style.height = (r*2) + 'px';
+    el.style.left = (cx - r) + 'px';
+    el.style.top = (cy - r) + 'px';
+    el.style.setProperty('--emo-size', (docked ? 19 : Math.round(r*0.6)) + 'px');
+    el.querySelector('.b-emoji').textContent = c.emoji;
+    el.querySelector('.b-name').textContent = docked ? '' : dispCat(c);
+    const countEl = el.querySelector('.b-count');
+    if(cnt){ countEl.textContent = cnt; countEl.style.display = 'flex'; countEl.style.color = col.ac; }
+    else countEl.style.display = 'none';
+  });
+  Array.from(stage.children).forEach(el => {
+    const id = el.id.replace(/^bub-/, '');
+    if(!seen.has(id)) el.remove();
+  });
+}
+function renderDockedPanel(){
+  const panel = $('#dockedPanel'); if(!panel) return;
+  const dockedId = Object.keys(openCats)[0] || null;
+  const c = dockedId && state.cats.find(x => x.id === dockedId);
+  if(!c){ panel.classList.remove('show'); panel.innerHTML = ''; return; }
+  const col = catCol(c);
+  const cname = dispCat(c);
+  let html = `
+    <div class="docked-head" style="background:${col.bg}">
+      <span class="dp-title" style="color:${col.ac}">${c.emoji} ${esc(cname)}</span>
+      <button class="dp-close" style="color:${col.ac}" onclick="toggleCat('${c.id}')">✕</button>
+    </div>
+    <div class="docked-body">`;
+  if(!c.items.length){
+    html += `<div class="docked-empty">${esc(L('catEmpty'))}</div>`;
+  }else{
     c.items.forEach(it => {
       html += `
         <div class="item ${it.need?'on':''}" id="row-${it.id}">
@@ -1696,18 +1845,121 @@ function renderRequest(){
           <button class="del" onclick="delItem('${it.id}')">🗑</button>
         </div>`;
     });
-    html += `
-        <div class="addrow">
-          <input id="add-${c.id}" placeholder="${c.special ? esc(L('specialPlaceholder')) : esc(L('addToCatPlaceholder', {cat: cname}))}"
-                 onkeydown="if(event.key==='Enter')addItem('${c.id}')">
-          <button onclick="addItem('${c.id}')">➕</button>
-        </div>
+  }
+  html += `
+      <div class="addrow">
+        <input id="add-${c.id}" placeholder="${c.special ? esc(L('specialPlaceholder')) : esc(L('addToCatPlaceholder', {cat: cname}))}"
+               onkeydown="if(event.key==='Enter')addItem('${c.id}')">
+        <button onclick="addItem('${c.id}')">➕</button>
       </div>
     </div>`;
-  });
-  m.innerHTML = html;
+  panel.innerHTML = html;
+  panel.classList.add('show');
 }
 function toggleCat(id){ openCats = openCats[id] ? {} : { [id]: true }; render(); }
+
+/* ===== גיליון הוספת מוצר (עם המלצת קטגוריה) ===== */
+let addSheetSelectedCat = null;
+function suggestCategoryFor(text){
+  const q = String(text || '').trim();
+  if(!q) return null;
+  const idx = catalogIndex();
+  if(idx[q]) { const it = idx[q]; return state.cats.find(c => c.items.includes(it))?.id || null; }
+  const lower = q.toLowerCase();
+  for(const c of state.cats){
+    for(const it of c.items){
+      const names = typeof it.name === 'object' ? Object.values(it.name) : [it.name];
+      if(names.some(n => n && String(n).toLowerCase().includes(lower))) return c.id;
+    }
+  }
+  return null;
+}
+function openAddSheet(prefCatId){
+  addSheetSelectedCat = prefCatId || null;
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${esc(L('addProductBtn'))}</h2>
+    <input type="text" id="addProdIn" placeholder="${esc(L('addProductPlaceholder'))}" oninput="onAddProdInput()"
+           onkeydown="if(event.key==='Enter'){event.preventDefault();confirmAddProduct();}">
+    <label>${esc(L('chooseCategoryLabel'))}</label>
+    <div class="chiprow" id="addCatChips"></div>
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
+      <button class="primary" id="confirmAddBtn" onclick="confirmAddProduct()">${esc(L('addProductConfirm'))}</button>
+    </div>`;
+  $('#modalBox').dataset.modal = 'addProduct';
+  renderAddChips();
+  $('#overlay').classList.add('show');
+  setTimeout(() => { const i = $('#addProdIn'); if(i) i.focus(); }, 150);
+}
+function onAddProdInput(){
+  const text = $('#addProdIn').value;
+  renderAddChips(suggestCategoryFor(text));
+}
+function renderAddChips(suggestedId){
+  const wrap = $('#addCatChips'); if(!wrap) return;
+  const sel = addSheetSelectedCat || suggestedId;
+  wrap.innerHTML = state.cats.map(c => {
+    const col = catCol(c);
+    const isSel = sel === c.id;
+    const isSuggested = !addSheetSelectedCat && suggestedId === c.id;
+    return `<button type="button" class="chip ${isSel?'sel':''} ${isSuggested?'suggested':''}"
+      style="background:${col.bg};color:${col.ac}" onclick="pickAddCat('${c.id}')">${isSuggested?'✨ ':''}${c.emoji} ${esc(dispCat(c))}</button>`;
+  }).join('');
+}
+function pickAddCat(id){ addSheetSelectedCat = id; renderAddChips(); }
+function confirmAddProduct(){
+  const inp = $('#addProdIn');
+  const name = (inp.value || '').trim();
+  if(!name){ inp.focus(); return; }
+  const catId = addSheetSelectedCat || suggestCategoryFor(name) || 'special';
+  const c = state.cats.find(x => x.id === catId) || state.cats.find(x => x.id === 'special');
+  const item = { id:'i' + Date.now() + Math.floor(Math.random()*1e4), name, note:'', need:true, bought:false };
+  markAdded(item);
+  c.items.push(item);
+  save();
+  const fromBtn = $('#confirmAddBtn');
+  const fromRect = fromBtn ? fromBtn.getBoundingClientRect() : null;
+  closeModal();
+  render();
+  toast(L('addedToListToast', {name}));
+  flyToBubble(fromRect, c.id);
+}
+function bumpBubble(target){
+  if(!target) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce || !target.animate) return;
+  target.animate([{transform:'scale(1)'},{transform:'scale(1.24)'},{transform:'scale(1)'}],
+    {duration:420, easing:'cubic-bezier(.3,1.4,.6,1)'});
+}
+function flyToBubble(fromRect, catId){
+  const target = document.getElementById('bub-' + catId);
+  if(!target) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce || !fromRect || !target.animate){ bumpBubble(target); return; }
+  const toR = target.getBoundingClientRect();
+  const col = catCol(state.cats.find(c => c.id === catId));
+  const comet = document.createElement('div');
+  comet.className = 'comet';
+  comet.style.background = (col && col.ac) || 'var(--teal)';
+  document.body.appendChild(comet);
+  const sx = fromRect.left + fromRect.width/2, sy = fromRect.top + fromRect.height/2;
+  const ex = toR.left + toR.width/2, ey = toR.top + toR.height/2;
+  const midX = (sx + ex)/2, midY = Math.min(sy, ey) - 80;
+  comet.style.left = sx + 'px'; comet.style.top = sy + 'px';
+  const anim = comet.animate([
+    { transform:'translate(0,0) scale(1)', opacity:1, offset:0 },
+    { transform:`translate(${midX-sx}px,${midY-sy}px) scale(1.2)`, opacity:1, offset:.5 },
+    { transform:`translate(${ex-sx}px,${ey-sy}px) scale(.3)`, opacity:0, offset:1 },
+  ], { duration:620, easing:'cubic-bezier(.2,.8,.2,1)' });
+  anim.onfinish = () => { comet.remove(); bumpBubble(target); };
+}
+window.addEventListener('resize', () => {
+  clearTimeout(window.__bubResizeT);
+  window.__bubResizeT = setTimeout(() => {
+    if(view === 'request' && $('#bubbleStage')){ layoutBubbles(true); renderBubbleStage(); }
+  }, 200);
+});
 
 /* ===== בורר כמות/משקל ===== */
 const UNIT_KEYS = ['unit', 'kg', 'gram', 'pack', 'bag', 'bottle', 'liter'];
@@ -2015,6 +2267,7 @@ function addItem(catId){
   save(); render();
   const again = $('#add-' + catId); if(again) again.focus();
   toast(L('addedToListToast', {name}));
+  bumpBubble(document.getElementById('bub-' + catId));
 }
 function delItem(id){
   const f = findItem(id); if(!f) return;
@@ -2036,6 +2289,7 @@ function resetAll(){
 /* ===== shopper view ===== */
 function renderShop(){
   const m = $('#main');
+  m.dataset.mode = 'shop';
   const all = neededItems();
   if(!all.length){
     m.innerHTML = `
@@ -2440,6 +2694,7 @@ async function openDeals(){
 let histOpen = {};
 function renderHistory(){
   const m = $('#main');
+  m.dataset.mode = 'history';
   let html = '';
   if(fam){
     html += `
