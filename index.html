@@ -292,6 +292,25 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .catitem .cpr{color:var(--teal-dark);font-weight:700;font-size:13.5px}
 .catitem .cnote{font-size:12px;color:var(--amber)}
 
+/* store picker */
+.storelist{max-height:38vh;overflow-y:auto;margin-top:10px}
+.storerow{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:right;
+  border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:7px;
+  background:#fff;font-size:14.5px;
+}
+.storerow:active{background:var(--teal-soft)}
+.storerow .sregion{margin-inline-start:auto;font-size:12px;color:var(--soft)}
+#storeSearch{
+  width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;background:#fff;
+}
+#storeSearch:focus{border-color:var(--teal)}
+.tripstore{
+  font-size:13.5px;color:var(--teal-dark);font-weight:700;margin:-2px 0 8px;
+  display:flex;align-items:center;gap:4px;
+}
+.benchtbl tr.mychain td{background:#f0fdfa}
+
 /* benchmark */
 .bench{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
 .bench .btitle{font-weight:700;font-size:15.5px;margin-bottom:8px}
@@ -925,6 +944,7 @@ function renderShop(){
       <span class="title">🛍️ הקנייה שלי</span>
       <span class="nums"><b>${done}</b> מתוך ${all.length} נאספו</span>
     </div>
+    ${state.trip.startedAt && state.trip.store ? `<div class="tripstore">📍 ${esc(state.trip.store.chain)} ${esc(state.trip.store.name || '')}</div>` : ''}
     <div class="bar"><div style="width:${pct}%"></div></div>
     ${total > 0 ? `<div class="carttotal"><span>🧾 מצטבר בעגלה</span><b>₪${fmtPrice(total)}</b></div>` : ''}
     <div class="tripline">
@@ -1110,15 +1130,100 @@ function fmtDur(ms){
 function isShopper(){
   return !fam || !state.trip.shopperId || state.trip.shopperId === fam.memberId;
 }
-function startTrip(){
+function startTrip(){ openStoreModal(); }
+function actuallyStartTrip(store){
   state.trip = {
     startedAt: Date.now(),
     shopperId: fam ? fam.memberId : null,
-    shopperName: fam ? fam.myName : (state.settings.reqName || '')
+    shopperName: fam ? fam.myName : (state.settings.reqName || ''),
+    store: store || null
   };
-  save(); render();
+  save(); closeModal(); render();
   pushList(); // דחיפה מיידית כדי שבני המשפחה יקבלו את האיתות מהר
-  toast('⏱ הקנייה התחילה — בהצלחה!');
+  toast('⏱ הקנייה התחילה' + (store ? ' ב' + store.chain + (store.name ? ' ' + store.name : '') : '') + ' — בהצלחה!');
+}
+
+/* ===== מאגר מקומות קנייה ===== */
+const CHAINS = ['שופרסל','רמי לוי','ויקטורי','יוחננוף','אושר עד','חצי חינם','טיב טעם','יינות ביתן','קרפור','מחסני השוק','סופר פארם','מכולת שכונתית','שוק','אחר'];
+let storeCache = [];
+async function openStoreModal(){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>📍 איפה קונים היום?</h2>
+    <div class="msub">בחרו מקום מהמאגר — הקנייה תירשם עליו ותיכנס להשוואת הרשתות.</div>
+    <input type="text" id="storeSearch" placeholder="🔍 חיפוש... (למשל: שופרסל)" oninput="renderStoreList(this.value)">
+    <div id="storeList" class="storelist"><div class="hint">⏳ טוען מאגר חנויות...</div></div>
+    <button class="camline" onclick="showAddStore()">➕ המקום לא במאגר? הוסיפו אותו</button>
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+      <button class="ghost" onclick="actuallyStartTrip(null)">התחל בלי מקום</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+  try{
+    const res = await apiGet('getStores', {});
+    storeCache = (res && res.ok && res.stores) || [];
+    renderStoreList('');
+  }catch(e){
+    const el = document.getElementById('storeList');
+    if(el) el.innerHTML = '<div class="hint">⚠️ אין חיבור למאגר — אפשר להוסיף מקום ידנית (יישמר לקנייה הזו) או להתחיל בלי מקום.</div>';
+  }
+}
+function renderStoreList(q){
+  const el = document.getElementById('storeList');
+  if(!el) return;
+  q = (q || '').trim();
+  const list = storeCache.filter(s => !q || (s.chain + ' ' + s.name).includes(q)).slice(0, 30);
+  if(!list.length){
+    el.innerHTML = `<div class="hint">${storeCache.length ? 'לא נמצא "' + esc(q) + '" — הוסיפו אותו למאגר 👇' : 'המאגר עדיין ריק — הוסיפו את המקום הראשון 👇'}</div>`;
+    return;
+  }
+  el.innerHTML = list.map(s => `
+    <button class="storerow" onclick="chooseStore('${esc(s.id)}')">
+      🏪 <b>${esc(s.chain)}</b> ${esc(s.name)}
+      ${s.region ? `<span class="sregion">📍 ${esc(s.region)}</span>` : ''}
+    </button>`).join('');
+}
+function chooseStore(id){
+  const s = storeCache.find(x => x.id === id); if(!s) return;
+  actuallyStartTrip({ id: s.id, chain: s.chain, name: s.name });
+}
+function showAddStore(){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>➕ הוספת מקום קנייה למאגר</h2>
+    <div class="msub">המקום יישמר במאגר המרכזי ויהיה זמין לכל המשתמשים.</div>
+    <label>רשת / סוג</label>
+    <select id="stChain" class="selectbox">${CHAINS.map(c => `<option>${c}</option>`).join('')}</select>
+    <label>שם הסניף / המקום</label>
+    <input type="text" id="stName" placeholder='למשל: ראשון לציון מערב / "המכולת של משה"'>
+    <label>אזור</label>
+    <select id="stRegion" class="selectbox">${REGIONS.map(r => `<option ${fam && fam.region === r ? 'selected' : ''}>${r}</option>`).join('')}</select>
+    <div class="ocr-status" id="stStatus"></div>
+    <div class="btnrow">
+      <button class="ghost" onclick="openStoreModal()">חזרה</button>
+      <button class="primary" onclick="submitStore()">שמור והתחל קנייה</button>
+    </div>`;
+}
+async function submitStore(){
+  const chain = $('#stChain').value;
+  const name = ($('#stName').value || '').trim();
+  const region = $('#stRegion').value;
+  const st = $('#stStatus');
+  if(!name){ st.textContent = 'נא למלא את שם הסניף/המקום'; return; }
+  st.textContent = '⏳ שומר במאגר...';
+  try{
+    const res = await apiPost('addStore', { chain, name, region, by: fam ? fam.myName : '' });
+    if(res && res.ok && res.store){
+      actuallyStartTrip({ id: res.store.id, chain: res.store.chain, name: res.store.name });
+      toast('🏪 "' + chain + ' ' + name + '" נוסף למאגר ✓');
+      return;
+    }
+    st.textContent = '⚠️ ' + ((res && res.error) || 'השמירה נכשלה');
+  }catch(e){
+    // אין שרת — נשמר לקנייה הזו בלבד
+    actuallyStartTrip({ id: null, chain, name });
+    toast('נשמר לקנייה הזו (אין חיבור למאגר)');
+  }
 }
 function finishTrip(){
   const all = neededItems();
@@ -1129,6 +1234,8 @@ function finishTrip(){
     date: new Date().toISOString(),
     durationMs: state.trip.startedAt ? Date.now() - state.trip.startedAt : null,
     total: cartTotal(),
+    store: state.trip.store || null,
+    shopperName: state.trip.shopperName || '',
     items: all.map(x => ({
       name: x.it.name, cat: x.cat.id, catName: x.cat.name, emoji: x.cat.emoji,
       note: x.it.note || '', bought: !!x.it.bought,
@@ -1202,6 +1309,8 @@ function renderHistory(){
     <div class="bench">
       <div class="btitle">📊 השוואה אזורית — ${esc(fam.region)}</div>
       <div id="benchBody" class="hint">⏳ טוען נתוני השוואה...</div>
+      <div class="btitle" style="margin-top:14px">🏪 השוואת רשתות</div>
+      <div id="benchChains" class="hint">⏳ טוען נתוני רשתות...</div>
     </div>`;
   }
   if(!state.history.length){
@@ -1210,7 +1319,7 @@ function renderHistory(){
         <div class="big">🧾</div>
         <p>עדיין אין קניות שמורות. במסך הקנייה, לחצו "▶️ התחל קנייה" ובסיום "🏁 סיים" — והקנייה תישמר כאן עם המוצרים, המחירים וזמן הקנייה.</p>
       </div>`;
-    if(fam){ loadBenchmark(); loadHistoryCloud(); }
+    if(fam){ loadBenchmark(); loadBenchmarkChains(); loadHistoryCloud(); }
     return;
   }
   state.history.forEach(rec => {
@@ -1226,6 +1335,7 @@ function renderHistory(){
         <span class="hd">
           <span class="hdate">${ds}</span>
           <span class="hmeta">
+            ${rec.store ? `<span>📍 ${esc(rec.store.chain)} ${esc(rec.store.name || '')}</span>` : ''}
             <span>📦 ${bought}/${rec.items.length} נאספו</span>
             ${rec.total > 0 ? `<span>🧾 ₪${fmtPrice(rec.total)}</span>` : ''}
             ${rec.durationMs != null ? `<span>⏱ ${fmtDur(rec.durationMs)}</span>` : ''}
@@ -1247,7 +1357,32 @@ function renderHistory(){
     </div>`;
   });
   m.innerHTML = html;
-  if(fam){ loadBenchmark(); loadHistoryCloud(); }
+  if(fam){ loadBenchmark(); loadBenchmarkChains(); loadHistoryCloud(); }
+}
+async function loadBenchmarkChains(){
+  try{
+    const res = await apiGet('benchmarkChains', {});
+    const el = document.getElementById('benchChains');
+    if(!el || !res || !res.ok) return;
+    if(!res.chains || !res.chains.length){
+      el.textContent = 'עדיין אין קניות עם מקום מסומן — בחרו חנות ב"התחל קנייה" וההשוואה תתמלא.';
+      return;
+    }
+    // הרשתות שהמשפחה קונה בהן — לסימון בטבלה
+    const myChains = new Set(state.history.filter(h => h.store && h.store.chain).map(h => h.store.chain));
+    el.innerHTML = `
+      <table class="benchtbl">
+        <tr><th>רשת</th><th>סל ממוצע</th><th>⏱ ממוצע</th><th>קניות</th></tr>
+        ${res.chains.map(c => `
+        <tr${myChains.has(c.chain) ? ' class="mychain"' : ''}>
+          <td>${myChains.has(c.chain) ? '⭐ ' : ''}${esc(c.chain)}</td>
+          <td>${c.avgTotal ? '₪' + fmtPrice(c.avgTotal) : '—'}</td>
+          <td>${c.avgDurationMs ? fmtDur(c.avgDurationMs) : '—'}</td>
+          <td>${c.count}</td>
+        </tr>`).join('')}
+      </table>
+      <div class="hint" style="margin-top:6px">⭐ = רשתות שהמשפחה שלכם קונה בהן. השוואה כלל-ארצית אנונימית.</div>`;
+  }catch(e){}
 }
 function toggleHist(id){ histOpen[id] = !histOpen[id]; render(); }
 let histCloudLoadedAt = 0;
@@ -1455,7 +1590,9 @@ function notifyDone(){
   const name = state.settings.reqName;
   const total = cartTotal();
   const dur = state.trip.startedAt ? fmtDur(Date.now() - state.trip.startedAt) : null;
+  const st = state.trip.store;
   openWA('✅ סיימתי את הקנייה! הכול נאסף 🛒'
+    + (st ? '\n📍 ' + st.chain + (st.name ? ' ' + st.name : '') : '')
     + (total > 0 ? '\n🧾 סה"כ לפי המחירים שהוזנו: ₪' + fmtPrice(total) : '')
     + (dur ? '\n⏱ זמן קנייה: ' + dur : '')
     + (name ? '\n(' + name + ', אפשר לאפס את הרשימה)' : ''), state.settings.reqPhone);

@@ -70,6 +70,17 @@ async function db(){
         record jsonb NOT NULL)`;
       await sql`CREATE INDEX IF NOT EXISTS purchases_family_idx ON purchases(family_id, date DESC)`;
       await sql`CREATE INDEX IF NOT EXISTS purchases_region_idx ON purchases(region)`;
+      await sql`CREATE TABLE IF NOT EXISTS stores(
+        id text PRIMARY KEY,
+        chain text NOT NULL,
+        name text NOT NULL,
+        region text,
+        created_by text,
+        created_at timestamptz NOT NULL DEFAULT now(),
+        UNIQUE(chain, name))`;
+      await sql`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS store_id text`;
+      await sql`ALTER TABLE purchases ADD COLUMN IF NOT EXISTS chain text`;
+      await sql`CREATE INDEX IF NOT EXISTS purchases_chain_idx ON purchases(chain)`;
       await sql`CREATE TABLE IF NOT EXISTS deals(
         id bigserial PRIMARY KEY,
         store text,
@@ -117,10 +128,11 @@ async function migrateFamilyToDb(sql, fam){
 }
 async function insertPurchase(sql, familyId, region, rec){
   const items = rec.items || [];
-  await sql`INSERT INTO purchases(id, family_id, date, duration_ms, total, items_count, bought_count, region, shopper_name, record)
+  const store = rec.store || {};
+  await sql`INSERT INTO purchases(id, family_id, date, duration_ms, total, items_count, bought_count, region, shopper_name, store_id, chain, record)
     VALUES(${rec.id}, ${familyId}, ${rec.date}, ${rec.durationMs || null}, ${rec.total || 0},
            ${items.length}, ${items.filter(i => i.bought).length}, ${region || 'אחר'},
-           ${rec.shopperName || ''}, ${JSON.stringify(rec)}::jsonb)
+           ${rec.shopperName || ''}, ${store.id || null}, ${store.chain || null}, ${JSON.stringify(rec)}::jsonb)
     ON CONFLICT (id) DO NOTHING`;
 }
 async function familyPayload(sql, familyId){
@@ -245,23 +257,98 @@ export default async (req) => {
         if (!arr.some(r => r.id === body.record.id)) arr.unshift(body.record);
         if (arr.length > 100) arr.length = 100;
         await history.setJSON(body.familyId, arr);
-        if (body.region) {
-          const stats = getStore('stats');
-          const key = 'r_' + body.region;
+        const stats = getStore('stats');
+        const summary = {
+          total: body.record.total || 0,
+          items: (body.record.items || []).length,
+          bought: (body.record.items || []).filter(i => i.bought).length,
+          durationMs: body.record.durationMs || null,
+          date: body.record.date,
+        };
+        const appendStat = async (key) => {
           const s = (await stats.get(key, { type: 'json' })) || [];
-          s.unshift({
-            total: body.record.total || 0,
-            items: (body.record.items || []).length,
-            bought: (body.record.items || []).filter(i => i.bought).length,
-            durationMs: body.record.durationMs || null,
-            date: body.record.date,
-          });
+          s.unshift(summary);
           if (s.length > 500) s.length = 500;
           await stats.setJSON(key, s);
+        };
+        if (body.region) await appendStat('r_' + body.region);
+        const chain = body.record.store && body.record.store.chain;
+        if (chain) {
+          await appendStat('c_' + chain);
+          const idx = (await stats.get('chains', { type: 'json' })) || [];
+          if(!idx.includes(chain)){ idx.push(chain); await stats.setJSON('chains', idx); }
         }
         return json({ ok: true });
       }
+
+      if (op === 'addStore') {
+        const chain = String(body.chain || '').trim().slice(0, 40);
+        const name = String(body.name || '').trim().slice(0, 60);
+        if(!chain || !name) return json({ ok: false, error: 'רשת ושם מקום חובה' }, 400);
+        const region = String(body.region || '').slice(0, 30) || null;
+        const id = uid();
+        if(sql){
+          const rows = await sql`INSERT INTO stores(id, chain, name, region, created_by)
+            VALUES(${id}, ${chain}, ${name}, ${region}, ${String(body.by || '').slice(0, 40)})
+            ON CONFLICT (chain, name) DO UPDATE SET region = COALESCE(stores.region, EXCLUDED.region)
+            RETURNING id, chain, name, region`;
+          return json({ ok: true, store: rows[0] });
+        }
+        const storesBlob = getStore('storesdb');
+        const arr = (await storesBlob.get('all', { type: 'json' })) || [];
+        let st = arr.find(s => s.chain === chain && s.name === name);
+        if(!st){
+          st = { id, chain, name, region };
+          arr.push(st);
+          if(arr.length > 500) arr.length = 500;
+          await storesBlob.setJSON('all', arr);
+        }
+        return json({ ok: true, store: st });
+      }
     } else {
+      if (op === 'getStores') {
+        const q = (url.searchParams.get('q') || '').trim();
+        if(sql){
+          const rows = q
+            ? await sql`SELECT id, chain, name, region FROM stores
+                WHERE (chain || ' ' || name) ILIKE ${'%' + q + '%'} ORDER BY chain, name LIMIT 100`
+            : await sql`SELECT id, chain, name, region FROM stores ORDER BY chain, name LIMIT 100`;
+          return json({ ok: true, stores: rows });
+        }
+        let arr = (await getStore('storesdb').get('all', { type: 'json' })) || [];
+        if(q) arr = arr.filter(s => (s.chain + ' ' + s.name).includes(q));
+        return json({ ok: true, stores: arr.slice(0, 100) });
+      }
+
+      if (op === 'benchmarkChains') {
+        if(sql){
+          const rows = await sql`SELECT chain, count(*)::int AS count,
+              avg(total) AS avg_total,
+              avg(items_count) AS avg_items,
+              avg(duration_ms) FILTER (WHERE duration_ms IS NOT NULL) AS avg_duration
+            FROM purchases WHERE chain IS NOT NULL AND chain <> ''
+            GROUP BY chain ORDER BY count DESC LIMIT 10`;
+          return json({ ok: true, chains: rows.map(r => ({
+            chain: r.chain, count: r.count,
+            avgTotal: r.avg_total ? Number(r.avg_total) : 0,
+            avgItems: r.avg_items ? Number(r.avg_items) : 0,
+            avgDurationMs: r.avg_duration ? Number(r.avg_duration) : null })) });
+        }
+        const stats = getStore('stats');
+        const idx = (await stats.get('chains', { type: 'json' })) || [];
+        const chains = [];
+        for(const chain of idx.slice(0, 10)){
+          const s = (await stats.get('c_' + chain, { type: 'json' })) || [];
+          const n = s.length;
+          if(!n) continue;
+          const avg = f => s.reduce((a, x) => a + (f(x) || 0), 0) / n;
+          const withDur = s.filter(x => x.durationMs);
+          chains.push({ chain, count: n, avgTotal: avg(x => x.total), avgItems: avg(x => x.items),
+            avgDurationMs: withDur.length ? withDur.reduce((a, x) => a + x.durationMs, 0) / withDur.length : null });
+        }
+        chains.sort((a, b) => b.count - a.count);
+        return json({ ok: true, chains });
+      }
       if (op === 'getFamily') {
         const familyId = url.searchParams.get('familyId');
         if(sql){
