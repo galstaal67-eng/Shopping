@@ -303,7 +303,9 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 }
 .member .mname{flex:1;display:flex;flex-direction:column;line-height:1.3}
 .metag{color:var(--teal-dark);font-size:12px;font-weight:700}
+.metag.admin{color:#a97b12}
 .mwa{font-size:18px;padding:2px 6px}
+.mdel{font-size:16px;padding:2px 6px;color:#e2a0a0}
 .famtitle{font-weight:700;font-size:15.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .famregion{font-size:12.5px;color:var(--muted);font-weight:500}
 .famcode-line{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:10px;flex-wrap:wrap}
@@ -931,6 +933,9 @@ inListCount:'ברשימה: {n} פריטים', myFamilyDefault:'המשפחה של
 tripBarText:'🛍️ {name} בקנייה עכשיו — יש משהו להוסיף?', tripReqBtnTitle:'בקש הוספת מוצר',
 tripReqModalTitle:'🛒 בקשה ל{name}', tripReqModalSub:'המוצר יתווסף מיד לרשימה של הקנייה הנוכחית.',
 tripReqPlaceholder:'למשל: עגבניות שרי, נייר טואלט...', tripReqSendBtn:'שלח בקשה 🛒',
+claimAdminBtn:'🛡️ הפוך למנהל המשפחה', adminTag:'מנהל/ת', removeMemberTitle:'הסר מהמשפחה',
+becameAdminToast:'🛡️ הפכת למנהל/ת המשפחה', removeMemberConfirm:'להסיר את {name} מהמשפחה? יצטרכו להצטרף מחדש עם הקוד.',
+memberRemovedToast:'{name} הוסר/ה מהמשפחה',
 },
 en:{
 appTitle:'Shopping List', btnFamilyChat:'Family chat', btnSettings:'Settings', sendListBtn:'Send to shopper',
@@ -1054,6 +1059,9 @@ inListCount:'In list: {n} items', myFamilyDefault:'My Family',
 tripBarText:'🛍️ {name} is shopping now — need anything added?', tripReqBtnTitle:'Request an item',
 tripReqModalTitle:'🛒 Request to {name}', tripReqModalSub:'The item will be added right away to the current shopping trip.',
 tripReqPlaceholder:'e.g. cherry tomatoes, toilet paper...', tripReqSendBtn:'Send request 🛒',
+claimAdminBtn:'🛡️ Become family admin', adminTag:'Admin', removeMemberTitle:'Remove from family',
+becameAdminToast:'🛡️ You are now the family admin', removeMemberConfirm:'Remove {name} from the family? They will need to rejoin with the code.',
+memberRemovedToast:'{name} was removed from the family',
 },
 ru:{
 appTitle:'Список покупок', btnFamilyChat:'Семейный чат', btnSettings:'Настройки', sendListBtn:'Отправить покупателю',
@@ -1177,6 +1185,9 @@ inListCount:'В списке: {n} товаров', myFamilyDefault:'Моя се�
 tripBarText:'🛍️ {name} сейчас за покупками — нужно что-то добавить?', tripReqBtnTitle:'Запросить товар',
 tripReqModalTitle:'🛒 Запрос к {name}', tripReqModalSub:'Товар будет сразу добавлен в текущую покупку.',
 tripReqPlaceholder:'например: помидоры черри, туалетная бумага...', tripReqSendBtn:'Отправить запрос 🛒',
+claimAdminBtn:'🛡️ Стать администратором семьи', adminTag:'Администратор', removeMemberTitle:'Удалить из семьи',
+becameAdminToast:'🛡️ Теперь вы администратор семьи', removeMemberConfirm:'Удалить {name} из семьи? Понадобится снова присоединиться по коду.',
+memberRemovedToast:'{name} удалён(а) из семьи',
 },
 ar:{
 appTitle:'قائمة التسوق', btnFamilyChat:'دردشة العائلة', btnSettings:'الإعدادات', sendListBtn:'إرسال إلى المتسوق',
@@ -1300,6 +1311,9 @@ inListCount:'في القائمة: {n} منتج', myFamilyDefault:'عائلتي',
 tripBarText:'🛍️ {name} يتسوق الآن — هل تحتاج إضافة شيء؟', tripReqBtnTitle:'اطلب منتجًا',
 tripReqModalTitle:'🛒 طلب إلى {name}', tripReqModalSub:'سيُضاف المنتج فورًا إلى رحلة التسوق الحالية.',
 tripReqPlaceholder:'مثل: طماطم كرزية، ورق تواليت...', tripReqSendBtn:'إرسال الطلب 🛒',
+claimAdminBtn:'🛡️ أصبح مسؤول العائلة', adminTag:'مسؤول', removeMemberTitle:'إزالة من العائلة',
+becameAdminToast:'🛡️ أصبحت الآن مسؤول العائلة', removeMemberConfirm:'إزالة {name} من العائلة؟ سيحتاجون للانضمام مجددًا بالرمز.',
+memberRemovedToast:'تمت إزالة {name} من العائلة',
 },
 zh:{
 appTitle:'购物清单', btnFamilyChat:'家庭聊天', btnSettings:'设置', sendListBtn:'发送给采购人',
@@ -1423,6 +1437,9 @@ inListCount:'清单中：{n}件商品', myFamilyDefault:'我的家庭',
 tripBarText:'🛍️ {name}正在购物 — 需要添加什么吗？', tripReqBtnTitle:'请求添加商品',
 tripReqModalTitle:'🛒 向{name}请求', tripReqModalSub:'商品会立即添加到本次购物清单中。',
 tripReqPlaceholder:'例如：圣女果、卫生纸...', tripReqSendBtn:'发送请求 🛒',
+claimAdminBtn:'🛡️ 成为家庭管理员', adminTag:'管理员', removeMemberTitle:'从家庭中移除',
+becameAdminToast:'🛡️ 你现在是家庭管理员', removeMemberConfirm:'从家庭中移除{name}？他们需要用代码重新加入。',
+memberRemovedToast:'{name}已从家庭中移除',
 },
 };
 
@@ -2915,6 +2932,7 @@ function openSettings(){
       <div class="members" id="famMembers">${membersHTML()}</div>
       ${(fam.members || []).length < 2 ? `<div class="hint">${esc(L('onlyYouHint'))}</div>` : ''}
       <div class="hint">${esc(L('syncHint'))}</div>
+      ${!fam.adminMemberId ? `<button class="minibtn" style="margin-top:8px" onclick="claimAdmin()">${esc(L('claimAdminBtn'))}</button>` : ''}
       <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">${esc(L('leaveFamilyBtn'))}</button>
     </div>`;
   }else{
@@ -2972,16 +2990,19 @@ async function checkDbStatus(){
   }
 }
 function membersHTML(){
+  const iAmAdmin = fam.adminMemberId && fam.adminMemberId === fam.memberId;
   return (fam.members || []).map(m => {
     const me = m.id === fam.memberId;
+    const isAdmin = fam.adminMemberId === m.id;
     const joined = m.joinedAt ? new Date(m.joinedAt) : null;
     return `
     <div class="member">
       <span class="mavatar">${esc((m.name || '?').trim().charAt(0))}</span>
-      <span class="mname">${esc(m.name)}${me ? ' <span class="metag">' + esc(L('me')) + '</span>' : ''}
+      <span class="mname">${esc(m.name)}${me ? ' <span class="metag">' + esc(L('me')) + '</span>' : ''}${isAdmin ? ' <span class="metag admin">👑 ' + esc(L('adminTag')) + '</span>' : ''}
         <span class="mphone">${esc(m.phone || L('noPhone'))}${joined ? esc(L('joinedOn', {d: joined.getDate() + '/' + (joined.getMonth()+1)})) : ''}</span>
       </span>
       ${(!me && m.phone) ? `<button class="mwa" onclick="openWA('${esc(L('hiWave'))}', '${esc(m.phone)}')" title="${esc(L('waTo', {name: m.name}))}">💬</button>` : ''}
+      ${(!me && iAmAdmin) ? `<button class="mdel" onclick="removeMember('${esc(m.id)}', '${esc(m.name).replace(/'/g, "\\'")}')" title="${esc(L('removeMemberTitle'))}">🗑</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -2992,11 +3013,37 @@ async function refreshFamily(){
       fam.members = res.family.members;
       fam.familyName = res.family.name;
       fam.region = normRegion(res.family.region);
+      fam.adminMemberId = res.family.adminMemberId || null;
       famSave();
       const el = document.getElementById('famMembers');
       if(el) el.innerHTML = membersHTML();
     }
   }catch(e){}
+}
+async function claimAdmin(){
+  try{
+    const res = await apiPost('claimAdmin', { familyId: fam.familyId, memberId: fam.memberId });
+    if(!res || !res.ok){ toast('⚠️ ' + ((res && res.error) || L('somethingWrong'))); return; }
+    fam.adminMemberId = res.family.adminMemberId || fam.memberId;
+    famSave();
+    toast(L('becameAdminToast'));
+    openSettings();
+  }catch(e){
+    toast(L('noServerConn'));
+  }
+}
+async function removeMember(targetId, name){
+  if(!confirm(L('removeMemberConfirm', {name}))) return;
+  try{
+    const res = await apiPost('removeMember', { familyId: fam.familyId, memberId: fam.memberId, targetId });
+    if(!res || !res.ok){ toast('⚠️ ' + ((res && res.error) || L('somethingWrong'))); return; }
+    fam.members = (fam.members || []).filter(m => m.id !== targetId);
+    famSave();
+    toast(L('memberRemovedToast', {name}));
+    openSettings();
+  }catch(e){
+    toast(L('noServerConn'));
+  }
 }
 function openFamilyForm(mode){
   const box = $('#modalBox');
@@ -3044,7 +3091,7 @@ async function submitFamily(mode){
     fam = {
       familyId: res.family.id, memberId: res.memberId, code: res.family.code,
       familyName: res.family.name, region: normRegion(res.family.region),
-      members: res.family.members, myName
+      members: res.family.members, adminMemberId: res.family.adminMemberId || null, myName
     };
     famSave();
     if(!state.settings.reqName){ state.settings.reqName = myName; state.settings.reqPhone = myPhone; }

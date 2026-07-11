@@ -35,6 +35,7 @@ async function db(){
         name text NOT NULL,
         region text,
         created_at timestamptz NOT NULL DEFAULT now())`;
+      await sql`ALTER TABLE families ADD COLUMN IF NOT EXISTS admin_member_id text`;
       await sql`CREATE TABLE IF NOT EXISTS members(
         id text PRIMARY KEY,
         family_id text NOT NULL REFERENCES families(id) ON DELETE CASCADE,
@@ -136,7 +137,7 @@ async function insertPurchase(sql, familyId, region, rec){
     ON CONFLICT (id) DO NOTHING`;
 }
 async function familyPayload(sql, familyId){
-  const frows = await sql`SELECT id, code, name, region, extract(epoch FROM created_at)*1000 AS created_at
+  const frows = await sql`SELECT id, code, name, region, admin_member_id, extract(epoch FROM created_at)*1000 AS created_at
     FROM families WHERE id = ${familyId}`;
   if(!frows.length) return null;
   const f = frows[0];
@@ -144,6 +145,7 @@ async function familyPayload(sql, familyId){
     FROM members WHERE family_id = ${familyId} ORDER BY joined_at`;
   return {
     id: f.id, code: f.code, name: f.name, region: f.region, createdAt: Number(f.created_at),
+    adminMemberId: f.admin_member_id || null,
     members: members.map(m => ({ id: m.id, name: m.name, phone: m.phone, joinedAt: Number(m.joined_at) })),
   };
 }
@@ -304,6 +306,48 @@ export default async (req) => {
           await storesBlob.setJSON('all', arr);
         }
         return json({ ok: true, store: st });
+      }
+
+      if (op === 'claimAdmin') {
+        const familyId = String(body.familyId || '');
+        const memberId = String(body.memberId || '');
+        if(!familyId || !memberId) return json({ ok: false, error: 'חסרים נתונים' }, 400);
+        if(sql){
+          if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
+          const rows = await sql`UPDATE families SET admin_member_id = ${memberId}
+            WHERE id = ${familyId} AND admin_member_id IS NULL RETURNING admin_member_id`;
+          if(!rows.length) return json({ ok: false, error: 'כבר יש מנהל למשפחה' }, 409);
+          return json({ ok: true, family: await familyPayload(sql, familyId) });
+        }
+        const famStore = getStore('families');
+        const fam = await famStore.get(familyId, { type: 'json' });
+        if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
+        if(fam.adminMemberId) return json({ ok: false, error: 'כבר יש מנהל למשפחה' }, 409);
+        fam.adminMemberId = memberId;
+        await famStore.setJSON(familyId, fam);
+        return json({ ok: true, family: fam });
+      }
+
+      if (op === 'removeMember') {
+        const familyId = String(body.familyId || '');
+        const memberId = String(body.memberId || '');
+        const targetId = String(body.targetId || '');
+        if(!familyId || !memberId || !targetId) return json({ ok: false, error: 'חסרים נתונים' }, 400);
+        if(targetId === memberId) return json({ ok: false, error: 'אי אפשר להסיר את עצמך' }, 400);
+        if(sql){
+          if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
+          const frows = await sql`SELECT admin_member_id FROM families WHERE id = ${familyId}`;
+          if(!frows.length || frows[0].admin_member_id !== memberId) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
+          await sql`DELETE FROM members WHERE id = ${targetId} AND family_id = ${familyId}`;
+          return json({ ok: true, family: await familyPayload(sql, familyId) });
+        }
+        const famStore = getStore('families');
+        const fam = await famStore.get(familyId, { type: 'json' });
+        if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
+        if(fam.adminMemberId !== memberId) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
+        fam.members = (fam.members || []).filter(m => m.id !== targetId);
+        await famStore.setJSON(familyId, fam);
+        return json({ ok: true, family: fam });
       }
     } else {
       if (op === 'getStores') {
