@@ -1165,19 +1165,31 @@ const DEMO_DEALS = [
   {e:'🫒', n:'שמן זית כתית מעולה', d:'השני ב-50% הנחה', t:'2ב50%'},
   {e:'☕', n:'קפה נמס 200 גרם', d:'₪19.90 לחברי מועדון', t:'מועדון'},
 ];
-function openDeals(){
+async function openDeals(){
   const box = $('#modalBox');
-  box.innerHTML = `
-    <h2>🏷️ מבצעים בחנות</h2>
-    <div class="msub">בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):</div>
-    ${DEMO_DEALS.map(d => `
-      <div class="deal">
-        <span class="demoji">${d.e}</span>
-        <span class="dtxt"><span class="dname">${d.n}</span><br><span class="ddesc">${d.d}</span></span>
-        <span class="dtag">${d.t}</span>
-      </div>`).join('')}
+  const dealHTML = (e, n, dsc, t) => `
+    <div class="deal">
+      <span class="demoji">${e || '🏷️'}</span>
+      <span class="dtxt"><span class="dname">${esc(n)}</span><br><span class="ddesc">${esc(dsc || '')}</span></span>
+      <span class="dtag">${esc(t || 'מבצע')}</span>
+    </div>`;
+  box.innerHTML = `<h2>🏷️ מבצעים בחנות</h2><div class="msub">⏳ בודק מבצעים...</div>
     <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
   $('#overlay').classList.add('show');
+  // מבצעים אמיתיים מה-DB המרכזי; אם אין — הדגמה
+  let real = [];
+  try{
+    const res = await apiGet('getDeals', fam ? { region: fam.region } : {});
+    if(res && res.ok && Array.isArray(res.deals)) real = res.deals;
+  }catch(e){}
+  if(!$('#overlay').classList.contains('show')) return;
+  box.innerHTML = `
+    <h2>🏷️ מבצעים בחנות</h2>
+    ${real.length
+      ? `<div class="msub">מבצעים באזורכם:</div>` + real.map(d => dealHTML(d.emoji, d.title, (d.store ? d.store + ' · ' : '') + (d.description || ''), d.tag)).join('')
+      : `<div class="msub">בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):</div>`
+        + DEMO_DEALS.map(d => dealHTML(d.e, d.n, d.d, d.t)).join('')}
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">סגירה</button></div>`;
 }
 
 /* ===== history view ===== */
