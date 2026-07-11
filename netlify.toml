@@ -2,3 +2,6 @@
 # הקובץ הזה גובר על הגדרות ה-UI של Netlify עבור פריסות הענף.
 [build]
   publish = "."
+
+[functions]
+  directory = "netlify/functions"

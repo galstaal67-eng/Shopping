@@ -1,0 +1,8 @@
+{
+  "name": "shopping-list-app",
+  "private": true,
+  "description": "אפליקציית רשימת קניות משפחתית — סטטי + Netlify Functions",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

@@ -229,6 +229,31 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .hactions .imp{background:var(--teal);color:#fff}
 .hactions .delh{background:#fff;border:1px solid var(--red-soft);color:var(--red);flex:0 0 auto;padding:9px 14px}
 
+.tripline .timer.live{background:#7f1d1d;color:#fecaca;font-size:14px}
+
+/* family */
+.famcard{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:12px;padding:14px;margin:6px 0 4px}
+.famtitle{font-weight:700;font-size:15.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.famregion{font-size:12.5px;color:var(--muted);font-weight:500}
+.famcode-line{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:10px;flex-wrap:wrap}
+.famcode{font-weight:700;font-size:19px;letter-spacing:3px;color:var(--teal-dark);background:#fff;border:1px dashed var(--teal);border-radius:8px;padding:2px 12px;direction:ltr}
+.minibtn{background:var(--teal);color:#fff;border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700}
+.minibtn.warn{background:#fff;border:1px solid var(--red-soft);color:var(--red)}
+.members{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.member{font-size:14px;display:flex;gap:8px;align-items:baseline}
+.member .mphone{font-size:12px;color:var(--soft);direction:ltr}
+.selectbox{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;font-family:inherit;font-size:15px;outline:none}
+.selectbox:focus{border-color:var(--teal)}
+
+/* benchmark */
+.bench{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
+.bench .btitle{font-weight:700;font-size:15.5px;margin-bottom:8px}
+.benchtbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.benchtbl th,.benchtbl td{padding:6px 8px;text-align:center;border-bottom:1px solid #f1f5f9}
+.benchtbl td:first-child{text-align:right;color:var(--muted)}
+.benchtbl th{color:var(--soft);font-size:12px}
+.benchtbl td:nth-child(2){font-weight:700;color:var(--teal-dark)}
+
 /* deals modal */
 .deal{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px}
 .deal .demoji{font-size:24px}
@@ -476,7 +501,7 @@ function load(){
   if(!state) state = freshState();
   if(!state.trip) state.trip = { startedAt:null };
   if(!Array.isArray(state.history)) state.history = [];
-  save();
+  saveLocalOnly(); // בלי לקדם updatedAt — טעינת דף לא "דורסת" שינויים מהענן
 }
 /* מיגרציה מגרסה 1: הקטלוג אורגן מחדש (פיצול ירקות לתתי-קטגוריות) —
    סימונים, הערות, מחירים ומוצרים שנוספו ידנית נשמרים. */
@@ -504,7 +529,75 @@ function migrateV1(old){
   }));
   return st;
 }
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function save(){
+  state.updatedAt = Date.now();
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+  schedulePush();
+}
+function saveLocalOnly(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* ================================================================
+   משפחה וסנכרון ענן — מעל Netlify Functions + Blobs (/api).
+   האפליקציה עובדת גם בלי משפחה (מצב מקומי); חיבור משפחה מוסיף
+   סנכרון בין מכשירים, מעקב חי אחרי הקנייה והשוואה אזורית.
+================================================================ */
+const FAM_KEY = 'shopping-family-v1';
+const REGIONS = ['צפון','חיפה והקריות','השרון','גוש דן','ירושלים והסביבה','שפלה','דרום','אחר'];
+let fam = null;
+let pushTimer = null;
+
+function famLoad(){ try{ fam = JSON.parse(localStorage.getItem(FAM_KEY)); }catch(e){ fam = null; } }
+function famSave(){ if(fam) localStorage.setItem(FAM_KEY, JSON.stringify(fam)); else localStorage.removeItem(FAM_KEY); }
+async function apiGet(op, params){
+  const q = new URLSearchParams(Object.assign({op}, params || {}));
+  const r = await fetch('/api?' + q.toString());
+  return r.json();
+}
+async function apiPost(op, body){
+  const r = await fetch('/api?op=' + op, {
+    method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body || {})
+  });
+  return r.json();
+}
+function schedulePush(){
+  if(!fam) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushList, 1200);
+}
+async function pushList(){
+  if(!fam) return;
+  clearTimeout(pushTimer);
+  try{
+    const res = await apiPost('putList', {
+      familyId: fam.familyId, memberId: fam.memberId, byName: fam.myName,
+      updatedAt: state.updatedAt || 0,
+      data: { cats: state.cats, trip: state.trip }
+    });
+    if(res && res.stale && res.remote) applyRemote(res.remote);
+  }catch(e){ /* אין רשת — יסונכרן בהמשך */ }
+}
+async function pullList(){
+  if(!fam) return;
+  try{
+    const res = await apiGet('getList', { familyId: fam.familyId });
+    if(res && res.list) applyRemote(res.list);
+  }catch(e){}
+}
+function applyRemote(remote){
+  if(!remote || !remote.data) return;
+  if(!(remote.updatedAt > (state.updatedAt || 0))) return;
+  const prevTrip = state.trip && state.trip.startedAt;
+  state.cats = remote.data.cats || state.cats;
+  state.trip = remote.data.trip || { startedAt:null };
+  state.updatedAt = remote.updatedAt;
+  saveLocalOnly();
+  if(!prevTrip && state.trip.startedAt && fam && state.trip.shopperId && state.trip.shopperId !== fam.memberId){
+    toast('🛍️ ' + (state.trip.shopperName || 'הקונה') + ' התחיל/ה קנייה — צפו בהתקדמות במסך הקנייה!');
+  }
+  render();
+}
+setInterval(() => { if(fam) pullList(); }, 8000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden && fam) pullList(); });
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -668,8 +761,10 @@ function renderShop(){
     ${total > 0 ? `<div class="carttotal"><span>🧾 מצטבר בעגלה</span><b>₪${fmtPrice(total)}</b></div>` : ''}
     <div class="tripline">
       ${state.trip.startedAt
-        ? `<div class="timer">⏱ <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>
-           <button class="finishbtn" onclick="finishTrip()">🏁 סיים</button>`
+        ? (isShopper()
+          ? `<div class="timer">⏱ <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>
+             <button class="finishbtn" onclick="finishTrip()">🏁 סיים</button>`
+          : `<div class="timer live">🔴 ${esc(state.trip.shopperName || 'הקונה')} בקנייה · <span id="tripTimer">${fmtDur(Date.now() - state.trip.startedAt)}</span></div>`)
         : `<button class="startbtn" onclick="startTrip()">▶️ התחל קנייה</button>`}
       <button class="dealsbtn" onclick="openDeals()">🏷️ מבצעים</button>
     </div>
@@ -739,9 +834,17 @@ function fmtDur(ms){
   const p = n => String(n).padStart(2, '0');
   return h ? h + ':' + p(m) + ':' + p(ss) : m + ':' + p(ss);
 }
+function isShopper(){
+  return !fam || !state.trip.shopperId || state.trip.shopperId === fam.memberId;
+}
 function startTrip(){
-  state.trip.startedAt = Date.now();
+  state.trip = {
+    startedAt: Date.now(),
+    shopperId: fam ? fam.memberId : null,
+    shopperName: fam ? fam.myName : (state.settings.reqName || '')
+  };
   save(); render();
+  pushList(); // דחיפה מיידית כדי שבני המשפחה יקבלו את האיתות מהר
   toast('⏱ הקנייה התחילה — בהצלחה!');
 }
 function finishTrip(){
@@ -761,8 +864,11 @@ function finishTrip(){
   };
   state.history.unshift(rec);
   if(state.history.length > 60) state.history.length = 60;
-  state.trip.startedAt = null;
+  state.trip = { startedAt:null };
   save();
+  if(fam){
+    apiPost('finishTrip', { familyId: fam.familyId, region: fam.region, record: rec }).catch(() => {});
+  }
   toast('הקנייה נשמרה בהיסטוריה 🧾');
   if(confirm('לאפס את הרשימה לקראת הקנייה הבאה?')){
     state.cats.forEach(c => {
@@ -805,15 +911,23 @@ function openDeals(){
 let histOpen = {};
 function renderHistory(){
   const m = $('#main');
+  let html = '';
+  if(fam){
+    html += `
+    <div class="bench">
+      <div class="btitle">📊 השוואה אזורית — ${esc(fam.region)}</div>
+      <div id="benchBody" class="hint">⏳ טוען נתוני השוואה...</div>
+    </div>`;
+  }
   if(!state.history.length){
-    m.innerHTML = `
+    m.innerHTML = html + `
       <div class="empty">
         <div class="big">🧾</div>
         <p>עדיין אין קניות שמורות. במסך הקנייה, לחצו "▶️ התחל קנייה" ובסיום "🏁 סיים" — והקנייה תישמר כאן עם המוצרים, המחירים וזמן הקנייה.</p>
       </div>`;
+    if(fam){ loadBenchmark(); loadHistoryCloud(); }
     return;
   }
-  let html = '';
   state.history.forEach(rec => {
     const d = new Date(rec.date);
     const p = n => String(n).padStart(2, '0');
@@ -848,8 +962,53 @@ function renderHistory(){
     </div>`;
   });
   m.innerHTML = html;
+  if(fam){ loadBenchmark(); loadHistoryCloud(); }
 }
 function toggleHist(id){ histOpen[id] = !histOpen[id]; render(); }
+let histCloudLoadedAt = 0;
+async function loadHistoryCloud(){
+  if(!fam || Date.now() - histCloudLoadedAt < 15000) return;
+  histCloudLoadedAt = Date.now();
+  try{
+    const res = await apiGet('getHistory', { familyId: fam.familyId });
+    if(res && res.ok && Array.isArray(res.history)){
+      const ids = new Set(state.history.map(h => h.id));
+      const fresh = res.history.filter(h => h && h.id && !ids.has(h.id));
+      if(fresh.length){
+        state.history = state.history.concat(fresh)
+          .sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 100);
+        saveLocalOnly();
+        if(view === 'history') render();
+      }
+    }
+  }catch(e){}
+}
+async function loadBenchmark(){
+  if(!fam) return;
+  try{
+    const res = await apiGet('benchmark', { region: fam.region });
+    const el = document.getElementById('benchBody');
+    if(!el || !res || !res.ok) return;
+    if(!res.count){
+      el.textContent = 'עדיין אין נתונים מאזור ' + fam.region + ' — ההשוואה תתמלא ככל שמשפחות באזור ישתמשו באפליקציה.';
+      return;
+    }
+    const mine = state.history;
+    const myTotals = mine.filter(h => h.total > 0);
+    const myAvgTotal = myTotals.length ? myTotals.reduce((a,h) => a + h.total, 0) / myTotals.length : 0;
+    const myDur = mine.filter(h => h.durationMs);
+    const myAvgDur = myDur.length ? myDur.reduce((a,h) => a + h.durationMs, 0) / myDur.length : null;
+    const myAvgItems = mine.length ? mine.reduce((a,h) => a + h.items.length, 0) / mine.length : 0;
+    el.innerHTML = `
+      <table class="benchtbl">
+        <tr><th></th><th>המשפחה שלכם</th><th>ממוצע אזורי</th></tr>
+        <tr><td>🧾 סל ממוצע</td><td>${myAvgTotal ? '₪' + fmtPrice(myAvgTotal) : '—'}</td><td>${res.avgTotal ? '₪' + fmtPrice(res.avgTotal) : '—'}</td></tr>
+        <tr><td>📦 פריטים בקנייה</td><td>${myAvgItems ? Math.round(myAvgItems) : '—'}</td><td>${res.avgItems ? Math.round(res.avgItems) : '—'}</td></tr>
+        <tr><td>⏱ זמן קנייה</td><td>${myAvgDur ? fmtDur(myAvgDur) : '—'}</td><td>${res.avgDurationMs ? fmtDur(res.avgDurationMs) : '—'}</td></tr>
+      </table>
+      <div class="hint" style="margin-top:6px">מבוסס על ${res.count} קניות באזור (השוואה כללית ואנונימית — לא מול משפחה ספציפית).</div>`;
+  }catch(e){}
+}
 function importPurchase(id){
   const rec = state.history.find(h => h.id === id); if(!rec) return;
   let n = 0;
@@ -1038,7 +1197,14 @@ function openQuestionModal(item){
     ${templates.map((t,i) => `<button class="qopt ${i===0?'sel':''}" data-i="${i}" onclick="pickQ(${i})">${esc(t)}</button>`).join('')}
     <label>או ניסוח חופשי:</label>
     <textarea id="qFree" rows="2" placeholder="כתבו הודעה משלכם..." oninput="pickQ(-1)"></textarea>
-    ${hasPhone ? '' : '<div class="hint">💡 טיפ: קבעו את מספר הטלפון של רושם הרשימה בהגדרות ⚙️ — וההודעה תיפתח ישר בצ׳אט הנכון.</div>'}
+    ${famOthers().length ? `
+    <label>למי לשלוח?</label>
+    <select id="qTarget" class="selectbox">
+      ${famOthers().map(m => `<option value="${esc(m.phone || '')}">${esc(m.name)}${m.phone ? '' : ' (בלי טלפון)'}</option>`).join('')}
+      ${state.settings.reqPhone && !famOthers().some(m => normPhone(m.phone) === normPhone(state.settings.reqPhone))
+        ? `<option value="${esc(state.settings.reqPhone)}">${esc(state.settings.reqName || 'רושם הרשימה')}</option>` : ''}
+    </select>` : ''}
+    ${hasPhone || famOthers().length ? '' : '<div class="hint">💡 טיפ: קבעו את מספר הטלפון של רושם הרשימה בהגדרות ⚙️ — וההודעה תיפתח ישר בצ׳אט הנכון.</div>'}
     <div class="btnrow">
       <button class="ghost" onclick="closeModal()">ביטול</button>
       <button class="wa-btn" onclick="sendQ()">
@@ -1053,28 +1219,61 @@ function pickQ(i){
   qSelected = i;
   document.querySelectorAll('.qopt').forEach(b => b.classList.toggle('sel', +b.dataset.i === i));
 }
+function famOthers(){
+  if(!fam || !fam.members) return [];
+  return fam.members.filter(m => m.id !== fam.memberId);
+}
 function sendQ(){
   const templates = JSON.parse($('#modalBox').dataset.templates || '[]');
   const free = ($('#qFree') && $('#qFree').value.trim()) || '';
   let msg = qSelected === -1 ? free : (templates[qSelected] || free);
   if(!msg){ toast('בחרו שאלה או כתבו הודעה'); return; }
   msg = '🛒 ' + msg;
+  const target = $('#qTarget') ? $('#qTarget').value : state.settings.reqPhone;
   closeModal();
-  openWA(msg, state.settings.reqPhone);
+  openWA(msg, target || state.settings.reqPhone);
 }
 
-/* ---------- settings modal ---------- */
+/* ---------- settings modal (כולל משפחה) ---------- */
 function openSettings(){
   const s = state.settings;
   const box = $('#modalBox');
+  let famHtml;
+  if(fam){
+    famHtml = `
+    <div class="famcard">
+      <div class="famtitle">👨‍👩‍👧 משפחת ${esc(fam.familyName)} <span class="famregion">📍 ${esc(fam.region)}</span></div>
+      <div class="famcode-line">
+        קוד הצטרפות: <span class="famcode">${esc(fam.code)}</span>
+        <button class="minibtn" onclick="shareFamilyCode()">📤 שתף</button>
+      </div>
+      <div class="members" id="famMembers">${(fam.members || []).map(m => `
+        <div class="member">${m.id === fam.memberId ? '⭐' : '👤'} ${esc(m.name)}
+          <span class="mphone">${esc(m.phone || '')}</span></div>`).join('')}
+      </div>
+      <div class="hint">הרשימה מסתנכרנת אוטומטית בין כל בני המשפחה. כשמישהו לוחץ "התחל קנייה" — כולם מקבלים איתות ויכולים לעקוב חי.</div>
+      <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">🚪 התנתק מהמשפחה במכשיר הזה</button>
+    </div>`;
+  }else{
+    famHtml = `
+    <div class="famcard">
+      <div class="famtitle">👨‍👩‍👧 משפחה</div>
+      <div class="hint" style="margin-bottom:10px">חברו את המשפחה: רשימה משותפת שמסתנכרנת בין הטלפונים, מעקב חי אחרי הקנייה והשוואה אזורית.</div>
+      <div class="btnrow" style="margin-top:0">
+        <button class="primary" onclick="openFamilyForm('create')">➕ צור משפחה</button>
+        <button class="ghost" onclick="openFamilyForm('join')">🔗 הצטרף עם קוד</button>
+      </div>
+    </div>`;
+  }
   box.innerHTML = `
     <h2>⚙️ הגדרות</h2>
-    <div class="msub">מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.</div>
+    ${famHtml}
+    <div class="msub" style="margin-top:18px">מי שממלא את הרשימה — כדי שהקונה יוכל לשלוח שאלות בוואטסאפ.</div>
     <label>שם רושם/ת הרשימה</label>
     <input type="text" id="setName" value="${esc(s.reqName)}" placeholder="למשל: גל">
     <label>מספר וואטסאפ של רושם/ת הרשימה</label>
     <input type="tel" id="setPhone" value="${esc(s.reqPhone)}" placeholder="050-1234567" style="direction:ltr;text-align:right">
-    <div class="hint">אפשר גם בפורמט בינלאומי (9725...). כפתורי השאלה במסך הקנייה ישלחו לצ׳אט הזה.</div>
+    <div class="hint">אפשר גם בפורמט בינלאומי (9725...). כשמחוברים למשפחה — הקונה יכול לבחור לאיזה בן משפחה לשלוח.</div>
     <div class="btnrow">
       <button class="ghost" onclick="closeModal()">ביטול</button>
       <button class="primary" onclick="saveSettings()">שמירה</button>
@@ -1084,6 +1283,95 @@ function openSettings(){
       <div class="hint" style="margin-top:6px">מוחק את כל השינויים, המוצרים שנוספו והסימונים, ומחזיר את הקטלוג של האקסל המקורי.</div>
     </div>`;
   $('#overlay').classList.add('show');
+  if(fam) refreshFamily();
+}
+async function refreshFamily(){
+  try{
+    const res = await apiGet('getFamily', { familyId: fam.familyId });
+    if(res && res.ok && res.family){
+      fam.members = res.family.members;
+      fam.familyName = res.family.name;
+      fam.region = res.family.region;
+      famSave();
+      const el = document.getElementById('famMembers');
+      if(el) el.innerHTML = fam.members.map(m => `
+        <div class="member">${m.id === fam.memberId ? '⭐' : '👤'} ${esc(m.name)}
+          <span class="mphone">${esc(m.phone || '')}</span></div>`).join('');
+    }
+  }catch(e){}
+}
+function openFamilyForm(mode){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${mode === 'create' ? '➕ יצירת משפחה' : '🔗 הצטרפות למשפחה'}</h2>
+    <div class="msub">${mode === 'create'
+      ? 'צרו מנוי משפחתי — תקבלו קוד הצטרפות לשיתוף עם בני המשפחה.'
+      : 'הזינו את קוד המשפחה שקיבלתם, ופרטים שלכם.'}</div>
+    ${mode === 'create' ? `
+      <label>שם המשפחה</label>
+      <input type="text" id="famName" placeholder="למשל: משפחת סטאל">
+      <label>אזור מגורים (להשוואה אזורית אנונימית)</label>
+      <select id="famRegion" class="selectbox">${REGIONS.map(r => `<option>${r}</option>`).join('')}</select>
+    ` : `
+      <label>קוד משפחה</label>
+      <input type="text" id="famCode" placeholder="למשל: X7K2ML" style="direction:ltr;text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase" maxlength="6">
+    `}
+    <label>השם שלך</label>
+    <input type="text" id="famMyName" placeholder="למשל: גל">
+    <label>הטלפון הנייד שלך (לוואטסאפ)</label>
+    <input type="tel" id="famMyPhone" placeholder="050-1234567" style="direction:ltr;text-align:right">
+    <div class="ocr-status" id="famStatus"></div>
+    <div class="btnrow">
+      <button class="ghost" onclick="openSettings()">חזרה</button>
+      <button class="primary" onclick="submitFamily('${mode}')">${mode === 'create' ? 'צור משפחה' : 'הצטרף'}</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+}
+async function submitFamily(mode){
+  const myName = ($('#famMyName').value || '').trim();
+  const myPhone = ($('#famMyPhone').value || '').trim();
+  const st = $('#famStatus');
+  if(!myName){ st.textContent = 'נא למלא שם'; return; }
+  st.textContent = '⏳ רגע...';
+  try{
+    let res;
+    if(mode === 'create'){
+      const familyName = ($('#famName').value || '').trim() || 'המשפחה שלי';
+      const region = $('#famRegion').value;
+      res = await apiPost('createFamily', { familyName, region, userName: myName, phone: myPhone });
+    }else{
+      const code = ($('#famCode').value || '').trim().toUpperCase();
+      if(!code){ st.textContent = 'נא להזין קוד'; return; }
+      res = await apiPost('joinFamily', { code, userName: myName, phone: myPhone });
+    }
+    if(!res || !res.ok){ st.textContent = '⚠️ ' + ((res && res.error) || 'משהו השתבש, נסו שוב'); return; }
+    fam = {
+      familyId: res.family.id, memberId: res.memberId, code: res.family.code,
+      familyName: res.family.name, region: res.family.region,
+      members: res.family.members, myName
+    };
+    famSave();
+    if(!state.settings.reqName){ state.settings.reqName = myName; state.settings.reqPhone = myPhone; }
+    if(mode === 'create') pushList(); else await pullList();
+    save();
+    closeModal(); render();
+    toast(mode === 'create' ? '👨‍👩‍👧 המשפחה נוצרה! קוד: ' + fam.code : '🎉 הצטרפת למשפחת ' + fam.familyName);
+    if(mode === 'create') setTimeout(openSettings, 600);
+  }catch(e){
+    st.textContent = '⚠️ אין חיבור לשרת. שימו לב: זה עובד רק באתר (Netlify), לא בקובץ מקומי.';
+  }
+}
+function shareFamilyCode(){
+  openWA('👨‍👩‍👧 מצטרפים לרשימת הקניות של משפחת ' + fam.familyName + '!\n'
+    + '1. פותחים: ' + location.origin + '\n'
+    + '2. לוחצים ⚙️ ← "הצטרף עם קוד"\n'
+    + '3. הקוד: *' + fam.code + '*', '');
+}
+function leaveFamily(){
+  if(!confirm('להתנתק מהמשפחה במכשיר הזה? (הרשימה המשותפת תישאר אצל שאר בני המשפחה)')) return;
+  fam = null; famSave();
+  closeModal(); render();
+  toast('התנתקת מהמשפחה במכשיר הזה');
 }
 function saveSettings(){
   state.settings.reqName = $('#setName').value.trim();
@@ -1105,8 +1393,10 @@ function closeModal(){ $('#overlay').classList.remove('show'); }
 $('#settingsBtn').addEventListener('click', openSettings);
 $('#sendListBtn').addEventListener('click', sendList);
 $('#overlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+famLoad();
 load();
 render();
+if(fam) pullList();
 </script>
 </body>
 </html>
