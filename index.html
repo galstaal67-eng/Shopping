@@ -64,6 +64,10 @@ header .sub{font-size:12.5px;color:#d3f5ef;margin-top:2px}
 .cmeta{font-size:11px;color:var(--soft);margin-top:2px;padding:0 4px}
 .creq{font-size:11.5px;font-weight:700;color:#92400e;background:#fef3c7;border-radius:999px;padding:0 8px}
 .caddbtn{margin-top:6px;background:var(--teal);color:#fff;border-radius:999px;padding:4px 13px;font-size:12.5px;font-weight:700;display:inline-block}
+.cadded{
+  display:inline-block;margin-top:6px;background:var(--green-soft);color:#166534;border:1px solid #86efac;
+  border-radius:999px;padding:2px 12px;font-size:12px;font-weight:700;
+}
 .chatinput input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;margin-top:10px;background:#fff}
 .chatinput input:focus{border-color:var(--teal)}
 .popmsg{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16.5px;margin:8px 0 2px;line-height:1.6}
@@ -1081,7 +1085,9 @@ function chatMsgsHTML(){
       <div class="cbubble">
         ${m.req ? '<span class="creq">🛒 בקשת מוצר</span><br>' : ''}
         ${esc(m.text)}
-        ${m.req && !mine ? `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">➕ הוסף לרשימה</button>` : ''}
+        ${m.req ? (m.added
+          ? `<br><span class="cadded">✓ נוסף לרשימה${m.addedByName ? ' ע"י ' + esc(m.addedByName) : ''}</span>`
+          : `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">➕ הוסף לרשימת הקנייה</button>`) : ''}
       </div>
       <div class="cmeta">${esc(m.from || '')} · ${fmtAgo(m.at)}</div>
     </div>`;
@@ -1131,7 +1137,10 @@ function sendChat(req){
 }
 function chatAddToList(id){
   const m = (state.chat || []).find(x => x.id === id); if(!m) return;
+  if(m.added){ toast('הבקשה כבר נוספה לרשימה ✓'); return; }
   const name = addRequestToList(m.text, m.from);
+  m.added = true;
+  m.addedByName = fam ? fam.myName : '';
   pushChatMsg('✓ הוספתי לרשימה: ' + name, false);
   const cl = document.getElementById('chatList');
   if(cl){ cl.innerHTML = chatMsgsHTML(); cl.scrollTop = cl.scrollHeight; }
@@ -1527,6 +1536,7 @@ function finishTrip(){
       name: x.it.name, cat: x.cat.id, catName: x.cat.name, emoji: x.cat.emoji,
       note: x.it.note || '', bought: !!x.it.bought,
       ...(x.it.qty ? {qty: x.it.qty} : {}),
+      ...(x.it.addedBy ? {addedBy: x.it.addedBy} : {}),
       ...(x.it.price != null ? {price: x.it.price} : {})
     })),
   };
@@ -1634,7 +1644,7 @@ function renderHistory(){
       <div class="hbody">
         ${rec.items.map(i => `
           <div class="hitem ${i.bought?'':'notbought'}">
-            <span class="hn">${i.emoji || ''} ${esc(i.name)}${i.note ? ' <span style="color:var(--amber);font-size:12px">(' + esc(i.note) + ')</span>' : ''}</span>
+            <span class="hn">${i.emoji || ''} ${esc(i.name)}${i.qty ? ' <span class="qtybadge">' + esc(fmtQty(i.qty)) + '</span>' : ''}${i.note ? ' <span style="color:var(--amber);font-size:12px">(' + esc(i.note) + ')</span>' : ''}${i.addedBy ? ' <span style="color:var(--soft);font-size:11px">👤 ' + esc(i.addedBy) + '</span>' : ''}</span>
             <span class="hp">${i.price != null ? '₪' + fmtPrice(i.price) : (i.bought ? '✓' : '—')}</span>
           </div>`).join('')}
         <div class="hactions">
