@@ -372,7 +372,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 .board .btitle{font-weight:800;font-size:14.5px;margin-bottom:10px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.35)}
 .notesgrid{display:flex;flex-wrap:wrap;gap:8px;padding:2px 2px 6px}
 .stickynote{
-  --sn-s:48px;width:var(--sn-s);height:var(--sn-s);padding:calc(var(--sn-s)*.12) calc(var(--sn-s)*.1) calc(var(--sn-s)*.08);
+  --sn-s:53px;width:var(--sn-s);height:var(--sn-s);padding:calc(var(--sn-s)*.12) calc(var(--sn-s)*.1) calc(var(--sn-s)*.08);
   border-radius:2px;position:relative;cursor:pointer;
   display:flex;flex-direction:column;box-shadow:0 3px 7px rgba(0,0,0,.28),0 1px 2px rgba(0,0,0,.18);
   transition:transform .12s ease;flex-shrink:0;
@@ -1919,7 +1919,7 @@ function myNoteColorKey(){
 }
 function noteColorKeyFor(b){ return (b.color && NOTE_COLORS[b.color]) ? b.color : defaultNoteColorKey(b.byId || b.by); }
 function noteRotation(id){ return (hashStr(id) % 13) - 6; }
-const NOTE_SIZE = 48, NOTE_GAP = 8;
+const NOTE_SIZE = 53, NOTE_GAP = 8;
 function stickyNoteHtml(b, size){
   const col = NOTE_COLORS[noteColorKeyFor(b)];
   const s = size || NOTE_SIZE;
