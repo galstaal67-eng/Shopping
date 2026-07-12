@@ -166,7 +166,7 @@ body.editmode .item .note-in{display:block}
 .cat.special .cat-head .name{color:#92400e}
 
 /* toolbar above list */
-.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:nowrap;align-items:center}
 .pill{
   background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
   font-size:13.5px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px;box-shadow:var(--shadow);
@@ -175,9 +175,11 @@ body.editmode .item .note-in{display:block}
 .pill.warn{color:var(--red)}
 body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);font-weight:700}
 .datetime{
-  margin-inline-start:auto;align-self:center;font-size:12.5px;font-weight:600;color:var(--muted);
-  white-space:nowrap;font-variant-numeric:tabular-nums;
+  margin-inline-start:auto;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;white-space:nowrap;
 }
+.datetime #dtDay{font-size:9.5px;font-weight:700;letter-spacing:.2px;color:var(--soft);line-height:1}
+.datetime #dtTime{font-size:13px;font-weight:700;color:var(--muted);line-height:1;font-variant-numeric:tabular-nums}
 .resetlink{text-align:center;margin:0 0 12px}
 .resetlink button{font-size:12px;color:var(--soft);font-weight:500;padding:4px 10px}
 
@@ -1724,7 +1726,7 @@ function renderRequest(){
     <div class="toolbar">
       <button class="pill" id="editPill" onclick="toggleEdit()">${esc(L('editCatalog'))}</button>
       <button class="pill primary" onclick="openAddSheet()">${esc(L('addProductBtn'))}</button>
-      <span class="datetime" id="dateTimeLabel"></span>
+      <div class="datetime" id="dateTimeLabel"><span id="dtDay"></span><span id="dtTime"></span></div>
     </div>
     <div id="boardWrap"></div>
     <div class="bubble-stage" id="bubbleStage"></div>
@@ -2662,12 +2664,12 @@ setInterval(() => {
 }, 1000);
 const DATETIME_LOCALES = { he:'he-IL', en:'en-US', ru:'ru-RU', ar:'ar-SA' };
 function updateDateTimeLabel(){
-  const el = document.getElementById('dateTimeLabel'); if(!el) return;
+  const dayEl = document.getElementById('dtDay'), timeEl = document.getElementById('dtTime');
+  if(!dayEl || !timeEl) return;
   const loc = (DATETIME_LOCALES[lang] || 'he-IL') + '-u-nu-latn';
   const now = new Date();
-  const day = now.toLocaleDateString(loc, {weekday:'long'});
-  const time = now.toLocaleTimeString(loc, {hour:'2-digit', minute:'2-digit', hour12:false});
-  el.textContent = day + ' · ' + time;
+  dayEl.textContent = now.toLocaleDateString(loc, {weekday:'short'});
+  timeEl.textContent = now.toLocaleTimeString(loc, {hour:'2-digit', minute:'2-digit', hour12:false});
 }
 
 /* ===== deals (demo — store integration planned) ===== */
