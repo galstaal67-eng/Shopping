@@ -147,6 +147,14 @@ export async function insertPurchase(sql, familyId, region, rec){
            ${rec.shopperName || ''}, ${store.id || null}, ${store.chain || null}, ${JSON.stringify(rec)}::jsonb)
     ON CONFLICT (id) DO NOTHING`;
 }
+/* גרסת Blobs של אותו ריפוי: מנקה adminMemberId שמצביע על חבר שכבר לא קיים ושומר את התיקון */
+export async function healBlobsFamilyAdmin(store, fam){
+  if(fam && fam.adminMemberId && !(fam.members || []).some(m => m.id === fam.adminMemberId)){
+    fam.adminMemberId = null;
+    await store.setJSON(fam.id, fam);
+  }
+  return fam;
+}
 export async function familyPayload(sql, familyId){
   const frows = await sql`SELECT id, code, name, region, admin_member_id, extract(epoch FROM created_at)*1000 AS created_at
     FROM families WHERE id = ${familyId}`;
@@ -154,9 +162,16 @@ export async function familyPayload(sql, familyId){
   const f = frows[0];
   const members = await sql`SELECT id, name, phone, extract(epoch FROM joined_at)*1000 AS joined_at
     FROM members WHERE family_id = ${familyId} ORDER BY joined_at`;
+  let adminMemberId = f.admin_member_id || null;
+  if(adminMemberId && !members.some(m => m.id === adminMemberId)){
+    // admin_member_id מצביע על חבר שכבר לא קיים (למשל נמחק כרשומה כפולה ישנה) —
+    // מנקים כדי שהמשפחה לא תישאר תקועה בלי אפשרות לתבוע מחדש ניהול
+    await sql`UPDATE families SET admin_member_id = NULL WHERE id = ${familyId}`;
+    adminMemberId = null;
+  }
   return {
     id: f.id, code: f.code, name: f.name, region: f.region, createdAt: Number(f.created_at),
-    adminMemberId: f.admin_member_id || null,
+    adminMemberId,
     members: members.map(m => ({ id: m.id, name: m.name, phone: m.phone, joinedAt: Number(m.joined_at) })),
   };
 }

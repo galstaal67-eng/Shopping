@@ -10,7 +10,7 @@
 import { getStore } from '@netlify/blobs';
 import {
   json, uid, newCode, normPhone, isEffectiveAdmin,
-  db, ensureFamilyInDb, insertPurchase, familyPayload,
+  db, ensureFamilyInDb, insertPurchase, familyPayload, healBlobsFamilyAdmin,
 } from './_shared.mjs';
 
 export default async (req) => {
@@ -116,7 +116,7 @@ export default async (req) => {
           if(fam.members.length > 20) fam.members.length = 20;
         }
         await famStore.setJSON(familyId, fam);
-        return json({ ok: true, family: fam, memberId });
+        return json({ ok: true, family: await healBlobsFamilyAdmin(famStore, fam), memberId });
       }
 
       if (op === 'putList') {
@@ -241,12 +241,16 @@ export default async (req) => {
           const memberRows = await sql`SELECT id, phone FROM members WHERE family_id = ${familyId}`;
           if(!isEffectiveAdmin(memberRows, memberId, frows[0].admin_member_id)) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
           await sql`DELETE FROM members WHERE id = ${targetId} AND family_id = ${familyId}`;
+          if(frows[0].admin_member_id === targetId){
+            await sql`UPDATE families SET admin_member_id = NULL WHERE id = ${familyId}`;
+          }
           return json({ ok: true, family: await familyPayload(sql, familyId) });
         }
         const famStore = getStore('families');
         const fam = await famStore.get(familyId, { type: 'json' });
         if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
         if(!isEffectiveAdmin(fam.members || [], memberId, fam.adminMemberId)) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
+        if(fam.adminMemberId === targetId) fam.adminMemberId = null;
         fam.members = (fam.members || []).filter(m => m.id !== targetId);
         await famStore.setJSON(familyId, fam);
         return json({ ok: true, family: fam });
@@ -374,8 +378,9 @@ export default async (req) => {
           if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'לא נמצא' }, 404);
           return json({ ok: true, family: await familyPayload(sql, familyId) });
         }
-        const fam = await getStore('families').get(familyId, { type: 'json' });
-        return fam ? json({ ok: true, family: fam }) : json({ ok: false, error: 'לא נמצא' }, 404);
+        const famStore = getStore('families');
+        const fam = await famStore.get(familyId, { type: 'json' });
+        return fam ? json({ ok: true, family: await healBlobsFamilyAdmin(famStore, fam) }) : json({ ok: false, error: 'לא נמצא' }, 404);
       }
 
       if (op === 'getList') {

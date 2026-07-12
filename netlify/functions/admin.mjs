@@ -2,7 +2,7 @@
 // (משתנה סביבה ADMIN_PASSWORD ב-Netlify). כל בקשה חייבת לשאת את הסיסמה
 // בכותרת x-admin-key. אם ADMIN_PASSWORD לא מוגדר בשרת — הכל נחסם (fail-closed).
 import { getStore } from '@netlify/blobs';
-import { json, uid, db, familyPayload } from './_shared.mjs';
+import { json, uid, db, familyPayload, healBlobsFamilyAdmin } from './_shared.mjs';
 
 function checkAuth(req){
   const want = process.env.ADMIN_PASSWORD;
@@ -299,7 +299,7 @@ export default async (req) => {
         const fam = await store.get(familyId, { type: 'json' });
         if(!fam) return json({ ok: false, error: 'לא נמצא' }, 404);
         const list = await getStore('lists').get(familyId, { type: 'json' });
-        return json({ ok: true, family: fam, cats: (list && list.data && list.data.cats) || [] });
+        return json({ ok: true, family: await healBlobsFamilyAdmin(store, fam), cats: (list && list.data && list.data.cats) || [] });
       }
 
       if (op === 'listStores') {
