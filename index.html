@@ -351,16 +351,60 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
   border-radius:10px;padding:8px 12px;margin-bottom:12px;line-height:1.6;
 }
 
-/* family board */
-.board{background:#fffdf5;border:1.5px solid #fde68a;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:12px}
-.board .btitle{font-weight:700;font-size:15px;margin-bottom:8px;color:#92400e}
-.bmsg{background:#fff;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;margin-bottom:7px}
-.bmsg .btxt{font-size:15px}
-.bmsg .bmeta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--soft);margin-top:4px;gap:8px;flex-wrap:wrap}
-.bacts{display:flex;gap:6px}
-.bact{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
-.bact.bdel{background:#fff;border-color:var(--red-soft);color:#e2a0a0}
-.bempty{font-size:13px;color:var(--soft);padding:4px 2px}
+/* family board — corkboard with pinned sticky notes */
+.board{
+  position:relative;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 14px 14px;margin-bottom:12px;
+  background-color:#c8996a;
+  background-image:
+    radial-gradient(circle at 12% 22%, rgba(255,255,255,.12) 0, transparent 3px),
+    radial-gradient(circle at 42% 65%, rgba(0,0,0,.14) 0, transparent 3px),
+    radial-gradient(circle at 78% 18%, rgba(0,0,0,.12) 0, transparent 3px),
+    radial-gradient(circle at 88% 72%, rgba(255,255,255,.10) 0, transparent 3px),
+    radial-gradient(circle at 28% 88%, rgba(0,0,0,.12) 0, transparent 3px),
+    radial-gradient(circle at 62% 40%, rgba(0,0,0,.10) 0, transparent 3px),
+    radial-gradient(circle at 8% 60%, rgba(0,0,0,.08) 0, transparent 3px),
+    linear-gradient(135deg,#d4a574,#b8875a);
+  background-size:42px 42px,58px 58px,36px 36px,64px 64px,46px 46px,52px 52px,38px 38px,100% 100%;
+  box-shadow:var(--shadow),inset 0 0 26px rgba(59,33,10,.35);
+}
+.board .btitle{font-weight:800;font-size:14.5px;margin-bottom:10px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.notesgrid{display:flex;flex-wrap:wrap;gap:14px 12px;padding:2px 2px 6px}
+.stickynote{
+  width:80px;height:80px;padding:9px 7px 6px;border-radius:2px;position:relative;cursor:pointer;
+  display:flex;flex-direction:column;box-shadow:0 3px 7px rgba(0,0,0,.28),0 1px 2px rgba(0,0,0,.18);
+  transition:transform .12s ease;flex-shrink:0;
+}
+.stickynote:active{transform:scale(.93) rotate(0deg) !important}
+.stickynote .sn-pin{
+  position:absolute;top:-6px;inset-inline-start:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#f87171,#b91c1c);box-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+.stickynote .sn-txt{
+  flex:1;overflow:hidden;font-size:10.5px;font-weight:700;line-height:1.28;word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+}
+.stickynote .sn-by{font-size:8.5px;font-weight:600;opacity:.72;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.board-addrow{display:flex;gap:8px;margin-top:12px}
+.board-addrow input{
+  flex:1;border:none;border-radius:10px;padding:9px 12px;outline:none;font-size:14px;background:rgba(255,255,255,.92);
+}
+.board-addrow button{
+  background:rgba(255,255,255,.92);border-radius:10px;padding:0 14px;font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.bempty{font-size:13px;color:#fff;opacity:.85;padding:6px 2px 10px;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+
+/* note detail modal */
+.notemodal{border-radius:12px;padding:16px 16px 14px;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.18);margin-top:6px}
+.notemodal .nm-pin{
+  position:absolute;top:-8px;inset-inline-start:50%;transform:translateX(-50%);width:15px;height:15px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#f87171,#b91c1c);box-shadow:0 2px 4px rgba(0,0,0,.4);
+}
+.notemodal .nm-by{font-size:12.5px;font-weight:700;opacity:.75;margin-bottom:8px}
+.notemodal .nm-txt{font-size:16px;font-weight:600;line-height:1.5;word-break:break-word}
+.colorswatches{display:flex;gap:10px;margin:6px 0 4px;flex-wrap:wrap}
+.colorswatch{width:34px;height:34px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,.2);position:relative;border:2px solid transparent}
+.colorswatch.sel{border-color:var(--ink)}
+.colorswatch.sel::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
 
 /* family */
 .famcard{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:12px;padding:14px;margin:6px 0 4px}
@@ -1007,6 +1051,9 @@ installAppTitle:'התקנת האפליקציה', installAppSub:'התקינו א�
 installAppBtn:'📲 התקנה', installedLabel:'האפליקציה מותקנת', installIosHint:'ב-Safari: כפתור שיתוף ⬆️ ← "הוספה למסך הבית".',
 shareAppTitle:'שליחת האפליקציה לחבר', shareAppExplain:'שולחים לינק לחבר/ה שרוצה לנהל רשימת קניות משלו/ה — הוא/היא יקבל/תקבל את האפליקציה כמשתמש/ת עצמאי/ת, בלי להצטרף למשפחה שלכם.',
 shareAppBtn:'📤 שליחה בוואטסאפ', shareAppMsg:'🛒 מצאתי אפליקציה נוחה לניהול רשימת קניות — רוצה לנסות?\n{url}',
+noteBy:'נכתב על ידי {name}', noteDeleteBtn:'מחיקה',
+noteColorTitle:'צבע הפתק שלי', noteColorExplain:'כל בן משפחה מקבל צבע פתק משלו (אקראי כברירת מחדל) — אפשר לבחור צבע קבוע כאן.',
+noteColor_yellow:'צהוב', noteColor_orange:'כתום', noteColor_pink:'ורוד', noteColor_green:'ירוק', noteColor_blue:'כחול', noteColor_purple:'סגול',
 becameAdminToast:'🛡️ הפכת למנהל/ת המשפחה', removeMemberConfirm:'להסיר את {name} מהמשפחה? יצטרכו להצטרף מחדש עם הקוד.',
 memberRemovedToast:'{name} הוסר/ה מהמשפחה',
 sendListTitle:'למי לשלוח את הרשימה?', sendListSub:'בחרו את הקונה מבני המשפחה.',
@@ -1152,6 +1199,9 @@ installAppTitle:'Install the app', installAppSub:'Add an icon to your home scree
 installAppBtn:'📲 Install', installedLabel:'App is installed', installIosHint:'In Safari: Share ⬆️ → "Add to Home Screen".',
 shareAppTitle:'Send the app to a friend', shareAppExplain:'Send a link to someone who wants to run their own shopping list — they get the app as an independent user, not as part of your family.',
 shareAppBtn:'📤 Send via WhatsApp', shareAppMsg:'🛒 Found a handy shopping list app — want to try it?\n{url}',
+noteBy:'Written by {name}', noteDeleteBtn:'Delete',
+noteColorTitle:'My note color', noteColorExplain:'Each family member gets their own note color (random by default) — pick a fixed one here.',
+noteColor_yellow:'Yellow', noteColor_orange:'Orange', noteColor_pink:'Pink', noteColor_green:'Green', noteColor_blue:'Blue', noteColor_purple:'Purple',
 becameAdminToast:'🛡️ You are now the family admin', removeMemberConfirm:'Remove {name} from the family? They will need to rejoin with the code.',
 memberRemovedToast:'{name} was removed from the family',
 sendListTitle:'Who should get the list?', sendListSub:'Pick the shopper from your family.',
@@ -1297,6 +1347,9 @@ installAppTitle:'Установить приложение', installAppSub:'До
 installAppBtn:'📲 Установить', installedLabel:'Приложение установлено', installIosHint:'В Safari: Поделиться ⬆️ → «На экран Домой».',
 shareAppTitle:'Отправить приложение другу', shareAppExplain:'Отправьте ссылку тому, кто хочет вести свой собственный список покупок — он получит приложение как независимый пользователь, не как часть вашей семьи.',
 shareAppBtn:'📤 Отправить в WhatsApp', shareAppMsg:'🛒 Нашёл(-ла) удобное приложение для списка покупок — хочешь попробовать?\n{url}',
+noteBy:'Написал(-а) {name}', noteDeleteBtn:'Удалить',
+noteColorTitle:'Цвет моей записки', noteColorExplain:'У каждого члена семьи свой цвет записки (случайный по умолчанию) — здесь можно выбрать постоянный.',
+noteColor_yellow:'Жёлтый', noteColor_orange:'Оранжевый', noteColor_pink:'Розовый', noteColor_green:'Зелёный', noteColor_blue:'Синий', noteColor_purple:'Фиолетовый',
 becameAdminToast:'🛡️ Теперь вы администратор семьи', removeMemberConfirm:'Удалить {name} из семьи? Понадобится снова присоединиться по коду.',
 memberRemovedToast:'{name} удалён(а) из семьи',
 sendListTitle:'Кому отправить список?', sendListSub:'Выберите покупателя из вашей семьи.',
@@ -1442,6 +1495,9 @@ installAppTitle:'تثبيت التطبيق', installAppSub:'أضف أيقونة 
 installAppBtn:'📲 تثبيت', installedLabel:'التطبيق مثبّت', installIosHint:'في Safari: مشاركة ⬆️ ← "إضافة إلى الشاشة الرئيسية".',
 shareAppTitle:'إرسال التطبيق لصديق', shareAppExplain:'أرسل رابطًا لشخص يريد إدارة قائمة تسوق خاصة به — سيحصل على التطبيق كمستخدم مستقل، وليس كجزء من عائلتك.',
 shareAppBtn:'📤 إرسال عبر واتساب', shareAppMsg:'🛒 وجدت تطبيقًا مريحًا لإدارة قائمة التسوق — تريد تجربته؟\n{url}',
+noteBy:'كتبها {name}', noteDeleteBtn:'حذف',
+noteColorTitle:'لون ملاحظتي', noteColorExplain:'كل فرد من العائلة يحصل على لون ملاحظة خاص به (عشوائي افتراضيًا) — يمكنك اختيار لون ثابت هنا.',
+noteColor_yellow:'أصفر', noteColor_orange:'برتقالي', noteColor_pink:'وردي', noteColor_green:'أخضر', noteColor_blue:'أزرق', noteColor_purple:'بنفسجي',
 becameAdminToast:'🛡️ أصبحت الآن مسؤول العائلة', removeMemberConfirm:'إزالة {name} من العائلة؟ سيحتاجون للانضمام مجددًا بالرمز.',
 memberRemovedToast:'تمت إزالة {name} من العائلة',
 sendListTitle:'إلى من ترسل القائمة؟', sendListSub:'اختر المتسوق من عائلتك.',
@@ -1819,24 +1875,39 @@ function renderRequest(){
   renderBubbleStage();
   renderDockedPanel();
 }
+/* ===== פתקים צהובים על לוח שעם — צבע קבוע ואקראי לכל משתמש, ניתן לבחירה בהגדרות ===== */
+const NOTE_COLORS = {
+  yellow: {bg:'#fde047', ink:'#713f12'},
+  orange: {bg:'#fdba74', ink:'#7c2d12'},
+  pink:   {bg:'#f9a8d4', ink:'#831843'},
+  green:  {bg:'#86efac', ink:'#14532d'},
+  blue:   {bg:'#93c5fd', ink:'#1e3a8a'},
+  purple: {bg:'#d8b4fe', ink:'#581c87'},
+};
+const NOTE_COLOR_KEYS = Object.keys(NOTE_COLORS);
+function hashStr(s){ let h = 0; for(let i = 0; i < s.length; i++){ h = (h * 31 + s.charCodeAt(i)) >>> 0; } return h; }
+function defaultNoteColorKey(seed){ return NOTE_COLOR_KEYS[hashStr(String(seed || 'x')) % NOTE_COLOR_KEYS.length]; }
+function myNoteColorKey(){
+  return state.settings.noteColor || defaultNoteColorKey(fam ? fam.memberId : (state.settings.reqName || 'me'));
+}
+function noteColorKeyFor(b){ return (b.color && NOTE_COLORS[b.color]) ? b.color : defaultNoteColorKey(b.byId || b.by); }
+function noteRotation(id){ return (hashStr(id) % 13) - 6; }
 function renderBoard(){
   const wrap = $('#boardWrap'); if(!wrap) return;
   if(!fam){ wrap.innerHTML = ''; return; }
   wrap.innerHTML = `
     <div class="board">
       <div class="btitle">${esc(L('boardTitle', {name: fam.familyName}))}</div>
-      ${(state.board || []).length ? (state.board || []).map(b => `
-        <div class="bmsg">
-          <div class="btxt">${esc(b.text)}</div>
-          <div class="bmeta">
-            <span>${esc(b.by || '')} · ${fmtAgo(b.at)}</span>
-            <span class="bacts">
-              <button class="bact" title="${esc(L('addToListTitle'))}" onclick="boardToList('${b.id}')">${esc(L('toListBtn'))}</button>
-              ${(!fam || b.byId === fam.memberId) ? `<button class="bact bdel" onclick="delBoard('${b.id}')">🗑</button>` : ''}
-            </span>
-          </div>
-        </div>`).join('') : `<div class="bempty">${esc(L('boardEmpty'))}</div>`}
-      <div class="addrow" style="background:none;padding:8px 0 0">
+      ${(state.board || []).length ? `<div class="notesgrid">${(state.board || []).map(b => {
+        const col = NOTE_COLORS[noteColorKeyFor(b)];
+        return `
+        <div class="stickynote" style="background:${col.bg};color:${col.ink};transform:rotate(${noteRotation(b.id)}deg)" onclick="openBoardNoteModal('${esc(b.id)}')">
+          <span class="sn-pin"></span>
+          <span class="sn-txt">${esc(b.text)}</span>
+          <span class="sn-by">${esc(b.by || '')}</span>
+        </div>`;
+      }).join('')}</div>` : `<div class="bempty">${esc(L('boardEmpty'))}</div>`}
+      <div class="board-addrow">
         <input id="boardIn" placeholder="${esc(L('boardPlaceholder'))}" onkeydown="if(event.key==='Enter')postBoard()">
         <button onclick="postBoard()">📌</button>
       </div>
@@ -2173,7 +2244,8 @@ function postBoard(){
     text: text.slice(0, 200),
     by: fam ? fam.myName : (state.settings.reqName || ''),
     byId: fam ? fam.memberId : null,
-    at: Date.now()
+    at: Date.now(),
+    color: myNoteColorKey()
   });
   if(state.board.length > 30) state.board.length = 30;
   save(); pushList(); render();
@@ -2182,6 +2254,23 @@ function postBoard(){
 function delBoard(id){
   state.board = state.board.filter(b => b.id !== id);
   save(); pushList(); render();
+}
+function openBoardNoteModal(id){
+  const b = (state.board || []).find(x => x.id === id); if(!b) return;
+  const col = NOTE_COLORS[noteColorKeyFor(b)];
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <div class="notemodal" style="background:${col.bg};color:${col.ink}">
+      <span class="nm-pin"></span>
+      <div class="nm-by">${esc(L('noteBy', {name: b.by || L('familyMember')}))} · ${fmtAgo(b.at)}</div>
+      <div class="nm-txt">${esc(b.text)}</div>
+    </div>
+    <div class="btnrow">
+      <button class="ghost" onclick="closeModal()">${esc(L('closeBtn'))}</button>
+      ${(!fam || b.byId === fam.memberId) ? `<button class="ghost" style="border:1.5px solid var(--red-soft);color:var(--red)" onclick="closeModal();delBoard('${esc(b.id)}')">🗑 ${esc(L('noteDeleteBtn'))}</button>` : ''}
+      <button class="primary" onclick="closeModal();boardToList('${esc(b.id)}')">${esc(L('toListBtn'))}</button>
+    </div>`;
+  $('#overlay').classList.add('show');
 }
 /* חילוץ שם מוצר מטקסט חופשי: "אבא תקנה לי רסק עגבניות" → "רסק עגבניות" */
 function extractProductName(text){
@@ -3369,6 +3458,23 @@ function shareAppHtml(){
     <button class="minibtn" onclick="shareAppLink()">${esc(L('shareAppBtn'))}</button>
   </div>`;
 }
+function noteColorHtml(){
+  const sel = myNoteColorKey();
+  return `<div class="famcard">
+    <div class="famtitle">🗒️ ${esc(L('noteColorTitle'))}</div>
+    <div class="hint" style="margin-bottom:8px">${esc(L('noteColorExplain'))}</div>
+    <div class="colorswatches">
+      ${NOTE_COLOR_KEYS.map(k => `<button type="button" class="colorswatch ${k===sel?'sel':''}" style="background:${NOTE_COLORS[k].bg}" title="${esc(L('noteColor_'+k))}" onclick="pickNoteColor('${k}')"></button>`).join('')}
+    </div>
+  </div>`;
+}
+function pickNoteColor(key){
+  state.settings.noteColor = key;
+  save();
+  const wrap = document.getElementById('noteColorWrap');
+  if(wrap) wrap.innerHTML = noteColorHtml();
+  renderBoard();
+}
 function openSettings(){
   const s = state.settings;
   const box = $('#modalBox');
@@ -3385,6 +3491,7 @@ function openSettings(){
     <div class="dbstatus" id="dbStatus">${esc(L('checkingServer'))}</div>
     ${installAppHtml()}
     <div id="famCardWrap">${famCardHtml()}</div>
+    <div id="noteColorWrap">${noteColorHtml()}</div>
     ${shareAppHtml()}
     <div class="msub" style="margin-top:18px">${esc(L('whoFillsHint'))}</div>
     <label>${esc(L('listOwnerNameLabel'))}</label>
