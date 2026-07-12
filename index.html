@@ -3359,9 +3359,9 @@ function forwardMessage(id, source){
   openSendChoiceModal(m.text);
 }
 let sendMsgText = '';
-function openSendChoiceModal(text){
+function openSendChoiceModal(text, fallbackPhone){
   sendMsgText = text;
-  if(!fam || !famOthers().length){ openWA(text, ''); return; }
+  if(!fam || !famOthers().length){ closeModal(); openWA(text, fallbackPhone || ''); return; }
   const box = $('#modalBox');
   box.innerHTML = `
     <h2>${esc(L('sendMsgTitle'))}</h2>
@@ -3438,7 +3438,6 @@ function openQuestionModal(item){
     L('qMissing', {name: iname}), L('qBrandSize', {name: iname}),
     L('qHowMuch', {name: iname}), L('qExpensive', {name: iname}),
   ] : [ L('qInStore'), L('qAlmostDone') ];
-  const hasPhone = !!state.settings.reqPhone;
   qSelected = 0;
   const box = $('#modalBox');
   box.innerHTML = `
@@ -3447,20 +3446,9 @@ function openQuestionModal(item){
     ${templates.map((tpl,i) => `<button class="qopt ${i===0?'sel':''}" data-i="${i}" onclick="pickQ(${i})">${esc(tpl)}</button>`).join('')}
     <label>${esc(L('freeTextLabel'))}</label>
     <textarea id="qFree" rows="2" placeholder="${esc(L('freeTextPlaceholder'))}" oninput="pickQ(-1)"></textarea>
-    ${famOthers().length ? `
-    <label>${esc(L('sendToWhomLabel'))}</label>
-    <select id="qTarget" class="selectbox">
-      ${famOthers().map(m => `<option value="${esc(m.phone || '')}">${esc(m.name)}${m.phone ? '' : esc(L('noPhoneSuffix'))}</option>`).join('')}
-      ${state.settings.reqPhone && !famOthers().some(m => normPhone(m.phone) === normPhone(state.settings.reqPhone))
-        ? `<option value="${esc(state.settings.reqPhone)}">${esc(state.settings.reqName || L('listOwnerDefault'))}</option>` : ''}
-    </select>` : ''}
-    ${hasPhone || famOthers().length ? '' : `<div class="hint">${esc(L('tipSetPhone'))}</div>`}
     <div class="btnrow">
       <button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button>
-      <button class="wa-btn" onclick="sendQ()">
-        <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.2 1.4z"/></svg>
-        ${esc(L('sendWaBtn'))}
-      </button>
+      <button class="primary" onclick="sendQ()">📤 ${esc(L('sendBtn'))}</button>
     </div>`;
   box.dataset.templates = JSON.stringify(templates);
   $('#overlay').classList.add('show');
@@ -3479,9 +3467,7 @@ function sendQ(){
   let msg = qSelected === -1 ? free : (templates[qSelected] || free);
   if(!msg){ toast(L('pickQOrWrite')); return; }
   msg = '🛒 ' + msg;
-  const target = $('#qTarget') ? $('#qTarget').value : state.settings.reqPhone;
-  closeModal();
-  openWA(msg, target || state.settings.reqPhone);
+  openSendChoiceModal(msg, state.settings.reqPhone);
 }
 
 /* ---------- settings modal (כולל משפחה) ---------- */
