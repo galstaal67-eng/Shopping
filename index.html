@@ -79,7 +79,9 @@ header .sub{font-size:12.5px;color:#d3f5ef;margin-top:2px}
   padding:8px 13px;max-width:86%;font-size:14.5px;line-height:1.5;
 }
 .cmsg.mine .cbubble{background:var(--teal-soft);border-color:#99f6e4;border-radius:14px 14px 4px 14px}
-.cmeta{font-size:11px;color:var(--soft);margin-top:2px;padding:0 4px}
+.cmeta{font-size:11px;color:var(--soft);margin-top:2px;padding:0 4px;display:flex;align-items:center;gap:5px}
+.cmeta .cfwd{font-size:12px;padding:2px 4px;opacity:.6;line-height:1}
+.cmeta .cfwd:active{opacity:1}
 .creq{font-size:11.5px;font-weight:700;color:#92400e;background:#fef3c7;border-radius:999px;padding:0 8px}
 .caddbtn{margin-top:6px;background:var(--teal);color:#fff;border-radius:999px;padding:4px 13px;font-size:12.5px;font-weight:700;display:inline-block}
 .cadded{
@@ -1061,6 +1063,8 @@ nextBtn:'המשך', pickPersonPrompt:'בחרו קודם למי לשלוח',
 sendChannelTitle:'איך לשלוח ל{name}?', sendChannelSub:'אפשר גם באפליקציה, גם בוואטסאפ, או שניהם.',
 sendViaAppBtn:'📱 באפליקציה', sendViaWaBtn:'💬 בוואטסאפ', sendViaBothBtn:'📱💬 שניהם',
 listSendMsg:'{name} שלח/ה לך את רשימת הקניות 🛒', sentInAppToast:'נשלח באפליקציה ל{name} ✓',
+sendBtn:'שליחה', sendMsgTitle:'📤 שליחת הודעה', sendMsgChannelSub:'איך לשלוח את ההודעה?', sendMsgRecipientsTitle:'למי לשלוח?',
+sendMsgRecipientsSub:'בחרו בן משפחה אחד או יותר, או "כולם".', sendToEveryone:'כולם', boardFwdTag:'הודעה מהלוח',
 listSendTag:'🛒 רשימת קניות', openListBtn:'🛍️ פתח את הרשימה',
 listSendPopupTitle:'🛒 {name} שלח/ה לך רשימת קניות', listSendPopupBody:'הרשימה מוכנה — אפשר לגשת אליה ולהתחיל לקנות.',
 totalGeneric:'סכום כולל ששילמתי', perUnitGeneric:'ליחידה', basisAmountLabel:'כמה קניתם? ({unit})',
@@ -1209,6 +1213,8 @@ nextBtn:'Next', pickPersonPrompt:'Pick who to send it to first',
 sendChannelTitle:'How to send to {name}?', sendChannelSub:'You can send it in-app, on WhatsApp, or both.',
 sendViaAppBtn:'📱 In the app', sendViaWaBtn:'💬 On WhatsApp', sendViaBothBtn:'📱💬 Both',
 listSendMsg:'{name} sent you the shopping list 🛒', sentInAppToast:'Sent in-app to {name} ✓',
+sendBtn:'Send', sendMsgTitle:'📤 Send message', sendMsgChannelSub:'How would you like to send it?', sendMsgRecipientsTitle:'Send to whom?',
+sendMsgRecipientsSub:'Pick one or more family members, or "Everyone".', sendToEveryone:'Everyone', boardFwdTag:'Message from the board',
 listSendTag:'🛒 Shopping list', openListBtn:'🛍️ Open the list',
 listSendPopupTitle:'🛒 {name} sent you a shopping list', listSendPopupBody:'The list is ready — you can open it and start shopping.',
 totalGeneric:'Total amount I paid', perUnitGeneric:'Per unit', basisAmountLabel:'How much did you buy? ({unit})',
@@ -1357,6 +1363,8 @@ nextBtn:'Далее', pickPersonPrompt:'Сначала выберите, ком�
 sendChannelTitle:'Как отправить {name}?', sendChannelSub:'Можно отправить в приложении, в WhatsApp или и там, и там.',
 sendViaAppBtn:'📱 В приложении', sendViaWaBtn:'💬 В WhatsApp', sendViaBothBtn:'📱💬 Оба варианта',
 listSendMsg:'{name} отправил(а) вам список покупок 🛒', sentInAppToast:'Отправлено в приложении {name} ✓',
+sendBtn:'Отправить', sendMsgTitle:'📤 Отправить сообщение', sendMsgChannelSub:'Как отправить сообщение?', sendMsgRecipientsTitle:'Кому отправить?',
+sendMsgRecipientsSub:'Выберите одного или нескольких членов семьи, или «Всем».', sendToEveryone:'Всем', boardFwdTag:'Сообщение с доски',
 listSendTag:'🛒 Список покупок', openListBtn:'🛍️ Открыть список',
 listSendPopupTitle:'🛒 {name} отправил(а) вам список покупок', listSendPopupBody:'Список готов — можно открыть его и начать покупки.',
 totalGeneric:'Общая сумма, которую я заплатил(а)', perUnitGeneric:'За единицу', basisAmountLabel:'Сколько вы купили? ({unit})',
@@ -1505,6 +1513,8 @@ nextBtn:'التالي', pickPersonPrompt:'اختر أولًا إلى من ترس
 sendChannelTitle:'كيف ترسل إلى {name}؟', sendChannelSub:'يمكنك الإرسال عبر التطبيق أو واتساب أو كليهما.',
 sendViaAppBtn:'📱 عبر التطبيق', sendViaWaBtn:'💬 عبر واتساب', sendViaBothBtn:'📱💬 كلاهما',
 listSendMsg:'أرسل لك {name} قائمة التسوق 🛒', sentInAppToast:'تم الإرسال عبر التطبيق إلى {name} ✓',
+sendBtn:'إرسال', sendMsgTitle:'📤 إرسال رسالة', sendMsgChannelSub:'كيف تريد إرسال الرسالة؟', sendMsgRecipientsTitle:'إلى من ترسل؟',
+sendMsgRecipientsSub:'اختر فردًا واحدًا أو أكثر من العائلة، أو "الجميع".', sendToEveryone:'الجميع', boardFwdTag:'رسالة من اللوحة',
 listSendTag:'🛒 قائمة تسوق', openListBtn:'🛍️ فتح القائمة',
 listSendPopupTitle:'🛒 أرسل لك {name} قائمة تسوق', listSendPopupBody:'القائمة جاهزة — يمكنك فتحها والبدء بالتسوق.',
 totalGeneric:'المبلغ الإجمالي الذي دفعته', perUnitGeneric:'لكل وحدة', basisAmountLabel:'كم اشتريت؟ ({unit})',
@@ -2268,6 +2278,9 @@ function openBoardNoteModal(id){
     <div class="btnrow">
       <button class="ghost" onclick="closeModal()">${esc(L('closeBtn'))}</button>
       ${(!fam || b.byId === fam.memberId) ? `<button class="ghost" style="border:1.5px solid var(--red-soft);color:var(--red)" onclick="closeModal();delBoard('${esc(b.id)}')">🗑 ${esc(L('noteDeleteBtn'))}</button>` : ''}
+    </div>
+    <div class="btnrow">
+      <button class="ghost" style="border:1.5px solid var(--teal);color:var(--teal-dark)" onclick="forwardMessage('${esc(b.id)}','board')">📤 ${esc(L('sendBtn'))}</button>
       <button class="primary" onclick="closeModal();boardToList('${esc(b.id)}')">${esc(L('toListBtn'))}</button>
     </div>`;
   $('#overlay').classList.add('show');
@@ -2335,13 +2348,13 @@ function chatMsgsHTML(){
     return `
     <div class="cmsg ${mine ? 'mine' : ''}">
       <div class="cbubble">
-        ${m.listSend ? `<span class="creq">${esc(L('listSendTag'))}</span><br>` : (m.req ? `<span class="creq">${esc(L('productRequestTag'))}</span><br>` : '')}
+        ${m.listSend ? `<span class="creq">${esc(L('listSendTag'))}</span><br>` : m.fwd ? `<span class="creq">📌 ${esc(L('boardFwdTag'))}</span><br>` : (m.req ? `<span class="creq">${esc(L('productRequestTag'))}</span><br>` : '')}
         ${esc(m.text)}
         ${m.listSend ? `<br><button class="caddbtn" onclick="closeModal();setView('shop')">${esc(L('openListBtn'))}</button>` : (m.req ? (m.added
           ? `<br><span class="cadded">${esc(L('addedToList'))}${m.addedByName ? esc(L('addedToListBy', {name: m.addedByName})) : ''}</span>`
           : `<br><button class="caddbtn" onclick="chatAddToList('${m.id}')">${esc(L('addToListBtn'))}</button>`) : '')}
       </div>
-      <div class="cmeta">${esc(m.from || '')} · ${fmtAgo(m.at)}</div>
+      <div class="cmeta">${esc(m.from || '')} · ${fmtAgo(m.at)} <button class="cfwd" title="${esc(L('sendBtn'))}" onclick="forwardMessage('${esc(m.id)}','chat')">📤</button></div>
     </div>`;
   }).join('');
 }
@@ -2377,8 +2390,8 @@ function pushChatMsg(text, req, extra){
   if(state.chat.length > 60) state.chat.length = 60;
   save(); pushList();
 }
-/* הודעת "שליחת רשימה" מיועדת רק לנמען שנבחר — שאר בני המשפחה לא רואים אותה בצ'אט */
-function chatVisible(m){ return !m.listSend || (fam && m.to === fam.memberId) || (fam && m.fromId === fam.memberId); }
+/* כל הודעה עם יעד (to) מיועדת רק לנמען שנבחר — שאר בני המשפחה לא רואים אותה בצ'אט */
+function chatVisible(m){ return !m.to || (fam && m.to === fam.memberId) || (fam && m.fromId === fam.memberId); }
 function sendChat(req){
   const inp = $('#chatIn');
   const text = (inp && inp.value || '').trim();
@@ -3336,6 +3349,69 @@ function doSendList(targetId, channel){
   }
   closeModal();
   if(channel === 'app') toast(L('sentInAppToast', {name: target.name}));
+}
+
+/* ===== שליחה כללית של הודעה קיימת (פתק לוח / הודעת צ'אט): ערוץ ← נמענים ===== */
+function forwardMessage(id, source){
+  const arr = source === 'board' ? (state.board || []) : (state.chat || []);
+  const m = arr.find(x => x.id === id);
+  if(!m) return;
+  openSendChoiceModal(m.text);
+}
+let sendMsgText = '';
+function openSendChoiceModal(text){
+  sendMsgText = text;
+  if(!fam || !famOthers().length){ openWA(text, ''); return; }
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${esc(L('sendMsgTitle'))}</h2>
+    <div class="msub">${esc(L('sendMsgChannelSub'))}</div>
+    <div class="btnrow" style="flex-direction:column">
+      <button class="primary" onclick="openSendRecipientsModal()">${esc(L('sendViaAppBtn'))}</button>
+      <button class="primary" style="background:var(--wa)" onclick="closeModal();openWA(sendMsgText,'')">${esc(L('sendViaWaBtn'))}</button>
+    </div>
+    <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button></div>`;
+  $('#overlay').classList.add('show');
+}
+let sendMsgRecipients = new Set();
+function openSendRecipientsModal(){
+  sendMsgRecipients = new Set();
+  const others = famOthers();
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <h2>${esc(L('sendMsgRecipientsTitle'))}</h2>
+    <div class="msub">${esc(L('sendMsgRecipientsSub'))}</div>
+    <button class="qopt" id="sendAllOpt" data-id="__all__" onclick="toggleSendRecipient('__all__')">👥 ${esc(L('sendToEveryone'))}</button>
+    ${others.map(m => `<button class="qopt" data-id="${esc(m.id)}" onclick="toggleSendRecipient('${esc(m.id)}')">${esc(m.name)}</button>`).join('')}
+    <div class="btnrow">
+      <button class="ghost" onclick="openSendChoiceModal(sendMsgText)">${esc(L('back'))}</button>
+      <button class="primary" onclick="confirmSendMsg()">${esc(L('sendChatBtn'))}</button>
+    </div>`;
+  $('#overlay').classList.add('show');
+}
+function toggleSendRecipient(id){
+  if(id === '__all__'){
+    const nowAll = !sendMsgRecipients.has('__all__');
+    sendMsgRecipients = nowAll ? new Set(['__all__']) : new Set();
+  }else{
+    sendMsgRecipients.delete('__all__');
+    if(sendMsgRecipients.has(id)) sendMsgRecipients.delete(id); else sendMsgRecipients.add(id);
+  }
+  document.querySelectorAll('#modalBox .qopt').forEach(b => b.classList.toggle('sel', sendMsgRecipients.has(b.dataset.id)));
+}
+function confirmSendMsg(){
+  if(!sendMsgRecipients.size){ toast(L('pickPersonPrompt')); return; }
+  if(sendMsgRecipients.has('__all__')){
+    pushChatMsg(sendMsgText, false, { fwd: true });
+  }else{
+    const others = famOthers();
+    sendMsgRecipients.forEach(id => {
+      const m = others.find(x => x.id === id); if(!m) return;
+      pushChatMsg(sendMsgText, false, { fwd: true, to: m.id, toName: m.name });
+    });
+  }
+  closeModal(); render();
+  toast(L('sentToast'));
 }
 function askGeneral(){ openQuestionModal(null); }
 function askAbout(id){
