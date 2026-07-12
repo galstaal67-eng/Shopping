@@ -15,6 +15,13 @@ const json = (data, status = 200) =>
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const newCode = () => Array.from({ length: 6 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+/* מנרמל מספר טלפון להשוואה (תואם ל-normPhone בצד הלקוח) — כדי לזהות חבר קיים לפי הנייד */
+function normPhone(p){
+  let d = String(p || '').replace(/\D/g, '');
+  if(d.startsWith('00')) d = d.slice(2);
+  if(d.startsWith('0')) d = '972' + d.slice(1);
+  return d;
+}
 
 /* ---------- Postgres (Netlify DB / Neon) ---------- */
 let sqlClient = null;
@@ -194,7 +201,7 @@ export default async (req) => {
         const code = String(body.code || '').toUpperCase().trim();
         const userName = String(body.userName || 'משתמש').slice(0, 40);
         const phone = String(body.phone || '').slice(0, 20);
-        const memberId = uid();
+        const normedPhone = normPhone(phone);
         if(sql){
           let rows = await sql`SELECT id FROM families WHERE code = ${code}`;
           if(!rows.length){
@@ -204,7 +211,19 @@ export default async (req) => {
           }
           if(!rows.length) return json({ ok: false, error: 'קוד משפחה לא נמצא' }, 404);
           const familyId = rows[0].id;
-          await sql`INSERT INTO members(id, family_id, name, phone) VALUES(${memberId}, ${familyId}, ${userName}, ${phone})`;
+          // חבר קיים עם אותו נייד — מתחברים אליו מחדש במקום ליצור כפילות
+          let memberId = null;
+          if(normedPhone){
+            const existing = await sql`SELECT id, phone FROM members WHERE family_id = ${familyId}`;
+            const match = existing.find(m => normPhone(m.phone) === normedPhone);
+            if(match) memberId = match.id;
+          }
+          if(memberId){
+            await sql`UPDATE members SET name = ${userName} WHERE id = ${memberId}`;
+          }else{
+            memberId = uid();
+            await sql`INSERT INTO members(id, family_id, name, phone) VALUES(${memberId}, ${familyId}, ${userName}, ${phone})`;
+          }
           await sql`INSERT INTO sessions(member_id, family_id, kind, user_agent) VALUES(${memberId}, ${familyId}, 'join', ${ua})`;
           return json({ ok: true, family: await familyPayload(sql, familyId), memberId });
         }
@@ -213,8 +232,19 @@ export default async (req) => {
         const famStore = getStore('families');
         const fam = await famStore.get(familyId, { type: 'json' });
         if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
-        fam.members.push({ id: memberId, name: userName, phone, joinedAt: Date.now() });
-        if(fam.members.length > 20) fam.members.length = 20;
+        let memberId = null;
+        if(normedPhone){
+          const match = (fam.members || []).find(m => normPhone(m.phone) === normedPhone);
+          if(match) memberId = match.id;
+        }
+        if(memberId){
+          const m = fam.members.find(x => x.id === memberId);
+          m.name = userName;
+        }else{
+          memberId = uid();
+          fam.members.push({ id: memberId, name: userName, phone, joinedAt: Date.now() });
+          if(fam.members.length > 20) fam.members.length = 20;
+        }
         await famStore.setJSON(familyId, fam);
         return json({ ok: true, family: fam, memberId });
       }
