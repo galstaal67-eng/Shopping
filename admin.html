@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ניהול מערכת — רשימת קניות</title>
+<style>
+:root{
+  --ink:#0f172a; --card:#ffffff; --bg:#f1f5f9; --line:#e2e8f0;
+  --muted:#64748b; --soft:#94a3b8;
+  --teal:#0d9488; --teal-dark:#0f766e; --teal-soft:#ccfbf1;
+  --red:#dc2626; --red-soft:#fee2e2;
+  --amber:#d97706; --amber-soft:#fef3c7;
+  --radius:12px; --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:14.5px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+
+/* ===== login ===== */
+#loginWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.loginbox{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px 28px;width:100%;max-width:360px;text-align:center}
+.loginbox .lico{font-size:38px;margin-bottom:6px}
+.loginbox h1{font-size:19px;margin:0 0 4px}
+.loginbox .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.loginbox input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;outline:none;text-align:center;letter-spacing:1px}
+.loginbox input:focus{border-color:var(--teal)}
+.loginbox button.go{width:100%;margin-top:12px;background:var(--teal);color:#fff;border-radius:10px;padding:11px;font-weight:700}
+.loginbox .err{color:var(--red);font-size:13px;margin-top:10px;min-height:16px}
+
+/* ===== shell ===== */
+#appWrap{display:none}
+header.top{background:linear-gradient(135deg,#1e293b,#0f172a);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+header.top h1{font-size:16.5px;margin:0;display:flex;align-items:center;gap:8px}
+header.top .logout{color:#94a3b8;font-size:13px}
+main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+
+.statrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.statcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;min-width:130px}
+.statcard .n{font-size:24px;font-weight:800;color:var(--teal-dark)}
+.statcard .l{font-size:12.5px;color:var(--muted)}
+
+.tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.tabs button{padding:10px 16px;font-weight:600;color:var(--muted);border-bottom:2.5px solid transparent}
+.tabs button.active{color:var(--teal-dark);border-color:var(--teal)}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.card h2{font-size:15.5px;margin:0 0 12px}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:start;font-size:12px;color:var(--soft);font-weight:700;padding:6px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid #f1f5f9;font-size:13.5px;vertical-align:middle}
+tr.clickable{cursor:pointer}
+tr.clickable:hover td{background:#f8fafc}
+.pill{display:inline-block;background:var(--teal-soft);color:var(--teal-dark);border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:700}
+.pill.admin{background:var(--amber-soft);color:var(--amber)}
+.actbtn{border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:600}
+.actbtn.primary{background:var(--teal);color:#fff}
+.actbtn.ghost{background:#eef2f6;color:var(--muted)}
+.actbtn.danger{background:var(--red-soft);color:var(--red)}
+.searchbar{display:flex;gap:8px;margin-bottom:12px}
+.searchbar input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 13px;outline:none}
+.searchbar input:focus{border-color:var(--teal)}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.field input,.field select{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:8px 11px;outline:none}
+.field input:focus,.field select:focus{border-color:var(--teal)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* ===== overlay/modal ===== */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:60;display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto}
+.overlay.show{display:flex}
+.modal{background:var(--card);border-radius:14px;width:100%;max-width:640px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal h2{margin:0 0 4px;font-size:17px;display:flex;align-items:center;gap:8px}
+.modal .sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.modal .closex{position:absolute;top:16px;left:16px}
+.modal-pos{position:relative}
+
+.catblock{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:#fafcfd}
+.catblock .cathead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.catblock .cathead input{flex:1;border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+.itemrow{display:flex;align-items:center;gap:6px;padding:4px 0}
+.itemrow input[type=text]{flex:1;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font-size:13px}
+.itemrow input[type=checkbox]{accent-color:var(--teal)}
+.itemrow .del{color:var(--red);font-size:14px;padding:3px 6px}
+.addcat{margin-top:4px}
+
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  border-radius:999px;padding:10px 20px;font-size:13.5px;z-index:80;opacity:0;transition:opacity .25s;
+  pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap;
+}
+.toast.show{opacity:1}
+.empty-hint{color:var(--soft);font-size:13px;padding:14px 4px;text-align:center}
+.dangerzone{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px}
+.dangerzone .actbtn.danger{width:100%}
+</style>
+</head>
+<body>
+
+<div id="loginWrap">
+  <div class="loginbox">
+    <div class="lico">🔐</div>
+    <h1>ניהול מערכת</h1>
+    <div class="sub">רשימת קניות משפחתית — גישת אדמין</div>
+    <input type="password" id="pwIn" placeholder="סיסמת אדמין" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="go" onclick="tryLogin()">כניסה</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<div id="appWrap">
+  <header class="top">
+    <h1>🔐 ניהול מערכת</h1>
+    <button class="logout" onclick="logout()">התנתקות</button>
+  </header>
+  <main>
+    <div class="statrow" id="statRow"></div>
+    <div class="tabs">
+      <button id="tab-fam" class="active" onclick="setTab('fam')">👨‍👩‍👧 משפחות</button>
+      <button id="tab-store" onclick="setTab('store')">🏬 חנויות</button>
+      <button id="tab-deal" onclick="setTab('deal')">🏷️ מבצעים</button>
+    </div>
+    <div id="tabBody"></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal modal-pos" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_KEY_STORAGE = 'admin-panel-key-v1';
+let adminKey = sessionStorage.getItem(ADMIN_KEY_STORAGE) || '';
+let curTab = 'fam';
+let familiesCache = [];
+let storesCache = [];
+let dealsCache = [];
+
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._h); toast._h = setTimeout(() => t.classList.remove('show'), 2400);
+}
+function closeModal(){ $('#overlay').classList.remove('show'); $('#modalBox').innerHTML=''; }
+$('#overlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+
+async function adminGet(op, params){
+  const q = new URLSearchParams(Object.assign({op}, params || {}));
+  const r = await fetch('/admin-api?' + q.toString(), { headers: { 'x-admin-key': adminKey } });
+  return r.json();
+}
+async function adminPost(op, body){
+  const r = await fetch('/admin-api?op=' + op, {
+    method:'POST', headers:{'content-type':'application/json', 'x-admin-key': adminKey}, body: JSON.stringify(body || {})
+  });
+  return r.json();
+}
+
+async function tryLogin(){
+  const pw = $('#pwIn').value;
+  if(!pw) return;
+  adminKey = pw;
+  $('#loginErr').textContent = 'בודק…';
+  try{
+    const res = await adminGet('ping');
+    if(res && res.ok){
+      sessionStorage.setItem(ADMIN_KEY_STORAGE, pw);
+      $('#loginErr').textContent = '';
+      showDashboard();
+    }else{
+      $('#loginErr').textContent = 'סיסמה שגויה או שהאדמין לא הוגדר בשרת (ADMIN_PASSWORD).';
+    }
+  }catch(e){
+    $('#loginErr').textContent = 'שגיאת רשת — נסה שוב.';
+  }
+}
+function logout(){
+  sessionStorage.removeItem(ADMIN_KEY_STORAGE);
+  adminKey = '';
+  $('#appWrap').style.display = 'none';
+  $('#loginWrap').style.display = 'flex';
+  $('#pwIn').value = '';
+}
+async function showDashboard(){
+  $('#loginWrap').style.display = 'none';
+  $('#appWrap').style.display = 'block';
+  await loadStats();
+  setTab('fam');
+}
+async function loadStats(){
+  const res = await adminGet('stats');
+  if(!res || !res.ok) return;
+  $('#statRow').innerHTML = `
+    <div class="statcard"><div class="n">${res.families}</div><div class="l">משפחות</div></div>
+    <div class="statcard"><div class="n">${res.members}</div><div class="l">משתמשים</div></div>
+    <div class="statcard"><div class="n">${res.purchases == null ? '—' : res.purchases}</div><div class="l">קניות שתועדו</div></div>
+    <div class="statcard"><div class="n" style="font-size:14px">${res.backend === 'postgres' ? '🟢 Postgres' : '🟡 Blobs'}</div><div class="l">אחסון פעיל</div></div>
+  `;
+}
+function setTab(t){
+  curTab = t;
+  ['fam','store','deal'].forEach(x => $('#tab-' + x).classList.toggle('active', x === t));
+  if(t === 'fam') renderFamiliesTab();
+  else if(t === 'store') renderStoresTab();
+  else renderDealsTab();
+}
+
+/* ===== families ===== */
+async function renderFamiliesTab(search){
+  const body = $('#tabBody');
+  body.innerHTML = `<div class="card">
+    <div class="searchbar"><input id="famSearch" placeholder="חיפוש לפי שם משפחה / קוד…" oninput="filterFamilies()" value="${esc(search||'')}"></div>
+    <div id="famTableWrap">טוען…</div>
+  </div>`;
+  const res = await adminGet('listFamilies');
+  if(!res || !res.ok){ $('#famTableWrap').innerHTML = `<div class="empty-hint">שגיאה בטעינה: ${esc((res&&res.error)||'')}</div>`; return; }
+  familiesCache = res.families;
+  drawFamiliesTable(familiesCache);
+}
+function filterFamilies(){
+  const q = $('#famSearch').value.trim().toLowerCase();
+  const filtered = !q ? familiesCache : familiesCache.filter(f =>
+    (f.name||'').toLowerCase().includes(q) || (f.code||'').toLowerCase().includes(q));
+  drawFamiliesTable(filtered);
+}
+function drawFamiliesTable(list){
+  const wrap = $('#famTableWrap');
+  if(!list.length){ wrap.innerHTML = '<div class="empty-hint">אין משפחות רשומות עדיין.</div>'; return; }
+  wrap.innerHTML = `<table>
+    <thead><tr><th>שם משפחה</th><th>קוד</th><th>אזור</th><th>חברים</th><th>נוצרה</th><th></th></tr></thead>
+    <tbody>${list.map(f => `
+      <tr class="clickable" onclick="openFamilyDetail('${esc(f.id)}')">
+        <td>${esc(f.name)}</td>
+        <td><code>${esc(f.code)}</code></td>
+        <td>${esc(f.region || '—')}</td>
+        <td>${f.memberCount}</td>
+        <td>${f.createdAt ? new Date(f.createdAt).toLocaleDateString('he-IL') : '—'}</td>
+        <td><button class="actbtn primary" onclick="event.stopPropagation();openFamilyDetail('${esc(f.id)}')">פתיחה</button></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+async function openFamilyDetail(familyId){
+  const res = await adminGet('getFamilyDetail', { familyId });
+  if(!res || !res.ok){ toast('שגיאה: ' + ((res&&res.error)||'')); return; }
+  renderFamilyModal(res.family, res.cats || []);
+}
+function renderFamilyModal(fam, cats){
+  const box = $('#modalBox');
+  box.innerHTML = `
+    <button class="closex actbtn ghost" onclick="closeModal()">✕ סגירה</button>
+    <h2 style="margin-top:26px">👨‍👩‍👧 ${esc(fam.name)}</h2>
+    <div class="sub">קוד הצטרפות: <code>${esc(fam.code)}</code></div>
+
+    <div class="row2">
+      <div class="field"><label>שם משפחה</label><input id="fdName" value="${esc(fam.name)}"></div>
+      <div class="field"><label>אזור</label><input id="fdRegion" value="${esc(fam.region || '')}"></div>
+    </div>
+    <button class="actbtn primary" onclick="saveFamilyInfo('${esc(fam.id)}')">💾 שמירת פרטי משפחה</button>
+
+    <h2 style="margin-top:22px">חברי משפחה (${fam.members.length})</h2>
+    <table>
+      <thead><tr><th>שם</th><th>טלפון</th><th>הצטרף/ה</th><th>מנהל</th><th></th></tr></thead>
+      <tbody id="fdMembers">${fam.members.map(m => memberRowHtml(fam, m)).join('')}</tbody>
+    </table>
+    <div class="btnrow">
+      <input id="fdNewName" placeholder="שם חבר חדש" style="flex:1;border:1.5px solid var(--line);border-radius:9px;padding:8px 11px">
+      <input id="fdNewPhone" placeholder="טלפון" style="width:140px;border:1.5px solid var(--line);border-radius:9px;padding:8px 11px;direction:ltr">
+      <button class="actbtn ghost" onclick="addMember('${esc(fam.id)}')">➕ הוספת חבר</button>
+    </div>
+
+    <h2 style="margin-top:22px">קטגוריות ומוצרים</h2>
+    <div id="fdCats">${catsEditorHtml(cats)}</div>
+    <button class="actbtn ghost addcat" onclick="addCategory()">➕ קטגוריה חדשה</button>
+    <div class="btnrow"><button class="actbtn primary" onclick="saveCats('${esc(fam.id)}')">💾 שמירת קטגוריות ומוצרים</button></div>
+
+    <div class="dangerzone">
+      <button class="actbtn danger" onclick="deleteFamily('${esc(fam.id)}','${esc(fam.name).replace(/'/g,"\\'")}')">🗑️ מחיקת המשפחה כולה (בלתי הפיך)</button>
+    </div>
+  `;
+  box.dataset.familyId = fam.id;
+  box.dataset.adminId = fam.adminMemberId || '';
+  $('#overlay').classList.add('show');
+}
+function memberRowHtml(fam, m){
+  const isAdmin = fam.adminMemberId === m.id;
+  return `<tr data-mid="${esc(m.id)}">
+    <td><input type="text" class="mName" value="${esc(m.name)}" style="width:110px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+    <td><input type="text" class="mPhone" value="${esc(m.phone||'')}" style="width:120px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;direction:ltr"></td>
+    <td style="white-space:nowrap;font-size:12px;color:var(--muted)">${m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('he-IL') : '—'}</td>
+    <td>${isAdmin ? '<span class="pill admin">👑 מנהל/ת</span>' : `<button class="actbtn ghost" onclick="setAdmin('${esc(fam.id)}','${esc(m.id)}')">הפוך למנהל</button>`}</td>
+    <td style="white-space:nowrap">
+      <button class="actbtn primary" onclick="saveMember('${esc(fam.id)}','${esc(m.id)}')">💾</button>
+      <button class="actbtn danger" onclick="deleteMember('${esc(fam.id)}','${esc(m.id)}','${esc(m.name).replace(/'/g,"\\'")}')">🗑️</button>
+    </td>
+  </tr>`;
+}
+async function saveFamilyInfo(familyId){
+  const name = $('#fdName').value.trim(), region = $('#fdRegion').value.trim();
+  if(!name){ toast('שם משפחה חובה'); return; }
+  const res = await adminPost('updateFamily', { familyId, name, region });
+  if(res && res.ok){ toast('✓ נשמר'); loadStats(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function saveMember(familyId, memberId){
+  const row = document.querySelector(`tr[data-mid="${memberId}"]`);
+  const name = row.querySelector('.mName').value.trim();
+  const phone = row.querySelector('.mPhone').value.trim();
+  if(!name){ toast('שם חובה'); return; }
+  const res = await adminPost('updateMember', { familyId, memberId, name, phone });
+  if(res && res.ok){ toast('✓ נשמר'); refreshFamilyModal(familyId); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function deleteMember(familyId, memberId, name){
+  if(!confirm(`למחוק את "${name}" מהמשפחה?`)) return;
+  const res = await adminPost('deleteMember', { familyId, memberId });
+  if(res && res.ok){ toast('✓ הוסר'); refreshFamilyModal(familyId); loadStats(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function addMember(familyId){
+  const name = $('#fdNewName').value.trim(), phone = $('#fdNewPhone').value.trim();
+  if(!name){ toast('שם חובה'); return; }
+  const res = await adminPost('addMember', { familyId, name, phone });
+  if(res && res.ok){ toast('✓ נוסף'); refreshFamilyModal(familyId); loadStats(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function setAdmin(familyId, memberId){
+  const res = await adminPost('setFamilyAdmin', { familyId, memberId });
+  if(res && res.ok){ toast('✓ מנהל/ת עודכן/ה'); refreshFamilyModal(familyId); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function refreshFamilyModal(familyId){
+  const res = await adminGet('getFamilyDetail', { familyId });
+  if(res && res.ok) renderFamilyModal(res.family, res.cats || []);
+}
+async function deleteFamily(familyId, name){
+  if(!confirm(`למחוק לצמיתות את המשפחה "${name}"? כל הנתונים (רשימות, היסטוריה, חברים) יימחקו ולא ניתן לשחזר.`)) return;
+  if(prompt('להקלדת אישור, כתבו: מחק') !== 'מחק') { toast('בוטל'); return; }
+  const res = await adminPost('deleteFamily', { familyId });
+  if(res && res.ok){ toast('✓ המשפחה נמחקה'); closeModal(); renderFamiliesTab(); loadStats(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+
+/* ---- catalog (cats/items) editor within family modal ----
+   originalCats שומר את המבנה המקורי המלא (כולל bought/qty/price/addedBy וכו') כדי
+   ששמירה תעדכן רק את השדות שבאמת נערכו בטופס, ולא תמחק מטא-דאטה אחר בטעות. */
+let originalCats = [];
+let newCatSeq = 0, newItemSeq = 0;
+function dispCatName(c){ return (c && typeof c.name === 'object') ? (c.name.he || Object.values(c.name)[0] || '') : (c && c.name) || ''; }
+function dispItemName(it){ return (it && typeof it.name === 'object') ? (it.name.he || Object.values(it.name)[0] || '') : (it && it.name) || ''; }
+function dispItemNote(it){ return (it && typeof it.note === 'object') ? (it.note.he || '') : (it && it.note) || ''; }
+function catsEditorHtml(cats){
+  originalCats = cats;
+  if(!cats.length) return '<div class="empty-hint">אין נתוני רשימה למשפחה זו עדיין.</div>';
+  return cats.map(c => catBlockHtml(c)).join('');
+}
+function catBlockHtml(c){
+  const catId = esc(c.id || '');
+  return `
+    <div class="catblock" data-cat-id="${catId}">
+      <div class="cathead">
+        <span>${esc(c.emoji || '📦')}</span>
+        <input type="text" class="catName" value="${esc(dispCatName(c))}" placeholder="שם קטגוריה">
+        <button class="actbtn danger" onclick="removeCategory(this)">🗑️ קטגוריה</button>
+      </div>
+      <div class="catitems">
+        ${(c.items||[]).map(it => itemRowHtml(it)).join('')}
+      </div>
+      <button class="actbtn ghost" style="margin-top:4px" onclick="addItem(this)">➕ מוצר</button>
+    </div>`;
+}
+function itemRowHtml(it){
+  return `<div class="itemrow" data-item-id="${esc(it.id || '')}">
+    <input type="checkbox" class="itNeed" ${it.need ? 'checked' : ''} title="נדרש כרגע">
+    <input type="text" class="itName" value="${esc(dispItemName(it))}" placeholder="שם מוצר">
+    <input type="text" class="itNote" value="${esc(dispItemNote(it))}" placeholder="הערה" style="max-width:110px">
+    <button class="del" onclick="this.closest('.itemrow').remove()">🗑️</button>
+  </div>`;
+}
+function addCategory(){
+  const wrap = $('#fdCats');
+  if(wrap.querySelector('.empty-hint')) wrap.innerHTML = '';
+  const div = document.createElement('div');
+  div.innerHTML = catBlockHtml({ id: '__new' + (newCatSeq++), emoji:'📦', name:'', items:[] });
+  wrap.appendChild(div.firstElementChild);
+}
+function removeCategory(btn){
+  if(!confirm('להסיר את הקטגוריה כולה מהעריכה? (השינוי נשמר רק בלחיצה על "שמירה")')) return;
+  btn.closest('.catblock').remove();
+}
+function addItem(btn){
+  const block = btn.closest('.catblock').querySelector('.catitems');
+  const div = document.createElement('div');
+  div.innerHTML = itemRowHtml({ id: '__newitem' + (newItemSeq++), need:false, name:'', note:'' });
+  block.appendChild(div.firstElementChild);
+}
+async function saveCats(familyId){
+  const blocks = Array.from(document.querySelectorAll('#fdCats .catblock'));
+  const cats = blocks.map(block => {
+    const catId = block.dataset.catId;
+    const origCat = catId && !catId.startsWith('__new') ? originalCats.find(c => c.id === catId) : null;
+    const catNameIn = block.querySelector('.catName').value.trim() || 'קטגוריה';
+    const items = Array.from(block.querySelectorAll('.itemrow')).map(row => {
+      const itemId = row.dataset.itemId;
+      const origItem = (itemId && !itemId.startsWith('__newitem') && origCat) ? (origCat.items||[]).find(i => i.id === itemId) : null;
+      const itNameIn = row.querySelector('.itName').value.trim();
+      const noteIn = row.querySelector('.itNote').value.trim();
+      const need = row.querySelector('.itNeed').checked;
+      if(!itNameIn) return null;
+      if(origItem){
+        // רק אם השדה נערך בפועל — כדי לא להחליף אובייקט רב-לשוני בשם/הערה בשפה אחת בלבד בלי צורך
+        const merged = Object.assign({}, origItem, { need });
+        if(itNameIn !== dispItemName(origItem)) merged.name = itNameIn;
+        if(noteIn !== dispItemNote(origItem)) merged.note = noteIn;
+        return merged;
+      }
+      return { id: 'i' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36), name: itNameIn, note: noteIn, need, bought: false };
+    }).filter(Boolean);
+    if(origCat){
+      const merged = Object.assign({}, origCat, { items });
+      if(catNameIn !== dispCatName(origCat)) merged.name = catNameIn;
+      return merged;
+    }
+    return { id: 'c' + Math.random().toString(36).slice(2, 8), emoji: '📦', name: catNameIn, items };
+  });
+  const res = await adminPost('updateFamilyList', { familyId, cats });
+  if(res && res.ok) toast('✓ הקטגוריות נשמרו');
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+
+/* ===== stores ===== */
+async function renderStoresTab(){
+  const body = $('#tabBody');
+  body.innerHTML = `<div class="card">
+    <h2>הוספת חנות</h2>
+    <div class="row2">
+      <div class="field"><label>רשת</label><input id="stChain" placeholder="למשל: שופרסל"></div>
+      <div class="field"><label>שם סניף</label><input id="stName" placeholder="למשל: שופרסל דיל רמת גן"></div>
+    </div>
+    <div class="field" style="max-width:240px"><label>אזור</label><input id="stRegion" placeholder="אופציונלי"></div>
+    <button class="actbtn primary" onclick="addStore()">➕ הוספה</button>
+  </div>
+  <div class="card"><h2>חנויות רשומות</h2><div id="storeTableWrap">טוען…</div></div>`;
+  const res = await adminGet('listStores');
+  if(!res || !res.ok){ $('#storeTableWrap').innerHTML = `<div class="empty-hint">שגיאה: ${esc((res&&res.error)||'')}</div>`; return; }
+  storesCache = res.stores;
+  drawStoresTable();
+}
+function drawStoresTable(){
+  const wrap = $('#storeTableWrap');
+  if(!storesCache.length){ wrap.innerHTML = '<div class="empty-hint">אין חנויות רשומות עדיין.</div>'; return; }
+  wrap.innerHTML = `<table><thead><tr><th>רשת</th><th>סניף</th><th>אזור</th><th></th></tr></thead>
+    <tbody>${storesCache.map(s => `
+      <tr data-sid="${esc(s.id)}">
+        <td><input type="text" class="sChain" value="${esc(s.chain)}" style="width:100px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="text" class="sName" value="${esc(s.name)}" style="width:160px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="text" class="sRegion" value="${esc(s.region||'')}" style="width:100px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td style="white-space:nowrap">
+          <button class="actbtn primary" onclick="saveStore('${esc(s.id)}')">💾</button>
+          <button class="actbtn danger" onclick="deleteStore('${esc(s.id)}')">🗑️</button>
+        </td>
+      </tr>`).join('')}</tbody></table>`;
+}
+async function addStore(){
+  const chain = $('#stChain').value.trim(), name = $('#stName').value.trim(), region = $('#stRegion').value.trim();
+  if(!chain || !name){ toast('רשת ושם סניף חובה'); return; }
+  const res = await adminPost('addStore', { chain, name, region });
+  if(res && res.ok){ toast('✓ נוספה'); $('#stChain').value=''; $('#stName').value=''; $('#stRegion').value=''; renderStoresTab(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function saveStore(id){
+  const row = document.querySelector(`tr[data-sid="${id}"]`);
+  const chain = row.querySelector('.sChain').value.trim();
+  const name = row.querySelector('.sName').value.trim();
+  const region = row.querySelector('.sRegion').value.trim();
+  const res = await adminPost('updateStore', { id, chain, name, region });
+  if(res && res.ok) toast('✓ נשמר'); else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function deleteStore(id){
+  if(!confirm('למחוק את החנות?')) return;
+  const res = await adminPost('deleteStore', { id });
+  if(res && res.ok){ toast('✓ נמחקה'); renderStoresTab(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+
+/* ===== deals ===== */
+async function renderDealsTab(){
+  const body = $('#tabBody');
+  body.innerHTML = `<div class="card">
+    <h2>הוספת מבצע</h2>
+    <div class="row2">
+      <div class="field"><label>אימוג׳י</label><input id="dlEmoji" value="🏷️" style="max-width:70px"></div>
+      <div class="field"><label>כותרת</label><input id="dlTitle" placeholder="למשל: 2 ב-20 ש״ח על שימורים"></div>
+    </div>
+    <div class="field"><label>תיאור</label><input id="dlDesc" placeholder="אופציונלי"></div>
+    <div class="row2">
+      <div class="field"><label>תגית</label><input id="dlTag" placeholder="למשל: מבצע שבועי"></div>
+      <div class="field"><label>חנות/רשת</label><input id="dlStore" placeholder="אופציונלי"></div>
+    </div>
+    <div class="field" style="max-width:240px"><label>אזור</label><input id="dlRegion" placeholder="אופציונלי — ריק=כל הארץ"></div>
+    <button class="actbtn primary" onclick="addDeal()">➕ הוספה</button>
+  </div>
+  <div class="card"><h2>מבצעים פעילים</h2><div id="dealTableWrap">טוען…</div></div>`;
+  const res = await adminGet('listDeals');
+  if(!res || !res.ok){ $('#dealTableWrap').innerHTML = `<div class="empty-hint">שגיאה: ${esc((res&&res.error)||'')}</div>`; return; }
+  dealsCache = res.deals;
+  drawDealsTable();
+}
+function drawDealsTable(){
+  const wrap = $('#dealTableWrap');
+  if(!dealsCache.length){ wrap.innerHTML = '<div class="empty-hint">אין מבצעים רשומים עדיין (או שהמערכת רצה על Blobs — תכונה זו דורשת חיבור DB).</div>'; return; }
+  wrap.innerHTML = `<table><thead><tr><th></th><th>כותרת</th><th>תגית</th><th>חנות</th><th>אזור</th><th>פעיל</th><th></th></tr></thead>
+    <tbody>${dealsCache.map(d => `
+      <tr data-did="${d.id}">
+        <td>${esc(d.emoji||'🏷️')}</td>
+        <td><input type="text" class="dTitle" value="${esc(d.title)}" style="width:160px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="text" class="dTag" value="${esc(d.tag||'')}" style="width:90px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="text" class="dStore" value="${esc(d.store||'')}" style="width:90px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="text" class="dRegion" value="${esc(d.region||'')}" style="width:80px;border:1px solid var(--line);border-radius:6px;padding:4px 6px"></td>
+        <td><input type="checkbox" class="dActive" ${d.active ? 'checked' : ''}></td>
+        <td style="white-space:nowrap">
+          <button class="actbtn primary" onclick="saveDeal(${d.id})">💾</button>
+          <button class="actbtn danger" onclick="deleteDeal(${d.id})">🗑️</button>
+        </td>
+      </tr>`).join('')}</tbody></table>`;
+}
+async function addDeal(){
+  const title = $('#dlTitle').value.trim();
+  if(!title){ toast('כותרת חובה'); return; }
+  const body = {
+    emoji: $('#dlEmoji').value.trim() || '🏷️', title,
+    description: $('#dlDesc').value.trim(), tag: $('#dlTag').value.trim(),
+    store: $('#dlStore').value.trim(), region: $('#dlRegion').value.trim(), active: true,
+  };
+  const res = await adminPost('addDeal', body);
+  if(res && res.ok){ toast('✓ נוסף'); renderDealsTab(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function saveDeal(id){
+  const row = document.querySelector(`tr[data-did="${id}"]`);
+  const body = {
+    id, title: row.querySelector('.dTitle').value.trim(), tag: row.querySelector('.dTag').value.trim(),
+    store: row.querySelector('.dStore').value.trim(), region: row.querySelector('.dRegion').value.trim(),
+    active: row.querySelector('.dActive').checked, emoji: '🏷️',
+  };
+  const res = await adminPost('updateDeal', body);
+  if(res && res.ok) toast('✓ נשמר'); else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+async function deleteDeal(id){
+  if(!confirm('למחוק את המבצע?')) return;
+  const res = await adminPost('deleteDeal', { id });
+  if(res && res.ok){ toast('✓ נמחק'); renderDealsTab(); }
+  else toast('שגיאה: ' + ((res&&res.error)||''));
+}
+
+/* ---------- init ---------- */
+if(adminKey){
+  adminGet('ping').then(res => { if(res && res.ok) showDashboard(); else logout(); });
+}
+</script>
+</body>
+</html>
