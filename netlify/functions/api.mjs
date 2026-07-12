@@ -31,8 +31,13 @@ export default async (req) => {
         const region = String(body.region || 'אחר').slice(0, 30);
         const userName = String(body.userName || 'משתמש').slice(0, 40);
         const phone = String(body.phone || '').slice(0, 20);
+        const force = !!body.force;
         let code = newCode();
         if(sql){
+          if(!force){
+            const dupName = await sql`SELECT 1 FROM families WHERE lower(name) = lower(${name}) LIMIT 1`;
+            if(dupName.length) return json({ ok: true, nameExists: true });
+          }
           for(let i = 0; i < 8; i++){
             const dup = await sql`SELECT 1 FROM families WHERE code = ${code}`;
             if(!dup.length) break;
@@ -44,6 +49,15 @@ export default async (req) => {
           return json({ ok: true, family: await familyPayload(sql, familyId), memberId });
         }
         // Blobs fallback
+        if(!force){
+          const { blobs } = await getStore('families').list();
+          for(const b of blobs){
+            const existing = await getStore('families').get(b.key, { type: 'json' });
+            if(existing && String(existing.name || '').trim().toLowerCase() === name.trim().toLowerCase()){
+              return json({ ok: true, nameExists: true });
+            }
+          }
+        }
         const codes = getStore('codes');
         for(let i = 0; i < 8; i++){ if(!(await codes.get(code))) break; code = newCode(); }
         const member = { id: memberId, name: userName, phone, joinedAt: Date.now() };
