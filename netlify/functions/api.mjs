@@ -22,6 +22,15 @@ function normPhone(p){
   if(d.startsWith('0')) d = '972' + d.slice(1);
   return d;
 }
+/* בודק האם memberId "שקול" למנהל — זהה בפועל, או שכפול-נייד ישן של אותו אדם (מ-DB לפני תיקון ה-dedup) */
+function isEffectiveAdmin(members, memberId, adminId){
+  if(!adminId) return false;
+  if(memberId === adminId) return true;
+  const me = members.find(m => m.id === memberId);
+  const admin = members.find(m => m.id === adminId);
+  const meP = me && normPhone(me.phone), adminP = admin && normPhone(admin.phone);
+  return !!(meP && adminP && meP === adminP);
+}
 
 /* ---------- Postgres (Netlify DB / Neon) ---------- */
 let sqlClient = null;
@@ -367,14 +376,16 @@ export default async (req) => {
         if(sql){
           if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
           const frows = await sql`SELECT admin_member_id FROM families WHERE id = ${familyId}`;
-          if(!frows.length || frows[0].admin_member_id !== memberId) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
+          if(!frows.length) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
+          const memberRows = await sql`SELECT id, phone FROM members WHERE family_id = ${familyId}`;
+          if(!isEffectiveAdmin(memberRows, memberId, frows[0].admin_member_id)) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
           await sql`DELETE FROM members WHERE id = ${targetId} AND family_id = ${familyId}`;
           return json({ ok: true, family: await familyPayload(sql, familyId) });
         }
         const famStore = getStore('families');
         const fam = await famStore.get(familyId, { type: 'json' });
         if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
-        if(fam.adminMemberId !== memberId) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
+        if(!isEffectiveAdmin(fam.members || [], memberId, fam.adminMemberId)) return json({ ok: false, error: 'רק המנהל יכול להסיר חברים' }, 403);
         fam.members = (fam.members || []).filter(m => m.id !== targetId);
         await famStore.setJSON(familyId, fam);
         return json({ ok: true, family: fam });
@@ -390,10 +401,11 @@ export default async (req) => {
         if(sql){
           if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
           const frows = await sql`SELECT admin_member_id FROM families WHERE id = ${familyId}`;
-          if(!frows.length || frows[0].admin_member_id !== memberId) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
-          let adminId = frows[0].admin_member_id;
+          if(!frows.length) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
           const members = await sql`SELECT id, name, phone, extract(epoch FROM joined_at)*1000 AS joined_at
             FROM members WHERE family_id = ${familyId} ORDER BY joined_at`;
+          if(!isEffectiveAdmin(members, memberId, frows[0].admin_member_id)) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
+          let adminId = frows[0].admin_member_id;
           const groups = new Map();
           for(const m of members){
             const key = normPhone(m.phone);
@@ -424,7 +436,7 @@ export default async (req) => {
         const famStore = getStore('families');
         const fam = await famStore.get(familyId, { type: 'json' });
         if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
-        if(fam.adminMemberId !== memberId) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
+        if(!isEffectiveAdmin(fam.members || [], memberId, fam.adminMemberId)) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
         const groups = new Map();
         for(const m of (fam.members || [])){
           const key = normPhone(m.phone);

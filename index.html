@@ -3248,13 +3248,9 @@ function sendQ(){
 }
 
 /* ---------- settings modal (כולל משפחה) ---------- */
-function openSettings(){
-  const s = state.settings;
-  const box = $('#modalBox');
-  box.dataset.modal = 'settings';
-  let famHtml;
+function famCardHtml(){
   if(fam){
-    famHtml = `
+    return `
     <div class="famcard">
       <div class="famtitle">${esc(L('familyOf', {name: fam.familyName}))} <span class="famregion">📍 ${esc(regionLabel(fam.region))}</span></div>
       <div class="famcode-line">
@@ -3266,11 +3262,11 @@ function openSettings(){
       ${(fam.members || []).length < 2 ? `<div class="hint">${esc(L('onlyYouHint'))}</div>` : ''}
       <div class="hint">${esc(L('syncHint'))}</div>
       ${!fam.adminMemberId ? `<button class="minibtn" style="margin-top:8px" onclick="claimAdmin()">${esc(L('claimAdminBtn'))}</button>` : ''}
-      ${(fam.adminMemberId === fam.memberId && hasDuplicateMembers()) ? `<button class="minibtn" style="margin-top:8px" onclick="mergeDuplicates()">${esc(L('mergeDuplicatesBtn'))}</button>` : ''}
+      ${(isEffectiveAdmin() && hasDuplicateMembers()) ? `<button class="minibtn" style="margin-top:8px" onclick="mergeDuplicates()">${esc(L('mergeDuplicatesBtn'))}</button>` : ''}
       <button class="minibtn warn" style="margin-top:8px" onclick="leaveFamily()">${esc(L('leaveFamilyBtn'))}</button>
     </div>`;
-  }else{
-    famHtml = `
+  }
+  return `
     <div class="famcard">
       <div class="famtitle">${esc(L('familyTitle'))}</div>
       <div class="hint" style="margin-bottom:10px">${esc(L('familyIntro'))}</div>
@@ -3279,7 +3275,11 @@ function openSettings(){
         <button class="ghost" onclick="openFamilyForm('join')">${esc(L('joinFamilyBtn'))}</button>
       </div>
     </div>`;
-  }
+}
+function openSettings(){
+  const s = state.settings;
+  const box = $('#modalBox');
+  box.dataset.modal = 'settings';
   const LANG_NAMES = {he:'עברית', en:'English', ru:'Русский', ar:'العربية'};
   const langHtml = `
     <div class="msub" style="margin-top:0">${esc(L('languageLabel'))}</div>
@@ -3290,7 +3290,7 @@ function openSettings(){
     <h2>${esc(L('settingsTitle'))}</h2>
     ${langHtml}
     <div class="dbstatus" id="dbStatus">${esc(L('checkingServer'))}</div>
-    ${famHtml}
+    <div id="famCardWrap">${famCardHtml()}</div>
     <div class="msub" style="margin-top:18px">${esc(L('whoFillsHint'))}</div>
     <label>${esc(L('listOwnerNameLabel'))}</label>
     <input type="text" id="setName" value="${esc(s.reqName)}" placeholder="${esc(L('listOwnerNamePlaceholder'))}">
@@ -3323,8 +3323,17 @@ async function checkDbStatus(){
     el.innerHTML = L('dbUnavailable');
   }
 }
+/* בודק אם אני "שקול" למנהל — זהה בפועל, או שכפול-נייד ישן של אותו אדם (מלפני תיקון ה-dedup) */
+function isEffectiveAdmin(){
+  if(!fam || !fam.adminMemberId) return false;
+  if(fam.adminMemberId === fam.memberId) return true;
+  const me = (fam.members || []).find(m => m.id === fam.memberId);
+  const admin = (fam.members || []).find(m => m.id === fam.adminMemberId);
+  const meP = me && normPhone(me.phone), adminP = admin && normPhone(admin.phone);
+  return !!(meP && adminP && meP === adminP);
+}
 function membersHTML(){
-  const iAmAdmin = fam.adminMemberId && fam.adminMemberId === fam.memberId;
+  const iAmAdmin = isEffectiveAdmin();
   return (fam.members || []).map(m => {
     const me = m.id === fam.memberId;
     const isAdmin = fam.adminMemberId === m.id;
@@ -3349,8 +3358,8 @@ async function refreshFamily(){
       fam.region = normRegion(res.family.region);
       fam.adminMemberId = res.family.adminMemberId || null;
       famSave();
-      const el = document.getElementById('famMembers');
-      if(el) el.innerHTML = membersHTML();
+      const wrap = document.getElementById('famCardWrap');
+      if(wrap) wrap.innerHTML = famCardHtml();
     }
   }catch(e){}
 }
