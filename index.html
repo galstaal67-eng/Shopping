@@ -3315,6 +3315,17 @@ async function onPriceFile(inp){
   inp.value = '';
 }
 
+/* ===== רשימה כטקסט נקי (בלי אמוג'י/סימני מארקדאון) — להדבקה באתרי רשתות אונליין ===== */
+function listAsPlainText(){
+  let out = '';
+  state.cats.forEach(c => {
+    const items = c.items.filter(i => i.need);
+    if(!items.length) return;
+    out += dispCat(c) + '\n';
+    items.forEach(i => { out += dispName(i) + (i.qty ? ' ' + fmtQty(i.qty) : '') + '\n'; });
+  });
+  return out.trim();
+}
 /* ===== WhatsApp ===== */
 function listAsText(){
   const d = new Date();
@@ -3649,7 +3660,7 @@ function sendListOnline(){
   if(!neededItems().length){ toast(L('listEmptyToast2')); return; }
   const store = ONLINE_STORES.find(s => s.key === state.settings.onlineStore);
   if(!store){ openOnlineStorePickerModal(); return; }
-  copyText(listAsText());
+  copyText(listAsPlainText());
   closeModal();
   window.open(store.url, '_blank');
   toast(L('onlineListCopiedToast', {chain: store.chain}));
