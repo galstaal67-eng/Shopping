@@ -379,6 +379,78 @@ export default async (req) => {
         await famStore.setJSON(familyId, fam);
         return json({ ok: true, family: fam });
       }
+
+      if (op === 'mergeDuplicateMembers') {
+        // מאחד חברים כפולים שנוצרו לפני תיקון ה-dedup (אותו נייד, כמה רשומות) לרשומה אחת
+        const familyId = String(body.familyId || '');
+        const memberId = String(body.memberId || '');
+        if(!familyId || !memberId) return json({ ok: false, error: 'חסרים נתונים' }, 400);
+        const pickCanonical = (group, adminId) =>
+          group.find(m => m.id === memberId) || group.find(m => m.id === adminId) || group[0];
+        if(sql){
+          if(!(await ensureFamilyInDb(sql, familyId))) return json({ ok: false, error: 'משפחה לא נמצאה' }, 404);
+          const frows = await sql`SELECT admin_member_id FROM families WHERE id = ${familyId}`;
+          if(!frows.length || frows[0].admin_member_id !== memberId) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
+          let adminId = frows[0].admin_member_id;
+          const members = await sql`SELECT id, name, phone, extract(epoch FROM joined_at)*1000 AS joined_at
+            FROM members WHERE family_id = ${familyId} ORDER BY joined_at`;
+          const groups = new Map();
+          for(const m of members){
+            const key = normPhone(m.phone);
+            if(!key) continue;
+            if(!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(m);
+          }
+          let removed = 0;
+          for(const group of groups.values()){
+            if(group.length < 2) continue;
+            const canonical = pickCanonical(group, adminId);
+            const latestName = group[group.length - 1].name;
+            if(latestName && latestName !== canonical.name){
+              await sql`UPDATE members SET name = ${latestName} WHERE id = ${canonical.id}`;
+            }
+            for(const m of group){
+              if(m.id === canonical.id) continue;
+              await sql`DELETE FROM members WHERE id = ${m.id}`;
+              removed++;
+              if(adminId === m.id) adminId = canonical.id;
+            }
+          }
+          if(adminId !== frows[0].admin_member_id){
+            await sql`UPDATE families SET admin_member_id = ${adminId} WHERE id = ${familyId}`;
+          }
+          return json({ ok: true, removed, family: await familyPayload(sql, familyId) });
+        }
+        const famStore = getStore('families');
+        const fam = await famStore.get(familyId, { type: 'json' });
+        if(!fam) return json({ ok: false, error: 'המשפחה לא נמצאה' }, 404);
+        if(fam.adminMemberId !== memberId) return json({ ok: false, error: 'רק המנהל יכול לאחד כפילויות' }, 403);
+        const groups = new Map();
+        for(const m of (fam.members || [])){
+          const key = normPhone(m.phone);
+          if(!key) continue;
+          (groups.get(key) || groups.set(key, []).get(key)).push(m);
+        }
+        let removed = 0;
+        let adminId = fam.adminMemberId;
+        const toRemove = new Set();
+        for(const group of groups.values()){
+          if(group.length < 2) continue;
+          const canonical = pickCanonical(group, adminId);
+          const latest = group[group.length - 1];
+          if(latest.name && latest.name !== canonical.name) canonical.name = latest.name;
+          for(const m of group){
+            if(m.id === canonical.id) continue;
+            toRemove.add(m.id);
+            removed++;
+            if(adminId === m.id) adminId = canonical.id;
+          }
+        }
+        fam.members = fam.members.filter(m => !toRemove.has(m.id));
+        fam.adminMemberId = adminId;
+        await famStore.setJSON(familyId, fam);
+        return json({ ok: true, removed, family: fam });
+      }
     } else {
       if (op === 'getStores') {
         const q = (url.searchParams.get('q') || '').trim();
