@@ -29,9 +29,9 @@ body{
   min-height:100vh;
   font-family:'Heebo','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
   background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;
-  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
 }
-body.has-summary{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+body.has-summary{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
 button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:inherit}
 input,textarea{font-family:inherit;font-size:inherit}
 
@@ -91,23 +91,23 @@ header .sub{font-size:12.5px;color:#d3f5ef;margin-top:2px}
 .popmsg{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16.5px;margin:8px 0 2px;line-height:1.6}
 .popmsg.reqmsg{background:#fffbeb;border-color:#fcd34d}
 
-/* ===== Tabs (bottom nav) ===== */
-nav.tabs{
-  position:fixed;bottom:0;right:0;left:0;z-index:40;
-  background:var(--card);border-top:1px solid var(--line);
-  display:flex;padding-bottom:env(safe-area-inset-bottom);
-  box-shadow:0 -4px 16px rgba(15,23,42,.07);
+/* ===== Home stage — three big circles, the app's primary navigation ===== */
+.homestage{position:relative;height:232px;margin-bottom:6px;transition:height .45s cubic-bezier(.2,.8,.2,1)}
+.homecircle{
+  position:absolute;border-radius:50%;border:none;color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  box-shadow:0 5px 16px rgba(15,23,42,.22);cursor:pointer;
+  transition:left .48s cubic-bezier(.2,.8,.2,1),top .48s cubic-bezier(.2,.8,.2,1),
+    width .48s cubic-bezier(.2,.8,.2,1),height .48s cubic-bezier(.2,.8,.2,1),
+    opacity .3s,filter .3s,box-shadow .3s;
 }
-nav.tabs button{
-  flex:1;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;
-  color:var(--soft);font-size:12px;font-weight:500;position:relative;
-}
-nav.tabs button .ticon{font-size:22px;line-height:1}
-nav.tabs button.active{color:var(--teal-dark);font-weight:700}
-nav.tabs button .badge{
-  position:absolute;top:4px;inset-inline-start:calc(50% + 8px);
-  min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--red);color:#fff;
-  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+.homecircle .hc-icon{font-size:var(--hc-icon-size,26px);line-height:1}
+.homecircle .hc-label{font-size:var(--hc-label-size,12.5px);font-weight:800;line-height:1.15;text-align:center;padding:0 4px}
+.homecircle.dim{opacity:.55;filter:saturate(.5);box-shadow:0 2px 8px rgba(15,23,42,.12)}
+.homecircle .hc-badge{
+  position:absolute;top:-2px;inset-inline-end:-2px;background:#fff;color:var(--red);border-radius:999px;
+  min-width:19px;height:19px;padding:0 5px;font-size:11px;font-weight:800;display:none;
+  align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25);
 }
 
 main{max-width:640px;margin:0 auto;padding:14px 12px 8px}
@@ -240,7 +240,7 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 
 /* ===== Sticky summary bar (request view) ===== */
 .summary{
-  position:fixed;bottom:calc(58px + env(safe-area-inset-bottom));right:0;left:0;z-index:35;
+  position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));right:0;left:0;z-index:35;
   display:flex;justify-content:center;padding:0 12px;pointer-events:none;
 }
 .summary .inner{
@@ -579,7 +579,11 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
 </div>
 </div>
 
-<main id="main"></main>
+<main>
+  <div id="boardWrap"></div>
+  <div class="homestage" id="homeStage"></div>
+  <div id="main"></div>
+</main>
 
 <div class="summary" id="summaryBar" style="display:none">
   <div class="inner">
@@ -593,19 +597,6 @@ body.editmode .pill#editPill{background:var(--amber-soft);border-color:var(--amb
     </div>
   </div>
 </div>
-
-<nav class="tabs">
-  <button id="tab-request" class="active" onclick="setView('request')">
-    <span class="ticon">📝</span><span id="tabRequestText">מה צריך</span>
-  </button>
-  <button id="tab-shop" onclick="setView('shop')">
-    <span class="ticon">🛍️</span><span id="tabShopText">קנייה</span>
-    <span class="badge" id="shopBadge" style="display:none"></span>
-  </button>
-  <button id="tab-history" onclick="setView('history')">
-    <span class="ticon">🧾</span><span id="tabHistoryText">היסטוריה</span>
-  </button>
-</nav>
 
 <div class="overlay" id="overlay"><div class="modal" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
@@ -1467,7 +1458,7 @@ enterAmountPrompt:'أدخل كمية الشراء',
 
 const LS_KEY = 'shopping-app-v1';
 let state = null;
-let view = 'request';
+let view = 'home';
 let openCats = {};
 let shopOpenCat = null;
 
@@ -1701,18 +1692,75 @@ function openWA(text, phone){ window.open(waLink(text, phone), '_blank'); }
 
 /* ---------- render ---------- */
 function render(){
-  updateBadge();
   updateTripBar();
+  renderBoard();
+  renderHomeStage();
+  updateBadge();
+  const m = $('#main');
   if(view === 'request') renderRequest();
   else if(view === 'shop') renderShop();
-  else renderHistory();
-  $('#tab-request').classList.toggle('active', view === 'request');
-  $('#tab-shop').classList.toggle('active', view === 'shop');
-  $('#tab-history').classList.toggle('active', view === 'history');
+  else if(view === 'history') renderHistory();
+  else { m.dataset.mode = 'home'; m.innerHTML = ''; }
   const showSummary = view === 'request' && neededItems().length > 0;
   $('#summaryBar').style.display = showSummary ? 'flex' : 'none';
   document.body.classList.toggle('has-summary', showSummary);
   if(view === 'request') $('#summaryCnt').innerHTML = L('inListCount', {n: '<b>' + neededItems().length + '</b>'});
+}
+/* ===== מסך הבית: שלושה עיגולים גדולים — הניווט הראשי של האפליקציה ===== */
+const HOME_ORDER = ['request', 'shop', 'history'];
+const HOME_ICONS = { request: '📝', shop: '🛍️', history: '🧾' };
+const HOME_COLORS = {
+  request: 'linear-gradient(135deg,#0f766e,#14b8a6)',
+  shop: 'linear-gradient(135deg,#15803d,#22c55e)',
+  history: 'linear-gradient(135deg,#6d28d9,#8b5cf6)',
+};
+const HOME_LABEL_KEY = { request: 'tabRequest', shop: 'tabShop', history: 'tabHistory' };
+function clickHomeCircle(key){
+  view = (view === key) ? 'home' : key;
+  window.scrollTo(0, 0);
+  render();
+}
+function renderHomeStage(){
+  const stage = $('#homeStage'); if(!stage) return;
+  const docked = view !== 'home';
+  const w = stage.clientWidth || 360;
+  stage.style.height = (docked ? 84 : 232) + 'px';
+  HOME_ORDER.forEach((key, i) => {
+    let el = document.getElementById('home-' + key);
+    if(!el){
+      el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'homecircle';
+      el.id = 'home-' + key;
+      el.innerHTML = `<span class="hc-badge" id="homeBadge-${key}"></span><span class="hc-icon"></span><span class="hc-label"></span>`;
+      stage.appendChild(el);
+    }
+    el.onclick = () => clickHomeCircle(key);
+    const active = view === key;
+    let r, cx, cy;
+    if(!docked){
+      r = key === 'request' ? 62 : 54;
+      if(key === 'request'){ cx = w / 2; cy = 68; }
+      else if(key === 'shop'){ cx = w * 0.27; cy = 172; }
+      else { cx = w * 0.73; cy = 172; }
+    }else{
+      r = active ? 34 : 25;
+      cx = w * (i === 0 ? 0.2 : i === 1 ? 0.5 : 0.8);
+      cy = 40;
+    }
+    el.classList.toggle('dim', docked && !active);
+    el.style.background = HOME_COLORS[key];
+    el.style.width = el.style.height = (r * 2) + 'px';
+    el.style.left = (cx - r) + 'px';
+    el.style.top = (cy - r) + 'px';
+    el.style.setProperty('--hc-icon-size', Math.round(r * (docked ? 0.62 : 0.48)) + 'px');
+    el.querySelector('.hc-icon').textContent = HOME_ICONS[key];
+    const showLabel = !docked || active;
+    const labelEl = el.querySelector('.hc-label');
+    labelEl.style.display = showLabel ? 'block' : 'none';
+    labelEl.style.setProperty('--hc-label-size', (docked ? 10.5 : 12.5) + 'px');
+    labelEl.textContent = showLabel ? L(HOME_LABEL_KEY[key]) : '';
+  });
 }
 /* בר בולט: מוצג לכל בן משפחה (חוץ מהקונה עצמו) כשקנייה פעילה — אפשר לשלוח בקשה מהירה שנוספת מיד לרשימה */
 function updateTripBar(){
@@ -1745,9 +1793,8 @@ function sendTripRequest(){
 }
 function updateBadge(){
   const left = neededItems().filter(x => !x.it.bought).length;
-  const b = $('#shopBadge');
-  b.style.display = left ? 'flex' : 'none';
-  b.textContent = left;
+  const b = $('#homeBadge-shop');
+  if(b){ b.style.display = left ? 'flex' : 'none'; b.textContent = left; }
   updateChatBadge();
 }
 function setView(v){ view = v; window.scrollTo(0,0); render(); }
@@ -1763,14 +1810,12 @@ function renderRequest(){
       <button class="pill primary" onclick="openAddSheet()">${esc(L('addProductBtn'))}</button>
       <div class="datetime" id="dateTimeLabel"><span id="dtDay"></span><span id="dtTime"></span></div>
     </div>
-    <div id="boardWrap"></div>
     <div class="bubble-stage" id="bubbleStage"></div>
     <div class="docked-panel" id="dockedPanel"></div>
     <div class="resetlink"><button onclick="resetAll()">${esc(L('resetList'))}</button></div>`;
     bubblePositions = {};
   }
   updateDateTimeLabel();
-  renderBoard();
   renderBubbleStage();
   renderDockedPanel();
 }
