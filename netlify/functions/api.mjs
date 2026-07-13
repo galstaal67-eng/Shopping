@@ -8,10 +8,42 @@
 // כל עוד ה-DB לא הופעל (אין NETLIFY_DATABASE_URL) — נפילה אוטומטית
 // ל-Netlify Blobs, ומשפחות קיימות עוברות ל-DB אוטומטית ברגע שיופעל.
 import { getStore } from '@netlify/blobs';
+import zlib from 'node:zlib';
 import {
   json, uid, newCode, normPhone, isEffectiveAdmin,
   db, ensureFamilyInDb, insertPurchase, familyPayload, healBlobsFamilyAdmin,
 } from './_shared.mjs';
+
+// שאיבת מבצעים חיים מפורטל שקיפות המחירים של שופרסל (חוק שקיפות מחירים, תשע"ה-2014).
+// קובץ המבצעים המלא (catID=4) ציבורי וללא התחברות. כשל בכל שלב (רשת/פורמט)
+// מוחזר כרשימה ריקה — הצד הלקוח נופל אוטומטית חזרה למבצעים המנוהלים/הדגמה.
+async function fetchShufersalPromotions(){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  const headers = { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' };
+  try{
+    const listRes = await fetch('https://prices.shufersal.co.il/FileObject/UpdateCategory?catID=4', { signal: ctrl.signal, headers });
+    if(!listRes.ok) return [];
+    const html = await listRes.text();
+    const hrefs = [...html.matchAll(/href="([^"]+\.gz)"/gi)].map(m => m[1]);
+    if(!hrefs.length) return [];
+    let fileUrl = hrefs[0];
+    if(fileUrl.startsWith('/')) fileUrl = 'https://prices.shufersal.co.il' + fileUrl;
+    else if(!/^https?:\/\//i.test(fileUrl)) fileUrl = 'https://prices.shufersal.co.il/' + fileUrl;
+    const fileRes = await fetch(fileUrl, { signal: ctrl.signal, headers });
+    if(!fileRes.ok) return [];
+    const buf = Buffer.from(await fileRes.arrayBuffer());
+    const xml = zlib.gunzipSync(buf).toString('utf8');
+    const descs = [...xml.matchAll(/<PromotionDescription>([\s\S]*?)<\/PromotionDescription>/gi)]
+      .map(m => m[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim())
+      .filter(Boolean);
+    return [...new Set(descs)].slice(0, 80);
+  }catch(e){
+    return [];
+  }finally{
+    clearTimeout(timer);
+  }
+}
 
 export default async (req) => {
   const url = new URL(req.url);
@@ -444,6 +476,13 @@ export default async (req) => {
           return json({ ok: true, deals: rows });
         }
         return json({ ok: true, deals: [] });
+      }
+
+      if (op === 'getLiveDeals') {
+        const chain = url.searchParams.get('chain') || '';
+        if(chain !== 'shufersal') return json({ ok: true, supported: false, deals: [] });
+        const deals = await fetchShufersalPromotions();
+        return json({ ok: true, supported: true, live: deals.length > 0, deals });
       }
 
       if (op === 'status') {

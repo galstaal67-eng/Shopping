@@ -902,6 +902,7 @@ function L(key, vars){
   return s;
 }
 function dispName(it){ return (it && typeof it.name === 'object') ? (it.name[lang] || it.name.he) : (it && it.name); }
+function heName(it){ return (it && typeof it.name === 'object') ? (it.name.he || it.name[lang]) : (it && it.name); }
 function dispNote(it){ return (it && typeof it.note === 'object') ? (it.note[lang] || it.note.he) : (it && it.note) || ''; }
 function dispCat(c){ return (c && typeof c.name === 'object') ? (c.name[lang] || c.name.he) : (c && c.name); }
 function catalogIndex(){
@@ -983,6 +984,8 @@ finishConfirm:'לסיים את הקנייה ולשמור אותה בהיסטור
 resetForNextConfirm:'לאפס את הרשימה לקראת הקנייה הבאה?',
 dealsTitle:'🏷️ מבצעים בחנות', checkingDeals:'⏳ בודק מבצעים...', dealsInRegion:'מבצעים באזורכם:',
 dealsComingSoon:'בקרוב: החנות שבה אתם קונים תזהה שאתם נמצאים בה ותשדר מבצעים ישירות לכאן. כך זה ייראה (הדגמה):',
+dealsOnListTitle:'🎯 מבצעים על מוצרים ברשימה שלך', dealsMoreBtn:'🏷️ עוד מבצעים ב{chain} ({n})', dealsGeneralTitle:'📋 מבצעים נוספים',
+dealsNoneMatched:'לא נמצאה התאמה בין המבצעים הנוכחיים לרשימה שלך כרגע.',
 dealTag:'מבצע',
 benchTitle:'📊 השוואה אזורית — {region}', loadingBench:'⏳ טוען נתוני השוואה...', chainCompareTitle:'🏪 השוואת רשתות',
 loadingChains:'⏳ טוען נתוני רשתות...',
@@ -1136,6 +1139,8 @@ finishConfirm:'Finish shopping and save it to history?', savedToHistoryToast:'Tr
 resetForNextConfirm:'Reset the list for the next trip?',
 dealsTitle:'🏷️ Store deals', checkingDeals:'⏳ Checking deals...', dealsInRegion:'Deals in your area:',
 dealsComingSoon:'Coming soon: the store you\'re shopping at will detect you\'re there and broadcast deals straight here. Here\'s a preview (demo):',
+dealsOnListTitle:'🎯 Deals on items in your list', dealsMoreBtn:'🏷️ More {chain} deals ({n})', dealsGeneralTitle:'📋 More deals',
+dealsNoneMatched:'No current deals match your list right now.',
 dealTag:'Deal',
 benchTitle:'📊 Regional comparison — {region}', loadingBench:'⏳ Loading comparison data...', chainCompareTitle:'🏪 Chain comparison',
 loadingChains:'⏳ Loading chain data...',
@@ -1289,6 +1294,8 @@ finishConfirm:'Завершить покупки и сохранить их в �
 resetForNextConfirm:'Сбросить список для следующей покупки?',
 dealsTitle:'🏷️ Акции в магазине', checkingDeals:'⏳ Проверка акций...', dealsInRegion:'Акции в вашем регионе:',
 dealsComingSoon:'Скоро: магазин, где вы находитесь, определит вас и будет транслировать акции прямо сюда. Вот как это будет выглядеть (демо):',
+dealsOnListTitle:'🎯 Акции на товары из вашего списка', dealsMoreBtn:'🏷️ Ещё акции в {chain} ({n})', dealsGeneralTitle:'📋 Другие акции',
+dealsNoneMatched:'Сейчас нет акций, соответствующих вашему списку.',
 dealTag:'Акция',
 benchTitle:'📊 Региональное сравнение — {region}', loadingBench:'⏳ Загрузка данных сравнения...', chainCompareTitle:'🏪 Сравнение сетей',
 loadingChains:'⏳ Загрузка данных по сетям...',
@@ -1442,6 +1449,8 @@ finishConfirm:'إنهاء التسوق وحفظه في السجل؟', savedToHis
 resetForNextConfirm:'إعادة تعيين القائمة للرحلة القادمة؟',
 dealsTitle:'🏷️ عروض المتجر', checkingDeals:'⏳ جارٍ التحقق من العروض...', dealsInRegion:'عروض في منطقتك:',
 dealsComingSoon:'قريبًا: سيتعرف المتجر الذي تتواجد فيه عليك وسيبث العروض مباشرة هنا. هكذا سيبدو الأمر (عرض توضيحي):',
+dealsOnListTitle:'🎯 عروض على منتجات في قائمتك', dealsMoreBtn:'🏷️ المزيد من عروض {chain} ({n})', dealsGeneralTitle:'📋 عروض إضافية',
+dealsNoneMatched:'لا توجد حاليًا عروض مطابقة لقائمتك.',
 dealTag:'عرض',
 benchTitle:'📊 مقارنة إقليمية — {region}', loadingBench:'⏳ جارٍ تحميل بيانات المقارنة...', chainCompareTitle:'🏪 مقارنة السلاسل',
 loadingChains:'⏳ جارٍ تحميل بيانات السلاسل...',
@@ -2945,6 +2954,22 @@ const DEMO_DEALS = {
     {e:'☕', n:'قهوة سريعة الذوبان 200 غ', d:'₪19.90 لأعضاء النادي', t:'نادي'},
   ],
 };
+/* רשת נוכחית לצורך מבצעים חיים: קניה פיזית פעילה עדיפה, אחרת הרשת המועדפת לאונליין */
+function liveDealsChain(){
+  const physChain = state.trip && state.trip.store && state.trip.store.chain;
+  const online = ONLINE_STORES.find(s => s.key === state.settings.onlineStore);
+  const chainName = physChain || (online && online.chain) || '';
+  if(chainName === 'שופרסל') return { key:'shufersal', name:'שופרסל' };
+  return null;
+}
+let dealsMoreShown = false;
+function toggleMoreDeals(){
+  dealsMoreShown = !dealsMoreShown;
+  const el = document.getElementById('dealsMoreList');
+  const btn = document.getElementById('dealsMoreBtn');
+  if(el) el.style.display = dealsMoreShown ? '' : 'none';
+  if(btn) btn.classList.toggle('open', dealsMoreShown);
+}
 async function openDeals(){
   const box = $('#modalBox');
   const dealHTML = (e, n, dsc, tag) => `
@@ -2956,6 +2981,32 @@ async function openDeals(){
   box.innerHTML = `<h2>${esc(L('dealsTitle'))}</h2><div class="msub">${esc(L('checkingDeals'))}</div>
     <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('close'))}</button></div>`;
   $('#overlay').classList.add('show');
+  dealsMoreShown = false;
+
+  // מבצעים חיים מהרשת שסומנה (אם נתמכת) — לצד המבצעים המנוהלים/הדגמה כרגיל
+  const chain = liveDealsChain();
+  let onListHtml = '', moreBtnHtml = '', moreListHtml = '';
+  if(chain){
+    try{
+      const liveRes = await apiGet('getLiveDeals', { chain: chain.key });
+      const liveDeals = (liveRes && liveRes.ok && Array.isArray(liveRes.deals)) ? liveRes.deals : [];
+      if(liveDeals.length){
+        const neededNames = neededItems().map(x => heName(x.it)).filter(Boolean);
+        const onList = [], others = [];
+        liveDeals.forEach(desc => {
+          const d = String(desc).toLowerCase();
+          (neededNames.some(n => n && d.includes(n.toLowerCase())) ? onList : others).push(desc);
+        });
+        onListHtml = `<div class="msub">${esc(L('dealsOnListTitle'))}</div>`
+          + (onList.length ? onList.map(d => dealHTML('🏷️', d, '', chain.name)).join('') : `<div class="hint">${esc(L('dealsNoneMatched'))}</div>`);
+        if(others.length){
+          moreBtnHtml = `<button id="dealsMoreBtn" class="camline" onclick="toggleMoreDeals()">${esc(L('dealsMoreBtn', {chain: chain.name, n: others.length}))}</button>`;
+          moreListHtml = `<div id="dealsMoreList" style="display:none">${others.map(d => dealHTML('🏷️', d, '', chain.name)).join('')}</div>`;
+        }
+      }
+    }catch(e){}
+  }
+
   // מבצעים אמיתיים מה-DB המרכזי; אם אין — הדגמה
   let real = [];
   try{
@@ -2963,12 +3014,12 @@ async function openDeals(){
     if(res && res.ok && Array.isArray(res.deals)) real = res.deals;
   }catch(e){}
   if(!$('#overlay').classList.contains('show')) return;
+  const generalHtml = real.length
+    ? `<div class="msub">${esc(onListHtml ? L('dealsGeneralTitle') : L('dealsInRegion'))}</div>` + real.map(d => dealHTML(d.emoji, d.title, (d.store ? d.store + ' · ' : '') + (d.description || ''), d.tag)).join('')
+    : (onListHtml ? '' : `<div class="msub">${esc(L('dealsComingSoon'))}</div>` + (DEMO_DEALS[lang] || DEMO_DEALS.he).map(d => dealHTML(d.e, d.n, d.d, d.t)).join(''));
   box.innerHTML = `
     <h2>${esc(L('dealsTitle'))}</h2>
-    ${real.length
-      ? `<div class="msub">${esc(L('dealsInRegion'))}</div>` + real.map(d => dealHTML(d.emoji, d.title, (d.store ? d.store + ' · ' : '') + (d.description || ''), d.tag)).join('')
-      : `<div class="msub">${esc(L('dealsComingSoon'))}</div>`
-        + (DEMO_DEALS[lang] || DEMO_DEALS.he).map(d => dealHTML(d.e, d.n, d.d, d.t)).join('')}
+    ${onListHtml}${moreBtnHtml}${moreListHtml}${generalHtml}
     <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('close'))}</button></div>`;
 }
 
