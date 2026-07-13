@@ -3646,24 +3646,29 @@ function pickOnlineStore(key){
   if(wrap) wrap.innerHTML = onlineStoreHtml();
 }
 function openOnlineStorePickerModal(){
+  const sel = state.settings.onlineStore || '';
   const box = $('#modalBox');
   box.innerHTML = `
     <h2>${esc(L('onlineStoreTitle'))}</h2>
     <div class="msub">${esc(L('onlineStoreExplain'))}</div>
     <div class="basisrow" style="margin:10px 0">
-      ${ONLINE_STORES.map(s => `<button type="button" onclick="pickOnlineStore('${s.key}');sendListOnline()">${esc(s.chain)}</button>`).join('')}
+      ${ONLINE_STORES.map(s => `<button type="button" class="${s.key===sel?'sel':''}" onclick="goOnlineStore('${s.key}')">${esc(s.chain)}</button>`).join('')}
     </div>
     <div class="btnrow"><button class="ghost" onclick="closeModal()">${esc(L('cancel'))}</button></div>`;
   $('#overlay').classList.add('show');
 }
-function sendListOnline(){
-  if(!neededItems().length){ toast(L('listEmptyToast2')); return; }
-  const store = ONLINE_STORES.find(s => s.key === state.settings.onlineStore);
-  if(!store){ openOnlineStorePickerModal(); return; }
+function goOnlineStore(key){
+  const store = ONLINE_STORES.find(s => s.key === key); if(!store) return;
+  state.settings.onlineStore = key;
+  save();
   copyText(listAsPlainText());
   closeModal();
   window.open(store.url, '_blank');
   toast(L('onlineListCopiedToast', {chain: store.chain}));
+}
+function sendListOnline(){
+  if(!neededItems().length){ toast(L('listEmptyToast2')); return; }
+  openOnlineStorePickerModal();
 }
 function openSettings(){
   const s = state.settings;
