@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1d4ed8">
+<title>מניעת הטרדה מינית — מידע לעובדות ולעובדים | קבוצת אנטרופי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#2563eb; --brand-dark:#1d4ed8; --brand-deep:#1e3a8a; --brand-soft:#dbeafe; --brand-faint:#eff6ff;
+  --bg:#f4f6f8; --card:#ffffff; --line:#e2e8f0;
+  --ink:#0f172a; --muted:#475569; --soft:#94a3b8;
+  --amber:#b45309; --amber-soft:#fef3c7; --amber-line:#fcd34d;
+  --red:#b91c1c; --red-soft:#fee2e2;
+  --violet:#6d28d9; --violet-soft:#ede9fe;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06);
+  --shadow-lg:0 10px 30px rgba(15,23,42,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Heebo','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16.5px;line-height:1.75;
+}
+a{color:var(--brand-dark)}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+
+/* ===== Hero ===== */
+.hero{
+  background:linear-gradient(140deg,var(--brand-deep) 0%,var(--brand-dark) 55%,var(--brand) 100%);
+  color:#fff;padding:46px 0 84px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset-inline-start:-120px;top:-120px;width:340px;height:340px;
+  border-radius:50%;background:rgba(255,255,255,.06);
+}
+.hero::before{
+  content:"";position:absolute;inset-inline-end:-90px;bottom:-150px;width:300px;height:300px;
+  border-radius:50%;background:rgba(255,255,255,.05);
+}
+.hero .org{font-size:14px;font-weight:600;letter-spacing:.4px;color:#bfdbfe;margin-bottom:10px}
+.hero h1{font-size:clamp(28px,4.6vw,40px);font-weight:800;line-height:1.25;margin-bottom:12px}
+.hero p.lead{font-size:clamp(16px,2.4vw,19px);color:#e0ecff;max-width:640px;font-weight:300}
+.hero .lawref{
+  display:inline-block;margin-top:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;padding:7px 16px;font-size:14px;font-weight:500;
+}
+
+/* ===== Quick nav ===== */
+.quicknav{margin-top:-46px;position:relative;z-index:5}
+.quicknav .pills{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);
+  display:flex;flex-wrap:wrap;gap:8px;padding:12px;justify-content:center;
+}
+.quicknav a{
+  text-decoration:none;font-weight:600;font-size:14.5px;color:var(--brand-deep);
+  background:var(--brand-faint);border:1px solid #bfdbfe;border-radius:999px;padding:8px 16px;
+  transition:background .15s;
+}
+.quicknav a:hover{background:var(--brand-soft)}
+.quicknav a.urgent{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+
+/* ===== Sections ===== */
+section{padding:44px 0 6px}
+h2{
+  font-size:clamp(22px,3.4vw,28px);font-weight:800;color:var(--brand-deep);
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;scroll-margin-top:24px;
+}
+h2 .num{
+  flex-shrink:0;width:38px;height:38px;border-radius:12px;background:var(--brand-soft);color:var(--brand-deep);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+h3{font-size:19px;font-weight:700;color:var(--ink);margin:22px 0 8px}
+p{margin-bottom:12px;color:var(--ink)}
+p.muted, li.muted{color:var(--muted)}
+ul,ol{padding-inline-start:24px;margin-bottom:12px}
+li{margin-bottom:7px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;
+}
+
+/* callouts */
+.callout{
+  border-radius:var(--radius);padding:18px 20px;margin:16px 0;border:1px solid;
+}
+.callout .ct{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.callout.warn{background:var(--amber-soft);border-color:var(--amber-line)}
+.callout.warn .ct{color:var(--amber)}
+.callout.info{background:var(--violet-soft);border-color:#c4b5fd}
+.callout.info .ct{color:var(--violet)}
+.callout.key{background:var(--brand-faint);border-color:#93c5fd}
+.callout.key .ct{color:var(--brand-deep)}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0}
+
+/* contact banner */
+.contactband{
+  background:linear-gradient(135deg,var(--brand-deep),var(--brand-dark));color:#fff;
+  border-radius:18px;padding:26px 28px;box-shadow:var(--shadow-lg);margin:20px 0 8px;
+}
+.contactband h3{color:#fff;margin-top:0;font-size:21px}
+.contactband p{color:#dbe9ff}
+.contactband .who{
+  display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;
+}
+.person{
+  flex:1 1 260px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;padding:16px 18px;
+}
+.person .role{font-size:13px;font-weight:600;color:#bfdbfe;letter-spacing:.3px}
+.person .name{font-size:19px;font-weight:800;margin:2px 0 6px;color:#fff}
+.person a{color:#dbeafe;font-weight:600;text-decoration:none}
+.person a:hover{text-decoration:underline}
+.person .line{font-size:14.5px;color:#e0ecff}
+
+/* type cards grid */
+.types{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:18px 0}
+.type{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;border-top:4px solid var(--brand);
+}
+.type .t-ico{font-size:26px;margin-bottom:8px}
+.type .t-title{font-weight:800;font-size:16.5px;margin-bottom:6px;color:var(--brand-deep)}
+.type p{font-size:14.5px;color:var(--muted);margin-bottom:0}
+
+/* steps */
+.steps{counter-reset:step;list-style:none;padding:0;margin:18px 0}
+.steps li{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:16px 62px 16px 20px;margin-bottom:12px;
+}
+.steps li::before{
+  counter-increment:step;content:counter(step);
+  position:absolute;inset-inline-start:16px;top:16px;width:32px;height:32px;border-radius:50%;
+  background:var(--brand);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.steps li b{color:var(--brand-deep)}
+.steps li p{margin:2px 0 0;font-size:15px;color:var(--muted)}
+
+/* penalties table */
+.tablewrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);font-size:15px;min-width:520px}
+th{background:var(--brand-deep);color:#fff;text-align:right;padding:12px 16px;font-weight:700}
+td{padding:11px 16px;border-top:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+td.pen{font-weight:700;color:var(--red);white-space:nowrap}
+
+/* law accordion */
+details.law{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+  margin-bottom:10px;overflow:hidden;
+}
+details.law summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;
+  padding:14px 18px;font-weight:700;color:var(--brand-deep);font-size:16px;user-select:none;
+}
+details.law summary::-webkit-details-marker{display:none}
+details.law summary .sec{
+  flex-shrink:0;background:var(--brand-soft);color:var(--brand-deep);border-radius:8px;
+  padding:2px 10px;font-size:13.5px;font-weight:800;white-space:nowrap;
+}
+details.law summary .chev{margin-inline-start:auto;transition:transform .2s;color:var(--soft)}
+details.law[open] summary .chev{transform:rotate(180deg)}
+details.law .body{padding:4px 20px 18px;border-top:1px dashed var(--line);color:var(--ink)}
+details.law .body p{font-size:15.5px}
+details.law .body ol,details.law .body ul{font-size:15.5px}
+.deflist dt{font-weight:700;color:var(--brand-deep);margin-top:10px}
+.deflist dd{margin-inline-start:0;color:var(--ink);font-size:15.5px}
+.subclauses{list-style:none;padding-inline-start:10px}
+.subclauses>li{margin-bottom:10px;padding-inline-start:12px;border-inline-start:3px solid var(--brand-soft)}
+
+/* footer */
+footer{margin-top:50px;background:var(--brand-deep);color:#bcd3f5;padding:34px 0 40px;font-size:14.5px}
+footer .wrap{display:flex;flex-direction:column;gap:8px}
+footer b{color:#fff}
+footer a{color:#bfdbfe}
+.disclaimer{font-size:13.5px;color:#8fb0dd;border-top:1px solid rgba(255,255,255,.18);padding-top:14px;margin-top:8px}
+
+.backtop{
+  position:fixed;bottom:22px;inset-inline-start:22px;z-index:20;
+  background:var(--brand);color:#fff;border-radius:50%;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;text-decoration:none;
+  box-shadow:var(--shadow-lg);
+}
+
+@media print{
+  .quicknav,.backtop{display:none}
+  .hero{padding:24px 0;background:var(--brand-deep) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  details.law{break-inside:avoid}
+  details.law .body{display:block !important}
+  body{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="org">קבוצת אנטרופי · משאבי אנוש</div>
+    <h1>מניעת הטרדה מינית והתנכלות<br>במקום העבודה</h1>
+    <p class="lead">
+      לכל עובדת ועובד מגיעה סביבת עבודה בטוחה ומכבדת. עמוד זה מרכז את עיקרי הנוהל וההדרכה של
+      קבוצת אנטרופי, את דרכי הפנייה והתלונה, ואת נוסח החוק למניעת הטרדה מינית.
+    </p>
+    <span class="lawref">⚖️ החוק למניעת הטרדה מינית, התשנ״ח־1998</span>
+  </div>
+</div>
+
+<nav class="quicknav wrap" aria-label="ניווט מהיר">
+  <div class="pills">
+    <a href="#what">מהי הטרדה מינית?</a>
+    <a href="#types">סוגי הטרדה</a>
+    <a href="#scope">מסגרת העבודה</a>
+    <a href="#protection">ההגנות בחוק</a>
+    <a href="#penalties">עונשים ופיצויים</a>
+    <a href="#employer">חובות המעסיק</a>
+    <a href="#law">נוסח החוק</a>
+    <a href="#report" class="urgent">🚨 למי פונים</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ===================== פתיח ===================== -->
+  <section id="intro">
+    <div class="card">
+      <p>
+        מישהו בעבודה העיר לך על הרגליים היפות שלך? אנשים בעבודה מדברים על הרגליהם המיניים?
+        עובדים אחרים גולשים באתרי פורנו בנוכחותך או מציגים תמונות אירוטיות בעבודה?
+        אחד העובדים מספר בדיחות גסות, מדבר בשפה מינית בוטה או עושה תנועות פיזיות בוטות?
+      </p>
+      <p><b>ייתכן שזו הטרדה מינית — וזכותך להתלונן.</b></p>
+      <p class="muted">
+        בעשורים האחרונים התגברה ההבנה שפגיעה מינית אינה רק פגיעה פיזית (כמו אונס או מעשים מגונים),
+        וקיימות פגיעות מיניות נוספות שעשויות להתבטא גם בפגיעות מילוליות. פגיעות אלה יכולות להתבצע
+        על ידי גברים ונשים — וכלפי כל אחד ואחת מהם. כדי להתמודד עם התופעה נחקק החוק למניעת הטרדה
+        מינית. החוק עוסק בהטרדות המבוצעות במקומות שונים, אך <b>מחמיר במיוחד כאשר ההטרדה בוצעה
+        במסגרת העבודה</b>.
+      </p>
+      <p class="muted">
+        אחד האתגרים בנושא הוא ההבחנה מתי חיזור שנתפס כלגיטימי הופך להטרדה מינית. המידע בעמוד זה
+        מתמודד עם השאלה, ובעיקר מדגיש את <b>זכות הסירוב</b> — זכותו של כל אדם שלא להמשיך ולסבול
+        מהתנהגות פוגענית.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== מהי הטרדה ===================== -->
+  <section id="what">
+    <h2><span class="num">1</span>מהי הטרדה מינית?</h2>
+    <p>
+      הטרדה מינית היא <b>התנהגות בעלת אופי מיני שיש בה כדי לפגוע בכבוד, בחירות, בפרטיות ובזכות
+      לשוויון</b> של המוטרדת או המוטרד.
+    </p>
+    <ul>
+      <li>הטרדה מינית יכולה להיות <b>מילולית</b>, <b>לא־מילולית</b> (שפת גוף, רמיזות, הצגת תכנים פורנוגרפיים) או <b>פיזית</b>.</li>
+      <li>הטרדה מינית נתפסת לרוב כמצב שבו נשים מוטרדות על ידי גברים, אך היא עשויה לקרות גם כאשר נשים מטרידות גברים, וגם בין בני אותו מין.</li>
+      <li>הטרדה מינית היא גם <b>עבירה פלילית</b> וגם <b>עוולה אזרחית</b> המקנה זכות לפיצויים.</li>
+    </ul>
+    <div class="callout key">
+      <div class="ct">💡 מהי התנכלות?</div>
+      <p>
+        התנכלות היא פגיעה מכל סוג שהוא שמקורה בהטרדה מינית, או בתלונה או בתביעה שהוגשו על הטרדה
+        מינית. החוק אוסר גם על הטרדה וגם על התנכלות.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== סוגי הטרדה ===================== -->
+  <section id="types">
+    <h2><span class="num">2</span>אילו מעשים נחשבים הטרדה מינית?</h2>
+    <p>החוק למניעת הטרדה מינית קובע כי כל אחד מהמעשים הבאים נחשב הטרדה מינית:</p>
+
+    <div class="types">
+      <div class="type">
+        <div class="t-ico">🗣️</div>
+        <div class="t-title">הצעות חוזרות בעלות אופי מיני</div>
+        <p>המופנות למי שהראה למטריד/ה כי אינו מעוניין בהן. ביחסי מרות — גם ללא הבעת אי־הסכמה.</p>
+      </div>
+      <div class="type">
+        <div class="t-ico">💬</div>
+        <div class="t-title">התייחסויות חוזרות למיניות</div>
+        <p>אמירות חוזרות המתמקדות במיניותו של אדם, כשהוא הראה כי אינו מעוניין בהן.</p>
+      </div>
+      <div class="type">
+        <div class="t-ico">⚠️</div>
+        <div class="t-title">אמירות מבזות או משפילות</div>
+        <p>התייחסות מבזה או משפילה ביחס למינו, למיניותו או לנטייתו המינית של אדם — גם ללא הבעת התנגדות.</p>
+      </div>
+      <div class="type">
+        <div class="t-ico">📵</div>
+        <div class="t-title">הפצת תכנים אינטימיים</div>
+        <p>פרסום או הפצה של תמונה, סרטון או הקלטה בעלי אופי מיני ללא הסכמת המצולם/ת.</p>
+      </div>
+      <div class="type">
+        <div class="t-ico">🚫</div>
+        <div class="t-title">מעשים מגונים</div>
+        <p>מעשה לשם גירוי, סיפוק או ביזוי מיניים. גם מעשה שנראה לכאורה תמים נבחן לפי הנסיבות.</p>
+      </div>
+      <div class="type">
+        <div class="t-ico">🔒</div>
+        <div class="t-title">סחיטה באיומים</div>
+        <p>דרישה לביצוע מעשה בעל אופי מיני תוך איום — למשל איום לפגוע במי שמסרב/ת.</p>
+      </div>
+    </div>
+
+    <h3>הצעות והתייחסויות חוזרות — מה חשוב לדעת?</h3>
+    <ul>
+      <li><b>"חוזרות"</b> — גם הצעות הנאמרות מספר פעמים בתוך דקות ספורות או במסגרת אירוע אחד נחשבות הצעות חוזרות.</li>
+      <li><b>"אופי מיני"</b> — נגזר לא רק מהמילים עצמן אלא גם מנסיבות העניין: היחסים בין הצדדים, פערי כוחות וגילים, כמות ההצעות, מידת הפגיעה בכבוד האדם, והשמרנות של המגזר שאליו משתייכים הצדדים. גם ביטויים "מנומסים" שאינם מיניים במפורש עשויים להיחשב בעלי אופי מיני על פי ההקשר.</li>
+      <li><b>דוגמאות:</b> מנהל שמציע לעובדת להזמין עבור שניהם חדר במלון, הצעות חוזרות לצאת יחד, הצעה לקיום יחסי מין.</li>
+    </ul>
+
+    <div class="callout key">
+      <div class="ct">✋ איך מראים חוסר עניין?</div>
+      <p>
+        אפשר להראות חוסר עניין <b>במילים או בהתנהגות חד־משמעית</b>: עזיבת החדר בפתאומיות, הפניית גב,
+        התחמקות ברורה, אמירה המבקשת להפסיק — או אפילו אמירה מתחמקת שממנה ניכר חוסר העניין.
+      </p>
+    </div>
+
+    <div class="callout warn">
+      <div class="ct">⚠️ אזהרה — יחסי מרות</div>
+      <p>
+        אם ההצעות החוזרות נעשו <b>במסגרת יחסי מרות</b> במקום העבודה (למשל בין ממונה לעובד/ת
+        הכפוף/ה לו), הן ייחשבו הטרדה מינית <b>גם אם המוטרד/ת לא הראו שאינם מעוניינים</b>.
+        החוק דורש ממנהל להימנע באופן מוחלט מהצעות ומהתייחסויות מיניות כלפי עובדים —
+        אפילו אם לא הביעו התנגדות.
+      </p>
+    </div>
+
+    <h3>דוגמאות להתייחסויות חוזרות בעלות אופי מיני</h3>
+    <ul>
+      <li>גלישה לאתרים פורנוגרפיים בנוכחות עובדים/ות.</li>
+      <li>שליחת דוא"ל בעל תוכן פורנוגרפי לעמית/ה שהודיע/ה כי אינם מעוניינים בכך.</li>
+      <li>מחוות גוף והבעות פנים בעלות קונוטציה מינית מובהקת.</li>
+      <li>סיפורים של ממונה בעבודה על יחסי מין שקיים.</li>
+      <li>בדיחות גסות.</li>
+      <li>הצגת תמונות ארוטיות וסרטונים בעלי אופי מיני.</li>
+    </ul>
+
+    <h3>הפצת תמונות, סרטונים או הקלטות ללא הסכמה</h3>
+    <ul>
+      <li>פרסום או הפצה של תכנים המתמקדים במיניותו של אדם, בנסיבות שבהן הפרסום עלול להשפילו או לבזותו וללא הסכמתו — מהווים הטרדה מינית ועבירה פלילית שעונשה עד <b>5 שנות מאסר</b>.</li>
+      <li>האיסור חל לא רק על מי שצילם — אלא גם על מי <b>שקיבל את התכנים והפיץ אותם הלאה</b>.</li>
+      <li>נפגעים/ות רשאים לפנות לאתרי האינטרנט בדרישה להסרת התכנים, להגיש תלונה במשטרה ולהגיש תביעת פיצויים נגד המפיץ.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== מסגרת העבודה ===================== -->
+  <section id="scope">
+    <h2><span class="num">3</span>מהי "מסגרת עבודה"?</h2>
+    <p>
+      החוק בישראל מחמיר במיוחד בהטרדה מינית במסגרת יחסי עבודה, ומטיל על המעסיק אחריות למנוע
+      הטרדה מינית וסביבת עבודה רווית תכנים מיניים. "מסגרת עבודה" היא כל אחד מאלה:
+    </p>
+    <ul>
+      <li><b>מקום העבודה עצמו.</b></li>
+      <li><b>מקום אחר שבו מתנהלת פעילות מטעם המעסיק</b> — תוך כדי העבודה.</li>
+      <li><b>כל מקום שהוא — תוך ניצול מרות ביחסי העבודה.</b></li>
+    </ul>
+    <div class="callout info">
+      <div class="ct">📍 דוגמאות</div>
+      <p>נופש חברה, הסעה לעבודה, מסיבה הקשורה לעבודה, ערב בפאב עם צוות העבודה, קורס או השתלמות מטעם העבודה.</p>
+    </div>
+  </section>
+
+  <!-- ===================== הגנות ===================== -->
+  <section id="protection">
+    <h2><span class="num">4</span>החוק מגן על מי שהוטרד/ה</h2>
+    <div class="card">
+      <ul style="margin-bottom:0">
+        <li><b>אסור להפלות</b> עובד/ת או מועמד/ת לעבודה בשל כך שעברו הטרדה מינית במקום העבודה, הגישו תלונה או תביעה על רקע הפגיעה, או סייעו לעובד/ת אחר/ת שנפגעו להגיש תלונה או תביעה.</li>
+        <li><b>אסור להתנכל</b> לעובד/ת שהוטרדו מינית, למי שהגישו תלונה או תביעה בגין הטרדה מינית, לעדים מטעם הנפגע/ת ולכל אדם שנקט עמדה לטובת הנפגע/ת.</li>
+        <li>בתביעה בשל פגיעה כזו, <b>נטל ההוכחה עובר למעסיק</b> להראות שלא פגע בעובד/ת (לפי חוק שוויון ההזדמנויות בעבודה).</li>
+        <li>בהליכים כאלה בית הדין לעבודה רשאי לדון <b>בדלתיים סגורות</b>, ולבקשת המתלונן/ת — ייעתר לכך אלא אם החליט אחרת מטעמים מיוחדים.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== עונשים ===================== -->
+  <section id="penalties">
+    <h2><span class="num">5</span>עונשים ופיצויים</h2>
+    <p>הטרדה מינית והתנכלות הן עבירות פליליות וגם עוולות אזרחיות:</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>המעשה</th><th>העונש הקבוע בחוק</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>הטרדה מינית (הצעות, התייחסויות, אמירות מבזות)</td><td class="pen">עד שנתיים מאסר</td></tr>
+          <tr><td>התנכלות</td><td class="pen">עד 3 שנות מאסר</td></tr>
+          <tr><td>הטרדה מינית + התנכלות</td><td class="pen">עד 4 שנות מאסר</td></tr>
+          <tr><td>הפצת תמונות/סרטונים/הקלטות בעלי אופי מיני ללא הסכמה</td><td class="pen">עד 5 שנות מאסר</td></tr>
+          <tr><td>סחיטה באיומים</td><td class="pen">עד 7 שנות מאסר</td></tr>
+          <tr><td>סחיטה באיומים — כשהנסחט/ת נכנעו וביצעו את המעשה</td><td class="pen">עד 9 שנות מאסר</td></tr>
+          <tr><td>מעשה מגונה</td><td class="pen">עד 10 שנות מאסר (בנסיבות מסוימות)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout key">
+      <div class="ct">💰 פיצוי ללא הוכחת נזק</div>
+      <p>
+        בית המשפט או בית הדין לעבודה רשאי לפסוק לנפגע/ת פיצוי של עד <b>50,000 ₪ ללא הוכחת נזק</b>
+        (הסכום צמוד למדד ממרס 1998). ניתן להגיש תביעה אזרחית בתוך <b>שלוש שנים</b> מיום שנוצרה העילה.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== חובות מעסיק ===================== -->
+  <section id="employer">
+    <h2><span class="num">6</span>חובות המעסיק</h2>
+    <p>סעיף 7 לחוק מחייב כל מעסיק לנקוט אמצעים סבירים כדי למנוע הטרדה מינית או התנכלות במסגרת יחסי העבודה, ובכלל זה:</p>
+    <ul>
+      <li>לקבוע <b>דרך יעילה להגשת תלונה</b> בשל הטרדה מינית או התנכלות — ולברר כל תלונה.</li>
+      <li><b>לטפל ביעילות</b> בכל מקרה שנודע לו עליו, למנוע את הישנות המעשים ולתקן את הפגיעה שנגרמה למתלונן/ת.</li>
+      <li>מעסיק המעסיק יותר מ־25 עובדים חייב לקבוע <b>תקנון</b> ובו עיקרי החוק ודרכי הגשת התלונות והטיפול בהן — ולפרסמו בין עובדיו. אי־פרסום תקנון הוא עבירה שדינה קנס.</li>
+      <li>מעסיק שלא קיים את חובותיו — <b>אחראי בעצמו</b> לעוולה האזרחית שביצע עובדו או ממונה מטעמו.</li>
+    </ul>
+    <p class="muted">
+      בקבוצת אנטרופי מונתה אחראית למניעת הטרדה מינית מטעם החברה, וכלל העובדים והעובדות עוברים
+      הדרכה תקופתית בנושא.
+    </p>
+  </section>
+
+  <!-- ===================== למי פונים ===================== -->
+  <section id="report">
+    <h2><span class="num">7</span>הוטרדת? כך פועלים</h2>
+    <p>מי שנפגע/ה מהטרדה מינית במסגרת העבודה יכול/ה לבחור באחד או יותר מהמסלולים הבאים — במקביל:</p>
+    <ol class="steps">
+      <li>
+        <b>פנייה לאחראית למניעת הטרדה מינית בחברה</b>
+        <p>הגשת תלונה לגב' סיגי זלינגר, האחראית מטעם קבוצת אנטרופי. התלונה תבורר ביעילות, בדיסקרטיות ובהגנה מלאה מפני התנכלות.</p>
+      </li>
+      <li>
+        <b>תלונה במשטרה</b>
+        <p>הטרדה מינית היא עבירה פלילית — ניתן להגיש תלונה במשטרה נגד המטריד/ה.</p>
+      </li>
+      <li>
+        <b>תביעה אזרחית בבית הדין לעבודה</b>
+        <p>ניתן להגיש תביעת פיצויים נגד המטריד/ה (ובמקרים המתאימים גם נגד המעסיק) — עד 50,000 ₪ ללא הוכחת נזק.</p>
+      </li>
+    </ol>
+
+    <div class="contactband">
+      <h3>🤝 אנחנו כאן בשבילך</h3>
+      <p>כל פנייה תטופל ברצינות, ברגישות ובסודיות. אל תישארו עם זה לבד.</p>
+      <div class="who">
+        <div class="person">
+          <div class="role">האחראית למניעת הטרדה מינית</div>
+          <div class="name">סיגי זלינגר</div>
+          <div class="line">הממונה מטעם החברה לקבלת תלונות ובירורן</div>
+        </div>
+        <div class="person">
+          <div class="role">משאבי אנוש, קבוצת אנטרופי</div>
+          <div class="name">נועה פסקל</div>
+          <div class="line">📞 <a href="tel:+972526665226">052-6665226</a></div>
+          <div class="line">✉️ <a href="mailto:noa.pascal@entropy.co.il">noa.pascal@entropy.co.il</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== נוסח החוק ===================== -->
+  <section id="law">
+    <h2><span class="num">8</span>החוק למניעת הטרדה מינית, התשנ״ח־1998</h2>
+    <p class="muted">
+      להלן נוסח החוק, סעיף אחר סעיף. לחצו על סעיף כדי להרחיב.
+    </p>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 1</span> מטרת החוק <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>חוק זה מטרתו לאסור הטרדה מינית כדי להגן על כבודו של אדם, על חירותו ועל פרטיותו, וכדי לקדם שוויון בין המינים.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 2</span> הגדרות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>בחוק זה —</p>
+        <dl class="deflist">
+          <dt>"בשירות"</dt><dd>בשירות בכוחות הביטחון, מקום שאין בינם לבין המשרת בהם יחסי עובד־מעביד, או בשירות לאומי;</dd>
+          <dt>"הראה"</dt><dd>במילים או בהתנהגות, ובלבד שלא היה ספק סביר לגבי משמעות ההתנהגות;</dd>
+          <dt>"התייחסות"</dt><dd>בכתב, בעל־פה, באמצעות מוצג חזותי או שמיעתי, לרבות באמצעות מחשב או חומר מחשב, או בהתנהגות;</dd>
+          <dt>"חוק שוויון ההזדמנויות בעבודה"</dt><dd>חוק שוויון ההזדמנויות בעבודה, התשמ"ח־1988;</dd>
+          <dt>"חוק העונשין"</dt><dd>חוק העונשין, התשל"ז־1977;</dd>
+          <dt>"חסר ישע"</dt><dd>כהגדרתו בסעיף 368א לחוק העונשין;</dd>
+          <dt>"כוחות הביטחון"</dt><dd>צבא הגנה לישראל, משטרת ישראל, שירות בתי הסוהר וארגוני הביטחון האחרים של המדינה;</dd>
+          <dt>"מחשב" ו"חומר מחשב"</dt><dd>כהגדרתם בחוק המחשבים, התשנ"ה־1995;</dd>
+          <dt>"מסגרת יחסי עבודה"</dt><dd>מקום העבודה, מקום אחר שבו מתנהלת פעילות מטעם המעביד, תוך כדי העבודה, או תוך ניצול מרות ביחסי העבודה בכל מקום שהוא;</dd>
+          <dt>"קבלן כוח אדם"</dt><dd>כהגדרתו בסעיף 1 לחוק העסקת עובדים על ידי קבלני כוח אדם, התשנ"ו־1996;</dd>
+          <dt>"קטין"</dt><dd>אדם שטרם מלאו לו 18 שנים;</dd>
+          <dt>"שירות לאומי"</dt><dd>כמשמעותו בפסקה (3)(ב) להגדרה "ילד" שבסעיף 238 לחוק הביטוח הלאומי [נוסח משולב], התשנ"ה־1995.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 3</span> הטרדה מינית והתנכלות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) הטרדה מינית היא כל אחד ממעשים אלה:</p>
+        <ol>
+          <li>סחיטה באיומים, כמשמעותה בסעיף 428 לחוק העונשין, כאשר המעשה שהאדם נדרש לעשותו הוא בעל אופי מיני;</li>
+          <li>מעשים מגונים כמשמעותם בסעיפים 348 ו־349 לחוק העונשין;</li>
+          <li>הצעות חוזרות בעלות אופי מיני, המופנות לאדם אשר הראה למטריד כי אינו מעוניין בהצעות האמורות;</li>
+          <li>התייחסויות חוזרות המופנות לאדם, המתמקדות במיניותו, כאשר אותו אדם הראה למטריד כי אינו מעוניין בהתייחסויות האמורות;</li>
+          <li>התייחסות מבזה או משפילה המופנית לאדם ביחס למינו או למיניותו, לרבות נטייתו המינית;</li>
+          <li>הצעות או התייחסויות כאמור בפסקאות (3) או (4), המופנות למי מהמנויים בפסקאות המשנה (א) עד (ו), בנסיבות המפורטות בפסקאות משנה אלה, גם אם המוטרד לא הראה למטריד כי אינו מעוניין בהצעות או בהתייחסויות האמורות:
+            <ul class="subclauses" style="margin-top:8px">
+              <li>(א) לקטין או לחסר ישע — תוך ניצול יחסי מרות, תלות, חינוך או טיפול, ואם טרם מלאו לקטין 15 שנים — גם בלא ניצול יחסים כאמור, ובלבד שהמטריד אינו קטין;</li>
+              <li>(ב) למטופל, במסגרת טיפול נפשי או רפואי — תוך ניצול תלות של המטופל במטפל;</li>
+              <li>(ג) לעובד במסגרת יחסי עבודה, ולאדם בשירות במסגרת שירות — תוך ניצול מרות ביחסי עבודה או בשירות;</li>
+              <li>(ד) לתלמיד בכיתה י"ב, י"ג או י"ד, שאינו קטין, תוך ניצול יחסי מרות בלימודים;</li>
+              <li>(ה) לתלמיד או לסטודנט, הלומד במוסד המקנה השכלה עיונית או מקצועית לבוגרים (בחוק זה — מוסד להשכלה לבוגרים), תוך ניצול יחסי מרות בלימודים;</li>
+              <li>(ו) למשתקם כהגדרתו בחוק זכויות לאנשים עם מוגבלות המועסקים כמשתקמים (הוראת שעה), התשס"ז־2007, במסגרת תעסוקה — תוך ניצול יחסי מרות בתעסוקה או ניצול תלות.</li>
+            </ul>
+          </li>
+        </ol>
+        <p>(ב) התנכלות היא פגיעה מכל סוג שהוא שמקורה בהטרדה מינית, או בתלונה או בתביעה, שהוגשו על הטרדה מינית.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 4</span> איסור הטרדה מינית והתנכלות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>לא יטריד אדם מינית את זולתו ולא יתנכל לו.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 5</span> הטרדה מינית והתנכלות — עבירות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) המטריד מינית אדם כאמור בסעיף 3(א)(3) עד (6), דינו — מאסר שנתיים.</p>
+        <p>(ב) המתנכל לאדם כאמור בסעיף 3(ב), דינו — מאסר שלוש שנים.</p>
+        <p>(ג) הטריד אדם מינית אדם אחר כאמור בסעיף קטן (א) והתנכל לו כאמור בסעיף קטן (ב), דינו — מאסר ארבע שנים.</p>
+        <p>(ד) הוראות סעיפים 2א ו־2ב לחוק לתיקון סדרי הדין (חקירת עדים), התשי"ח־1957, יחולו על חקירתו של מי שנפגע בעבירה לפי סעיף זה ועל עדותו בשל עבירה כאמור.</p>
+        <p>(ה) הוראות סעיף 352 לחוק העונשין יחולו לעניין פרסום שם של מי שנפגע בעבירה או שהתלונן כי נפגע בעבירה, לפי סעיף זה.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 6</span> הטרדה מינית והתנכלות — עוולות אזרחיות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) הטרדה מינית והתנכלות הן עוולות אזרחיות, והוראות פקודת הנזיקין [נוסח חדש] יחולו עליהן בכפוף להוראות חוק זה.</p>
+        <p>(ב) בית המשפט רשאי לפסוק בשל הטרדה מינית או בשל התנכלות פיצוי שלא יעלה על סך 50,000 ש"ח, ללא הוכחת נזק; סכום זה יעודכן ב־16 בכל חודש, בהתאם לשיעור עליית המדד החדש לעומת המדד הבסיסי; לעניין סעיף קטן זה — "מדד" — מדד המחירים לצרכן שמפרסמת הלשכה המרכזית לסטטיסטיקה; "המדד החדש" — מדד החודש שקדם לחודש העדכון; "המדד הבסיסי" — מדד חודש מרס 1998.</p>
+        <p>(ג) לא ייזקק בית המשפט או בית הדין לעבודה, לפי העניין, לתביעה בשל עוולה לפי סעיף זה או לפי סעיף 7, שהוגשה לאחר שחלפו שלוש שנים מיום שנוצרה העילה, והוראות סעיפים 18א ו־18ב לחוק ההתיישנות, התשי"ח־1958, לא יחולו על תביעה כאמור.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 7</span> נקיטת אמצעים בידי מעביד <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) מעביד חייב לנקוט אמצעים סבירים, בנסיבות העניין, כדי למנוע הטרדה מינית או התנכלות במסגרת יחסי עבודה, על ידי עובדו, או על ידי ממונה מטעמו אף אם אינו עובדו, ולטפל בכל מקרה כאמור, ולשם כך עליו:</p>
+        <ol>
+          <li>לקבוע דרך יעילה להגשת תלונה בשל הטרדה מינית או התנכלות ולבירור התלונה;</li>
+          <li>לטפל ביעילות במקרה של הטרדה מינית או התנכלות שידע אודותיהם, וכן לעשות כל שביכולתו כדי למנוע את הישנות המעשים האמורים וכדי לתקן את הפגיעה שנגרמה למתלונן עקב ההטרדה או ההתנכלות.</li>
+        </ol>
+        <p>(ב) מעביד המעסיק יותר מ־25 עובדים חייב, בנוסף לאמור בסעיף קטן (א), לקבוע תקנון שבו יובאו עיקרי הוראות החוק בדבר הטרדה מינית והתנכלות במסגרת יחסי עבודה ויפורטו בו דרכי הגשת התלונות שעניינן הטרדה מינית או התנכלות והטיפול בהן, כפי שקבע המעביד (להלן — תקנון); המעביד יפרסם את התקנון בין עובדיו.</p>
+        <p>(ג) מעביד שלא מילא את חובותיו לפי סעיפים קטנים (א)(1) ו־(2) ו־(ב) יהיה אחראי לעוולה אזרחית לפי סעיף 6, או לעוולה אזרחית בשל פגיעה כאמור בסעיף 7 לחוק שוויון ההזדמנויות בעבודה, שעשה עובדו, או ממונה מטעמו אף אם אינו עובדו, במסגרת יחסי העבודה.</p>
+        <p>(ד) שר המשפטים, בהסכמת שר העבודה והרווחה ובאישור הוועדה לקידום מעמד האישה של הכנסת, יקבע — (1) כללים לביצוע חובות המעביד על פי סעיף זה; כללים כאמור יכול שיהיו כלליים או לפי סוגים של מקומות עבודה, ענפי עבודה או מקצועות; (2) תקנון לדוגמה שישמש דוגמה למעביד (להלן — תקנון לדוגמה).</p>
+        <p>(ה) לצורך קיום חובותיו של המעביד לפי סעיף קטן (ב), יערוך המעביד בתקנון לדוגמה את ההתאמות הנדרשות.</p>
+        <p>(ו) לעניין סעיף זה, "התנכלות" — לרבות פגיעה כאמור בסעיף 7 לחוק שוויון ההזדמנויות בעבודה.</p>
+        <p>(ז) הוראות סעיף זה יחולו, בשינויים המחויבים לפי העניין, גם על מוסד להשכלה לבוגרים, ולעניין זה יראו את המוסד — כמעביד, את המורה או המרצה — כעובד או כממונה מטעם המעביד, ואת התלמיד או הסטודנט — כעובד.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 8</span> אי־פרסום תקנון — עבירה <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>לא פרסם מעביד תקנון כאמור בסעיף 7(ב), דינו — קנס, וקנס נוסף לכל שבוע שבו נמשכה העבירה, בשיעור הקנס הקבוע בסעיף 61(ג) לחוק העונשין.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 9</span> הרחבת תחולה <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>הוראות חוק זה לעניין מעביד ועובד יחולו, בשינויים המחויבים ולפי העניין, גם על מי שמעסיק בפועל אדם באמצעות קבלן כוח אדם, ועל אדם המועסק כאמור.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 10</span> סמכות בית הדין לעבודה <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) לבית הדין לעבודה תהא סמכות ייחודית לדון בהליך אזרחי לפי סעיפים 6, 7 ו־9 שעניינו אחד מאלה —</p>
+        <ol>
+          <li>הטרדה מינית שעשה מעביד, או ממונה מטעמו, לעובדו, או שעשה עובד לעובד אחר, במסגרת יחסי עבודה;</li>
+          <li>התנכלות של מעביד, או של ממונה מטעמו, כלפי עובד, או של עובד כלפי עובד אחר, במסגרת יחסי עבודה;</li>
+          <li>אחריות מעביד כאמור בסעיף 7 בשל הטרדה מינית או התנכלות שעשה ממונה מטעם המעביד לעובדו, או עובד לעובד אחר, במסגרת יחסי העבודה.</li>
+        </ol>
+        <p>(ב) הוראות סעיף זה לא יחולו על הליך אזרחי שעניינו הטרדה מינית או התנכלות שנעשו בשירות.</p>
+        <p>(ג) הוראות סעיפים 10, 10א, 12 ו־13 לחוק שוויון ההזדמנויות בעבודה יחולו על הליכים לפי סעיף זה.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 11</span> דין המדינה <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>חוק זה חל על המדינה; לעניין הוראות סעיפים 7 ו־8, יראו את כוחות הביטחון, מקום שאין בינם לבין המשרתים בהם יחסי עובד־מעביד, כמעביד, ואת המשרת בהם כעובד.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 12</span> שמירת דינים <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>אין בהוראות חוק זה כדי לגרוע מהוראות כל דין.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 13</span> ביצוע ותקנות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>שר המשפטים ממונה על ביצוע חוק זה, והוא רשאי, באישור הוועדה לקידום מעמד האישה של הכנסת, להתקין תקנות בכל עניין הנוגע לביצועו.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 14</span> חובת התקנת תקנות <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>תקנות לעניין סעיף 7 יוגשו לראשונה לאישור הוועדה לקידום מעמד האישה של הכנסת, בתוך חמישה חודשים מיום פרסומו של חוק זה.</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיפים 15–17</span> תיקונים עקיפים לחוקים אחרים <span class="chev">▾</span></summary>
+      <div class="body">
+        <p><b>סעיף 15 — תיקון חוק שוויון ההזדמנויות בעבודה (מס' 5):</b> קובע כי במסגרת יחסי עבודה לא יפגע מעביד או ממונה מטעמו בעובד או בדורש עבודה, כאשר מקור הפגיעה הוא הטרדה מינית, תלונה או תביעה בשל פגיעה כזו, או סיוע לעובד אחר בקשר לתלונה או תביעה. לעניין פגיעה שמקורה בהטרדה מינית לפי סעיף 3(א)(3) ו־(4) לחוק — די בהצעה או בהתייחסות אחת בלבד. עוד נקבע: העברת נטל ההוכחה למעביד, פיצוי עד 50,000 ש"ח ללא הוכחת נזק (צמוד למדד ממרס 1998), אפשרות לדיון בדלתיים סגורות לבקשת התובע/ת, והתיישנות של שלוש שנים לתביעה אזרחית.</p>
+        <p><b>סעיף 16 — תיקון חוק בית הדין לעבודה (מס' 29):</b> הוספת סעיף 8 לחוק למניעת הטרדה מינית לתוספת השנייה לחוק בית הדין לעבודה.</p>
+        <p><b>סעיף 17 — תיקון חוק בתי המשפט (מס' 24):</b> הוספת עבירות לפי החוק למניעת הטרדה מינית לסעיף 68(ב)(5) לחוק בתי המשפט (סגירת דלתיים).</p>
+      </div>
+    </details>
+
+    <details class="law">
+      <summary><span class="sec">סעיף 18</span> תחילה <span class="chev">▾</span></summary>
+      <div class="body">
+        <p>(א) תחילתו של חוק זה בתום שישה חודשים מיום פרסומו.</p>
+        <p>(ב) על אף האמור בסעיף קטן (א), לא ייכנס לתוקף סעיף 7 אלא בתום חודש מיום פרסום התקנות לפיו.</p>
+        <p class="muted" style="margin-top:10px">
+          התקבל בכנסת ופורסם בס"ח התשנ"ח מס' 1661 מיום 19.3.1998.<br>
+          בנימין נתניהו, ראש הממשלה · צחי הנגבי, שר המשפטים · עזר ויצמן, נשיא המדינה · דן תיכון, יושב ראש הכנסת
+        </p>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<a class="backtop" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" aria-label="חזרה לראש העמוד">↑</a>
+
+<footer>
+  <div class="wrap">
+    <div><b>קבוצת אנטרופי</b> · משאבי אנוש</div>
+    <div>מגדלי עזריאלי הרוקמים 26, חולון · בניין C, קומה 11</div>
+    <div>נועה פסקל · <a href="tel:+972526665226">052-6665226</a> · <a href="mailto:noa.pascal@entropy.co.il">noa.pascal@entropy.co.il</a> · <a href="https://www.entropy.co.il" target="_blank" rel="noopener">www.entropy.co.il</a></div>
+    <div>עמודים נוספים לעובדים: <a href="code-of-ethics.html">הקוד האתי וערכי הארגון</a></div>
+    <div class="disclaimer">
+      עמוד זה נועד להנגשת המידע לעובדות ולעובדי הקבוצה, והוא מבוסס על הדרכת מניעת הטרדה מינית של החברה
+      ועל נוסח החוק למניעת הטרדה מינית, התשנ"ח־1998. הנוסח המחייב הוא נוסח החוק והתקנות כפי שפורסמו
+      ברשומות, לרבות תיקונים מאוחרים.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
