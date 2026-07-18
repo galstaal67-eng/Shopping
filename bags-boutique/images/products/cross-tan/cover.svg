@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 30 440 350">
+  <defs><linearGradient id="g-cross-tan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e3b98a"/>
+      <stop offset="45%" stop-color="#c48a5a"/>
+      <stop offset="100%" stop-color="#8a5a34"/>
+    </linearGradient><linearGradient id="hw-cross-tan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b8b8b8"/>
+      <stop offset="100%" stop-color="#6f6f6f"/>
+    </linearGradient><radialGradient id="sh-cross-tan" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient><filter id="blur-cross-tan"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <ellipse cx="240" cy="306" rx="105.0" ry="16" fill="#000" opacity="0.22" filter="url(#blur-cross-tan)"/>
+  <rect x="170.0" y="150" width="140.0" height="140" rx="22" fill="url(#g-cross-tan)"/>
+  
+  <rect x="178.0" y="158" width="124.0" height="124" rx="16" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-dasharray="4 4" />
+  <path d="M 170.0 130 Q 240 75.0 310.0 130" fill="none" stroke="url(#g-cross-tan)" stroke-width="14" stroke-linecap="round"/><circle cx="240" cy="194.8" r="9.0" fill="url(#hw-cross-tan)"/><path d="M 170.0 150 h 140.0 v 63.0 q -70.0 22 -140.0 0 Z" fill="rgba(0,0,0,0.14)" opacity="1.00"/>
+  <ellipse cx="240.0" cy="189.2" rx="30.8" ry="70.0" fill="url(#sh-cross-tan)"/>
+</svg>

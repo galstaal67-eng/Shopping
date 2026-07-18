@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 30 440 350">
+  <defs><linearGradient id="g-backpack-cognac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b8794f"/>
+      <stop offset="45%" stop-color="#8a4a2a"/>
+      <stop offset="100%" stop-color="#5a2e17"/>
+    </linearGradient><linearGradient id="hw-backpack-cognac" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#cbb26a"/>
+      <stop offset="100%" stop-color="#8a7433"/>
+    </linearGradient><radialGradient id="sh-backpack-cognac" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient><filter id="blur-backpack-cognac"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <ellipse cx="240" cy="316" rx="120.0" ry="16" fill="#000" opacity="0.22" filter="url(#blur-backpack-cognac)"/>
+  <rect x="160.0" y="110" width="160.0" height="190" rx="22" fill="url(#g-backpack-cognac)"/>
+  
+  <rect x="168.0" y="118" width="144.0" height="174" rx="16" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-dasharray="4 4" />
+  <path d="M 202.0 116 q 6 90 0 170" fill="none" stroke="url(#g-backpack-cognac)" stroke-width="16" stroke-linecap="round" opacity="0.92"/><path d="M 278.0 116 q 6 90 0 170" fill="none" stroke="url(#g-backpack-cognac)" stroke-width="16" stroke-linecap="round" opacity="0.92"/><path d="M 176.0 110 q 64.0 -34 128.0 0 Z" fill="rgba(0,0,0,0.16)" opacity="1.00"/><circle cx="240.0" cy="140" r="7.0" fill="url(#hw-backpack-cognac)"/>
+  <ellipse cx="240.0" cy="163.2" rx="35.2" ry="95.0" fill="url(#sh-backpack-cognac)"/>
+</svg>

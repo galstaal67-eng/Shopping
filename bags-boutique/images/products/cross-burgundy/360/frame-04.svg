@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 30 440 350">
+  <defs><linearGradient id="g-cross-burgundy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8a3a4d"/>
+      <stop offset="45%" stop-color="#5c1f2e"/>
+      <stop offset="100%" stop-color="#33101a"/>
+    </linearGradient><linearGradient id="hw-cross-burgundy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d9b34a"/>
+      <stop offset="100%" stop-color="#7a5c1e"/>
+    </linearGradient><radialGradient id="sh-cross-burgundy" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient><filter id="blur-cross-burgundy"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <ellipse cx="240" cy="306" rx="52.49999999999998" ry="16" fill="#000" opacity="0.22" filter="url(#blur-cross-burgundy)"/>
+  <rect x="205.0" y="150" width="70.0" height="140" rx="22" fill="url(#g-cross-burgundy)"/>
+  <rect x="205.0" y="150" width="70.0" height="140" rx="22" fill="#33101a" opacity="0.17"/>
+  <rect x="213.0" y="158" width="53.99999999999997" height="124" rx="16" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-dasharray="4 4" />
+  <path d="M 211.9 130 Q 240 88.8 268.1 130" fill="none" stroke="url(#g-cross-burgundy)" stroke-width="14" stroke-linecap="round"/><circle cx="240" cy="194.8" r="4.5" fill="url(#hw-cross-burgundy)"/><path d="M 205.0 150 h 70.0 v 63.0 q -35.0 22 -70.0 0 Z" fill="rgba(0,0,0,0.14)" opacity="0.00"/>
+  <ellipse cx="317.9" cy="189.2" rx="15.4" ry="70.0" fill="url(#sh-cross-burgundy)"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 30 440 350">
+  <defs><linearGradient id="g-tote-noir" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a4a4a"/>
+      <stop offset="45%" stop-color="#2b2b2b"/>
+      <stop offset="100%" stop-color="#101010"/>
+    </linearGradient><linearGradient id="hw-tote-noir" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#cbb26a"/>
+      <stop offset="100%" stop-color="#8a7433"/>
+    </linearGradient><radialGradient id="sh-tote-noir" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient><filter id="blur-tote-noir"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <ellipse cx="240" cy="326" rx="123.40862003928248" ry="16" fill="#000" opacity="0.22" filter="url(#blur-tote-noir)"/>
+  <rect x="157.7" y="140" width="164.5" height="170" rx="22" fill="url(#g-tote-noir)"/>
+  
+  <rect x="165.72758664047836" y="148" width="148.5448267190433" height="154" rx="16" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-dasharray="4 4" />
+  <path d="M 195.0 140 q 4 -42.9 6.9 -42.9 q 4 0 6.9 42.9" fill="none" stroke="url(#hw-tote-noir)" stroke-width="7" stroke-linecap="round" opacity="0.92"/><path d="M 274.6 140 q 4 -42.9 6.9 -42.9 q 4 0 6.9 42.9" fill="none" stroke="url(#hw-tote-noir)" stroke-width="7" stroke-linecap="round" opacity="0.92"/><rect x="194.8" y="154" width="90.5" height="34" rx="8" fill="rgba(0,0,0,0.12)" opacity="0.87"/>
+  <ellipse cx="195.0" cy="187.6" rx="36.2" ry="85.0" fill="url(#sh-tote-noir)"/>
+</svg>
