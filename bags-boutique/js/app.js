@@ -30,7 +30,7 @@
     if (!reduceMotion) {
       setupCursorGlow();
       setupHeroParallax();
-      setupParticles();
+      setupLeaves();
     }
     setupHeroSpin();
     setupOverlay();
@@ -213,17 +213,43 @@
     });
   }
 
-  function setupParticles() {
-    const wrap = $("#heroParticles");
-    const count = window.innerWidth < 720 ? 8 : 18;
+  // ---------------- falling autumn leaves ----------------
+  const LEAF_COLORS = [
+    ["#a1532f", "#74371e"],
+    ["#c1703f", "#8a4425"],
+    ["#7a3220", "#551f13"],
+    ["#c98a3a", "#8f5c22"],
+  ];
+
+  function leafSvgUrl(fill, vein) {
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>` +
+      `<path d='M50 6 C82 22 90 56 50 96 C10 56 18 22 50 6 Z' fill='${fill}'/>` +
+      `<path d='M50 14 C46 40 46 62 50 88' stroke='${vein}' stroke-width='3' fill='none' opacity='0.55' stroke-linecap='round'/>` +
+      `</svg>`;
+    return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  }
+
+  function setupLeaves() {
+    const field = document.createElement("div");
+    field.className = "leaf-field";
+    field.setAttribute("aria-hidden", "true");
+    document.body.appendChild(field);
+
+    const count = window.innerWidth < 720 ? 8 : 15;
     for (let i = 0; i < count; i++) {
-      const span = document.createElement("span");
-      span.style.left = `${Math.random() * 100}%`;
-      span.style.top = `${40 + Math.random() * 55}%`;
-      span.style.animationDuration = `${6 + Math.random() * 8}s`;
-      span.style.animationDelay = `-${Math.random() * 8}s`;
-      span.style.opacity = (0.2 + Math.random() * 0.4).toFixed(2);
-      wrap.appendChild(span);
+      const [fill, vein] = LEAF_COLORS[i % LEAF_COLORS.length];
+      const leaf = document.createElement("span");
+      leaf.className = "leaf";
+      const size = 14 + Math.random() * 26;
+      leaf.style.backgroundImage = leafSvgUrl(fill, vein);
+      leaf.style.width = `${size}px`;
+      leaf.style.height = `${size}px`;
+      leaf.style.left = `${Math.random() * 100}%`;
+      leaf.style.opacity = (0.35 + Math.random() * 0.4).toFixed(2);
+      leaf.style.animationDuration = `${14 + Math.random() * 16}s`;
+      leaf.style.animationDelay = `-${Math.random() * 20}s`;
+      leaf.style.setProperty("--sway", `${18 + Math.random() * 30}px`);
+      field.appendChild(leaf);
     }
   }
 
