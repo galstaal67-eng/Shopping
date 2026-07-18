@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Generates placeholder "handmade leather bag" artwork for the boutique demo:
-one static cover.svg plus a 12-frame 360-degree turntable sequence per
-product, all as lightweight procedural SVG (no binary assets, no network).
+Generates placeholder "handmade crochet bag" artwork for products that don't
+have real photos yet: one static cover.svg plus a 12-frame 360-degree
+turntable sequence, all as lightweight procedural SVG (no binary assets,
+no network).
 
-Replace these with real product photography later — see bags-boutique/README.md
-for the exact folder convention each product expects.
+Replace these with real product photography when available — see
+bags-boutique/README.md for the folder convention each product expects.
 """
 import math
 import os

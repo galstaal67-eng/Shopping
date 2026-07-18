@@ -18,6 +18,7 @@ class SpinViewer {
     this._onPointerMove = this._onPointerMove.bind(this);
     this._onPointerUp = this._onPointerUp.bind(this);
     this._buildProgress();
+    this._render();
     this._bind();
   }
 

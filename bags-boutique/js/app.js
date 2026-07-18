@@ -117,6 +117,12 @@
     return `₪${n.toLocaleString("he-IL")}`;
   }
 
+  function anglesLabel(n) {
+    if (n >= 8) return "360°";
+    if (n >= 2) return `${n} זוויות`;
+    return "";
+  }
+
   function renderCatalog(filter) {
     const grid = $("#catalogGrid");
     const items = PRODUCTS.filter((p) => filter === "all" || p.category === filter);
@@ -125,7 +131,7 @@
         <div class="card-tilt">
           <div class="card-media">
             <span class="card-badge">${p.badge}</span>
-            <span class="card-360">360°</span>
+            ${anglesLabel(p.frames.length) ? `<span class="card-360">${anglesLabel(p.frames.length)}</span>` : ""}
             <img src="${p.cover}" alt="${p.name}" loading="lazy" />
           </div>
           <div class="card-body">
@@ -221,18 +227,11 @@
     }
   }
 
-  // ---------------- hero decorative spin ----------------
+  // ---------------- hero decorative showcase ----------------
   function setupHeroSpin() {
     const showcase = PRODUCTS[0];
     if (!showcase) return;
-    const img = $("#heroSpinImg");
-    let i = 0;
-    img.src = showcase.frames[0];
-    if (reduceMotion) return;
-    setInterval(() => {
-      i = (i + 1) % showcase.frames.length;
-      img.src = showcase.frames[i];
-    }, 220);
+    $("#heroSpinImg").src = showcase.cover;
   }
 
   // ---------------- product overlay ----------------
@@ -272,7 +271,12 @@
     `;
 
     const spinEl = $("#spinViewer");
+    const multiAngle = product.frames.length > 1;
     spinEl.classList.remove("spun", "dragging");
+    spinEl.classList.toggle("single-frame", !multiAngle);
+    $("#spinHint").querySelector("span").textContent =
+      product.frames.length >= 8 ? "🖐️ גררו לסובב" : "🖐️ גררו לזווית נוספת";
+    $("#spinAutoplay").hidden = !multiAngle;
     $("#spinAutoplay").setAttribute("aria-pressed", "false");
 
     if (!viewer) {

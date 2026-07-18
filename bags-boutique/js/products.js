@@ -1,108 +1,193 @@
-/* Product catalog — placeholder data & artwork until real photos are added.
-   See ../README.md for the exact folder convention to swap in real photos. */
+/* Product catalog — real handmade crochet (raffia-yarn) bags.
+   Photos were uploaded in bulk and unsorted; grouped into products by
+   best-effort visual matching (see README.md). Review names/prices/grouping
+   and correct anything that's off — this was an automated first pass. */
 
 const CATEGORIES = [
-  { id: "tote", name: "טוטים", tagline: "מרווחים ויומיומיים", icon: "🧺" },
-  { id: "crossbody", name: "קרוסבאדי", tagline: "קלילים לכתף", icon: "👜" },
-  { id: "clutch", name: "קלאצ'ים", tagline: "לערב ולאירוע", icon: "✨" },
-  { id: "backpack", name: "תרמילי גב", tagline: "לשגרה נעה", icon: "🎒" },
-  { id: "wallet", name: "ארנקים", tagline: "פרטי גימור קטנים", icon: "💳" },
+  { id: "tote", name: "טוטים", tagline: "מרווחים לכל היום", icon: "🧺" },
+  { id: "crossbody", name: "תיקי צד", tagline: "לענוב על הכתף", icon: "👜" },
+  { id: "pouch", name: "קלמים ונרתיקים", tagline: "לכל מה שצריך בפנים", icon: "👝" },
+  { id: "clutch", name: "קלאצ'ים", tagline: "לערב מיוחד", icon: "✨" },
 ];
 
-const FRAME_COUNT = 12;
-
-function framePaths(slug) {
-  const frames = [];
-  for (let i = 0; i < FRAME_COUNT; i++) {
-    frames.push(`images/products/${slug}/360/frame-${String(i).padStart(2, "0")}.svg`);
-  }
-  return frames;
+function photos(slug, files) {
+  return files.map((f) => `images/products/${slug}/${f}`);
 }
 
 const PRODUCTS = [
   {
-    slug: "tote-caramel",
-    name: "טוט ‘כרמל’",
-    category: "tote",
-    price: 420,
-    material: "עור פרה טבעי, עיבוד בגוון קרמל",
-    badge: "עבודת יד",
-    description:
-      "טוט מרווח לשימוש יומיומי, נתפר בעבודת יד עם תפרי אוכף כפולים וידיות עור מחוזקות. מתאים למחשב נייד, פנקס ותיק החלפה.",
-  },
-  {
-    slug: "tote-noir",
-    name: "טוט ‘שחור לילה’",
-    category: "tote",
-    price: 460,
-    material: "עור עגל מעובד, גימור מט",
-    badge: "מהדורה מוגבלת",
-    description:
-      "גרסה עמוקה ומינימליסטית של הטוט הקלאסי שלנו — עור שחור מט עם פרטי חומרה בגוון זהב עתיק.",
-  },
-  {
-    slug: "cross-tan",
-    name: "קרוסבאדי ‘חוף’",
-    category: "crossbody",
-    price: 320,
-    material: "עור זמש בגוון חול, רצועה מתכווננת",
-    badge: "עבודת יד",
-    description:
-      "תיק צד קומפקטי עם רצועה ארוכה ומתכווננת, כניסה מהירה ותא פנימי לטלפון וארנק.",
-  },
-  {
-    slug: "cross-burgundy",
-    name: "קרוסבאדי ‘יין’",
-    category: "crossbody",
-    price: 340,
-    material: "עור טבעי בגוון בורדו עמוק",
-    badge: "צבע ייחודי",
-    description:
-      "גוון בורדו עשיר עם פרטי זהב, תיק צד אלגנטי שעובר בטבעיות מהיום ללילה.",
-  },
-  {
-    slug: "clutch-gold",
-    name: "קלאצ' ‘זהב שקיעה’",
-    category: "clutch",
-    price: 280,
-    material: "עור מבריק בגימור מטאלי",
-    badge: "לאירועים",
-    description:
-      "קלאצ' ערב קטן ומהודר עם שרשרת נשלפת, מתאים לחתונות ואירועים חגיגיים.",
-  },
-  {
-    slug: "clutch-emerald",
-    name: "קלאצ' ‘אזמרגד’",
-    category: "clutch",
-    price: 290,
-    material: "עור טבעי בגוון ירוק עמוק, נצנצי זהב",
-    badge: "עבודת יד",
-    description:
-      "גוון אזמרגד עשיר עם שרשרת עדינה בגימור זהב — פריט מרכזי לכל תלבושת ערב.",
-  },
-  {
-    slug: "backpack-cognac",
-    name: "תרמיל ‘קוניאק’",
-    category: "backpack",
-    price: 480,
-    material: "עור עבה בגוון קוניאק, רצועות מתכווננות",
-    badge: "עבודת יד",
-    description:
-      "תרמיל גב עמיד ליומיום, עם כיס קדמי, סגירת אבזם ורצועות גב מרופדות לנוחות מרבית.",
-  },
-  {
-    slug: "wallet-mocha",
-    name: "ארנק ‘מוקה’",
-    category: "wallet",
+    slug: "clutch-powder-blue",
+    name: "קלמית ‘שמיים בהירים’",
+    category: "pouch",
     price: 140,
-    material: "עור טבעי, תאי כרטיסים מרובים",
-    badge: "מתנה מושלמת",
-    description:
-      "ארנק קומפקטי עם תאי כרטיסים, תא מטבעות ורוכסן — עיצוב נקי בגוון מוקה חם.",
+    material: "סריגת יד בחוט רפיה, פסי תכלת רך על רקע חום קרמל",
+    badge: "פריט יחיד",
+    description: "קלמית קטנה עם רצועה נשלפת, פס תכלת עדין באמצע ותליון לב לבן. תג ‘Hand Made’ תפור בפינה.",
+    files: ["IMG-20260718-WA0004.jpg", "IMG-20260718-WA0005.jpg"],
+  },
+  {
+    slug: "cross-navy-mesh",
+    name: "תיק צד ‘לילה כחול’",
+    category: "crossbody",
+    price: 180,
+    material: "סריגת יד בחוט רפיה, שילוב כחול רויאל ושחור ברשת פתוחה",
+    badge: "פריט יחיד",
+    description: "תיק צד קטן בסריגת רשת פתוחה, כחול ושחור, עם רצועת שרשרת מתכת וגדילי סיום.",
+    files: ["IMG-20260718-WA0006.jpg"],
+  },
+  {
+    slug: "tote-navy-blue",
+    name: "טוט ‘חצות כחול’",
+    category: "tote",
+    price: 260,
+    material: "סריגת יד בחוט רפיה, כחול ושחור בסריגה פתוחה, כיס קדמי שחור",
+    badge: "פריט יחיד",
+    description: "טוט מרווח בשילוב כחול ושחור, ידיות שרשרת מתכת ותליון לב.",
+    files: ["IMG-20260718-WA0007.jpg"],
+  },
+  {
+    slug: "tote-classic-blue",
+    name: "טוט ‘תכלת קלאסי’",
+    category: "tote",
+    price: 220,
+    material: "סריגת יד בחוט רפיה בגוון כחול אחיד",
+    badge: "פריט יחיד",
+    description: "טוט יומיומי בכחול אחיד, עם כיס קדמי לטלפון ותג ‘Hand Made’.",
+    files: ["IMG-20260718-WA0008.jpg"],
+  },
+  {
+    slug: "cross-black-cream",
+    name: "תיק צד ‘שנהב ופחם’",
+    category: "crossbody",
+    price: 190,
+    material: "סריגת יד בחוט רפיה, שנהב למעלה ושחור למטה",
+    badge: "פריט יחיד",
+    description: "תיק צד קומפקטי בשילוב שנהב ושחור, ידית סריגה עם חרוזי עץ וגדיל סיום.",
+    files: ["IMG-20260718-WA0009.jpg", "IMG-20260718-WA0011.jpg"],
+  },
+  {
+    slug: "tote-sand",
+    name: "טוט ‘חוף חם’",
+    category: "tote",
+    price: 230,
+    material: "סריגת יד בחוט רפיה בגוון חול אחיד",
+    badge: "פריט יחיד",
+    description: "טוט רך בגוון חול חם, ידית סריגה וגדיל ציצית ארוך, תג ‘Hand Made’.",
+    files: ["IMG-20260718-WA0012.jpg", "IMG-20260718-WA0013.jpg"],
+  },
+  {
+    slug: "pouch-cognac",
+    name: "קלמית ‘קוניאק’",
+    category: "pouch",
+    price: 130,
+    material: "סריגת יד בחוט רפיה בגוון חום קוניאק",
+    badge: "פריט יחיד",
+    description: "קלמית קטנה בגוון חום חם, עם גדיל ותליון קטן.",
+    files: ["IMG-20260718-WA0014.jpg"],
+  },
+  {
+    slug: "tote-forest-teal",
+    name: "טוט ‘יער וים’",
+    category: "tote",
+    price: 250,
+    material: "סריגת יד בחוט רפיה, גוף כחול-ים וידית ירוקה",
+    badge: "פריט יחיד",
+    description: "טוט גדול בשילוב כחול-ים וירוק יער, ידית סריגה ארוכה לנשיאה על הכתף.",
+    files: ["IMG-20260718-WA0015.jpg", "IMG-20260718-WA0030.jpg", "IMG-20260718-WA0032.jpg"],
+  },
+  {
+    slug: "tote-mocha-bow",
+    name: "טוט ‘פפיון מוקה’",
+    category: "tote",
+    price: 240,
+    material: "סריגת יד בחוט רפיה, חום כהה ובז׳ עם פפיון",
+    badge: "פריט יחיד",
+    description: "טוט בשילוב חום ובז׳, מעוטר בפפיון רפיה בחלק הקדמי.",
+    files: ["IMG-20260718-WA0016.jpg"],
+  },
+  {
+    slug: "pouch-onyx",
+    name: "קלמית ‘אוניקס’",
+    category: "pouch",
+    price: 130,
+    material: "סריגת יד בחוט רפיה בגוון שחור, סריגה מצולעת",
+    badge: "פריט יחיד",
+    description: "קלמית שחורה בסריגה מצולעת, זמינה עם רוכסן זהב ותליון לב עץ.",
+    files: ["IMG-20260718-WA0017.jpg", "IMG-20260718-WA0022.jpg", "IMG-20260718-WA0027.jpg"],
+  },
+  {
+    slug: "shoulder-beige-tassel",
+    name: "תיק צד ‘חול זהוב’",
+    category: "crossbody",
+    price: 200,
+    material: "סריגת יד בחוט רפיה מנצנץ בגוון בז׳",
+    badge: "פריט יחיד",
+    description: "תיק כתף בגוון בז׳ מנצנץ, עם זוג גדילים בשחור ובבז׳ וחומרה זהובה.",
+    files: ["IMG-20260718-WA0018.jpg", "IMG-20260718-WA0021.jpg"],
+  },
+  {
+    slug: "clutch-tricolor-stripe",
+    name: "קלאץ׳ ‘פסים צבעוניים’",
+    category: "clutch",
+    price: 160,
+    material: "סריגת יד בחוט רפיה, פסי כחול וצהוב על רקע חום",
+    badge: "פריט יחיד",
+    description: "קלאץ׳ שטוח עם פסי כחול וצהוב על רקע חום, ותליון כלב דצשונד מעור.",
+    files: ["IMG-20260718-WA0019.jpg"],
+  },
+  {
+    slug: "hobo-graphite",
+    name: "תיק צד ‘גרפיט’",
+    category: "crossbody",
+    price: 190,
+    material: "סריגת יד בחוט רפיה בגוון אפור כהה",
+    badge: "פריט יחיד",
+    description: "תיק כתף רך בגוון אפור-גרפיט, עם רצועה רקומה בדוגמת יהלומים.",
+    files: ["IMG-20260718-WA0020.jpg", "IMG-20260718-WA0033.jpg"],
+  },
+  {
+    slug: "pouch-forest-green",
+    name: "תיק צד ‘ירוק יער’",
+    category: "crossbody",
+    price: 175,
+    material: "סריגת יד בחוט רפיה בגוון ירוק יער",
+    badge: "פריט יחיד",
+    description: "תיק קטן וקומפקטי בירוק יער, רצועה מתכווננת ורוכסן עם חרוזים.",
+    files: ["IMG-20260718-WA0023.jpg", "IMG-20260718-WA0029.jpg"],
+  },
+  {
+    slug: "pouch-mustard",
+    name: "קלמית ‘חרדל’",
+    category: "pouch",
+    price: 125,
+    material: "סריגת יד בחוט רפיה בגוון צהוב חרדל",
+    badge: "פריט יחיד",
+    description: "קלמית תוססת בצהוב חרדל, עם גדיל ארוך בקצה הרוכסן.",
+    files: ["IMG-20260718-WA0031.jpg"],
+  },
+  {
+    slug: "pouch-toffee-boucle",
+    name: "קלמית ‘טופי מסולסל’",
+    category: "pouch",
+    price: 135,
+    material: "סריגת יד בחוט רפיה מסולסל (בוקלה) בגוון חום בהיר",
+    badge: "פריט יחיד",
+    description: "קלמית בסריגה מרקמית עבה בגוון חום-טופי, עם תליוני לב עץ.",
+    files: ["IMG-20260718-WA0025.jpg"],
+  },
+  {
+    slug: "pouch-sand-charm",
+    name: "קלמית ‘חול’",
+    category: "pouch",
+    price: 130,
+    material: "סריגת יד בחוט רפיה בגוון חול בהיר",
+    badge: "פריט יחיד",
+    description: "קלמית בגוון חול חם, סריגה צפופה ועדינה עם תג ‘Hand Made’.",
+    files: ["IMG-20260718-WA0034.jpg"],
   },
 ];
 
 PRODUCTS.forEach((p) => {
-  p.cover = `images/products/${p.slug}/cover.svg`;
-  p.frames = framePaths(p.slug);
+  p.frames = photos(p.slug, p.files);
+  p.cover = p.frames[0];
 });
