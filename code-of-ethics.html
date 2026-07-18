@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f766e">
+<title>קוד אתי וערכי הארגון | קבוצת אנטרופי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0d9488; --teal-dark:#0f766e; --teal-deep:#134e4a; --teal-soft:#ccfbf1; --teal-faint:#f0fdfa;
+  --bg:#f4f6f8; --card:#ffffff; --line:#e2e8f0;
+  --ink:#0f172a; --muted:#475569; --soft:#94a3b8;
+  --amber:#b45309; --amber-soft:#fef3c7; --amber-line:#fcd34d;
+  --blue:#1d4ed8; --blue-soft:#dbeafe;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06);
+  --shadow-lg:0 10px 30px rgba(15,23,42,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Heebo','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16.5px;line-height:1.75;
+}
+a{color:var(--teal-dark)}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+
+/* ===== Hero ===== */
+.hero{
+  background:linear-gradient(140deg,var(--teal-deep) 0%,var(--teal-dark) 55%,var(--teal) 100%);
+  color:#fff;padding:46px 0 84px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset-inline-start:-120px;top:-120px;width:340px;height:340px;
+  border-radius:50%;background:rgba(255,255,255,.06);
+}
+.hero::before{
+  content:"";position:absolute;inset-inline-end:-90px;bottom:-150px;width:300px;height:300px;
+  border-radius:50%;background:rgba(255,255,255,.05);
+}
+.hero .org{font-size:14px;font-weight:600;letter-spacing:.4px;color:#99f6e4;margin-bottom:10px}
+.hero h1{font-size:clamp(28px,4.6vw,40px);font-weight:800;line-height:1.25;margin-bottom:12px}
+.hero p.lead{font-size:clamp(16px,2.4vw,19px);color:#e6fffb;max-width:660px;font-weight:300}
+.hero .lawref{
+  display:inline-block;margin-top:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;padding:7px 16px;font-size:14px;font-weight:500;
+}
+
+/* ===== Quick nav ===== */
+.quicknav{margin-top:-46px;position:relative;z-index:5}
+.quicknav .pills{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);
+  display:flex;flex-wrap:wrap;gap:8px;padding:12px;justify-content:center;
+}
+.quicknav a{
+  text-decoration:none;font-weight:600;font-size:14.5px;color:var(--teal-deep);
+  background:var(--teal-faint);border:1px solid #99f6e4;border-radius:999px;padding:8px 16px;
+  transition:background .15s;
+}
+.quicknav a:hover{background:var(--teal-soft)}
+.quicknav a.urgent{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+
+/* ===== Sections ===== */
+section{padding:44px 0 6px}
+h2{
+  font-size:clamp(22px,3.4vw,28px);font-weight:800;color:var(--teal-deep);
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;scroll-margin-top:24px;
+}
+h2 .num{
+  flex-shrink:0;width:38px;height:38px;border-radius:12px;background:var(--teal-soft);color:var(--teal-deep);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+h3{font-size:19px;font-weight:700;color:var(--ink);margin:22px 0 8px}
+p{margin-bottom:12px;color:var(--ink)}
+p.muted, li.muted{color:var(--muted)}
+ul,ol{padding-inline-start:24px;margin-bottom:12px}
+li{margin-bottom:7px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;
+}
+
+/* callouts */
+.callout{
+  border-radius:var(--radius);padding:18px 20px;margin:16px 0;border:1px solid;
+}
+.callout .ct{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.callout.warn{background:var(--amber-soft);border-color:var(--amber-line)}
+.callout.warn .ct{color:var(--amber)}
+.callout.info{background:var(--blue-soft);border-color:#93c5fd}
+.callout.info .ct{color:var(--blue)}
+.callout.key{background:var(--teal-faint);border-color:#5eead4}
+.callout.key .ct{color:var(--teal-deep)}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0}
+
+/* values grid */
+.values{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:18px 0}
+.value{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:20px;border-top:4px solid var(--teal);
+}
+.value .v-ico{font-size:28px;margin-bottom:8px}
+.value .v-title{font-weight:800;font-size:17.5px;margin-bottom:6px;color:var(--teal-deep)}
+.value p{font-size:14.5px;color:var(--muted);margin-bottom:8px}
+.value p:last-child{margin-bottom:0}
+.value .v-do{
+  font-size:14px;color:var(--teal-deep);background:var(--teal-faint);border-radius:10px;
+  padding:10px 12px;border:1px solid #99f6e4;
+}
+
+/* commitments */
+.commit{counter-reset:cm;list-style:none;padding:0;margin:18px 0}
+.commit>li{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:15px 60px 15px 18px;margin-bottom:10px;
+}
+.commit>li::before{
+  counter-increment:cm;content:counter(cm);
+  position:absolute;inset-inline-start:15px;top:15px;width:30px;height:30px;border-radius:50%;
+  background:var(--teal);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+.commit>li b{color:var(--teal-deep)}
+.commit>li p{margin:2px 0 0;font-size:15px;color:var(--muted)}
+
+/* contact band */
+.contactband{
+  background:linear-gradient(135deg,var(--teal-deep),var(--teal-dark));color:#fff;
+  border-radius:18px;padding:26px 28px;box-shadow:var(--shadow-lg);margin:20px 0 8px;
+}
+.contactband h3{color:#fff;margin-top:0;font-size:21px}
+.contactband p{color:#d8fff8}
+.contactband .who{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px}
+.person{
+  flex:1 1 250px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;padding:16px 18px;
+}
+.person .role{font-size:13px;font-weight:600;color:#99f6e4;letter-spacing:.3px}
+.person .name{font-size:18px;font-weight:800;margin:2px 0 6px;color:#fff}
+.person a{color:#ccfbf1;font-weight:600;text-decoration:none}
+.person a:hover{text-decoration:underline}
+.person .line{font-size:14.5px;color:#e6fffb}
+.tbd{
+  display:inline-block;background:rgba(255,255,255,.18);border:1px dashed rgba(255,255,255,.5);
+  border-radius:8px;padding:1px 10px;font-size:13px;color:#fef3c7;
+}
+
+/* footer */
+footer{margin-top:50px;background:var(--teal-deep);color:#bfeee7;padding:34px 0 40px;font-size:14.5px}
+footer .wrap{display:flex;flex-direction:column;gap:8px}
+footer b{color:#fff}
+footer a{color:#99f6e4}
+.disclaimer{font-size:13.5px;color:#8dd7cd;border-top:1px solid rgba(255,255,255,.18);padding-top:14px;margin-top:8px}
+
+.backtop{
+  position:fixed;bottom:22px;inset-inline-start:22px;z-index:20;
+  background:var(--teal);color:#fff;border-radius:50%;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;text-decoration:none;
+  box-shadow:var(--shadow-lg);
+}
+
+@media print{
+  .quicknav,.backtop{display:none}
+  .hero{padding:24px 0;background:var(--teal-deep) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="org">קבוצת אנטרופי · משאבי אנוש</div>
+    <h1>הקוד האתי וערכי הארגון</h1>
+    <p class="lead">
+      הקוד האתי מניח קווים מנחים ליישום הערכים, העקרונות והנורמות המצופים מעובדות ועובדי קבוצת
+      אנטרופי, בהתאם לאלו המונהגים על ידי הנהלת הקבוצה והדירקטוריון. מטרתו — להנחות ולספק כלים
+      לקידום התנהגות מקצועית ומוסרית, ולסייע בשמירה על אמון הציבור, על תחושת השייכות של העובדים
+      ועל המוניטין של הקבוצה.
+    </p>
+    <span class="lawref">🧭 מצפן ערכי ומעשי לכל עובדי ומנהלי הקבוצה</span>
+  </div>
+</div>
+
+<nav class="quicknav wrap" aria-label="ניווט מהיר">
+  <div class="pills">
+    <a href="#intro">פתח דבר</a>
+    <a href="#values">ערכי הקבוצה</a>
+    <a href="#employees">אנחנו כעובדים</a>
+    <a href="#customers">לקוחות</a>
+    <a href="#suppliers">ספקים</a>
+    <a href="#community">קהילה וסביבה</a>
+    <a href="#integrity">טוהר המידות</a>
+    <a href="#privacy">מידע ופרטיות</a>
+    <a href="#apply">יישום הקוד</a>
+    <a href="#report" class="urgent">📣 היוועצות ודיווח</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ===================== פתח דבר ===================== -->
+  <section id="intro">
+    <h2><span class="num">1</span>פתח דבר</h2>
+    <div class="card">
+      <p>
+        קבוצת אנטרופי רואה חשיבות רבה באימוץ ערכים וקוד אתי שמטרתם להנחות ולהכווין את כלל עובדי
+        ומנהלי הקבוצה, בכל מקום שבו הם פועלים, בצורה מקצועית, ערכית ויומיומית. הקוד האתי מתווה
+        סטנדרטים ברורים להתנהלות ומעניק מענה לדילמות אתיות העלולות להתעורר במסגרת העבודה — גם
+        במצבים שבהם אין התייחסות ישירה בחוק, בתקנות או בנהלים.
+      </p>
+      <p>
+        הקוד האתי מהווה אבן יסוד עבור הקבוצה ביישום חזונה. הערכים המצוינים בו מגדירים את הסטנדרטים
+        למקצועיות ולמוסריות המצופים מעובדי ומנהלי הקבוצה, תוך שימת דגש על <b>שקיפות, אחריות וכבוד
+        הדדי</b>. הקוד חל על <b>כלל עובדי הקבוצה, לרבות חברות הבת</b>, ומהווה רף בסיסי להתנהלותם.
+        הוא ישמש ככלי עבודה יומיומי ויסייע לשמור על סטנדרטים גבוהים של מקצועיות וערכיות.
+      </p>
+      <p>
+        במקרים של ספקות או דילמות ניתן להיעזר בגורמים המתאימים בקבוצה — נאמני האתיקה או הממונה
+        על תחום האתיקה — לצורך קבלת ייעוץ והכוונה.
+      </p>
+      <div class="callout key">
+        <div class="ct">🔒 דיווח בטוח</div>
+        <p>
+          הקבוצה מבקשת לדווח על כל חשש להפרת הקוד. כל דיווח יטופל ברצינות, תוך שמירה על סודיות
+          וללא נקיטת צעדים משמעתיים נגד מי שמסר את המידע בתום לב.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ערכים ===================== -->
+  <section id="values">
+    <h2><span class="num">2</span>ערכי קבוצת אנטרופי</h2>
+    <p>
+      ערכי הקבוצה מהווים את עמוד השדרה של פעילותנו הארגונית. שישה ערכים מנחים אותנו, והם מבטאים
+      את מחויבותנו להעניק שירות איכותי, לפעול בהוגנות ובשקיפות, להשקיע בעובדינו ולקדם שותפות
+      אפקטיבית בכל תחום:
+    </p>
+    <div class="values">
+      <div class="value">
+        <div class="v-ico">🏆</div>
+        <div class="v-title">מצוינות</div>
+        <p>הישגיות ושאיפה למקסום יכולות ומיצוי פוטנציאל, להשגת הצלחות משמעותיות לאורך זמן. תרבות ארגונית שבה מערערים על המצב הקיים ועל הנחות יסוד, ומאמצים שינויים ושיפורים באופן אקטיבי ויזום.</p>
+        <div class="v-do">נפעל בחשיבה יצירתית, מחויבות ונחישות, מתוך למידה מתמשכת, סקרנות ורצון להוביל ולהתפתח מקצועית.</div>
+      </div>
+      <div class="value">
+        <div class="v-ico">🤝</div>
+        <div class="v-title">יושרה</div>
+        <p>מחויבות בלתי מתפשרת לעקרונות של אמת, הגינות ואחריות אישית: התנהלות כנה ושקופה, קיום הבטחות והתאמה בין מילים למעשים. היושרה היא יסוד לבניית אמון ומצפן מוסרי בקבלת החלטות.</p>
+        <div class="v-do">נעמוד בהבטחותינו, נדרוש מעצמנו ומאחרים את הסטנדרטים האתיים הגבוהים ביותר, ונפעל בעקביות, בהגינות ובאמינות.</div>
+      </div>
+      <div class="value">
+        <div class="v-ico">💙</div>
+        <div class="v-title">מחויבות לעובדים</div>
+        <p>יצירת סביבת עבודה תומכת, הוגנת ומכבדת, המאפשרת לכל עובד/ת לממש את הפוטנציאל האישי והמקצועי: השקעה ברווחה הפיזית והנפשית, פיתוח מיומנויות, הזדמנויות לצמיחה ואיזון בריא בין עבודה לחיים פרטיים.</p>
+        <div class="v-do">נעניק לעובדינו תחושת ערך, שייכות והכרה בתרומתם, תוך תקשורת פתוחה, שוויון הזדמנויות, הקשבה וכבוד לכל עובד ולצרכיו.</div>
+      </div>
+      <div class="value">
+        <div class="v-ico">🎯</div>
+        <div class="v-title">מיקוד בלקוח</div>
+        <p>מחויבות למתן מענה מיטבי לצרכים, לציפיות ולשאיפות של לקוחותינו — בהקשבה, במענה אישי, בפתרון בעיות מקצועי ובשירות מהיר.</p>
+        <div class="v-do">נספק שירות אדיב, מקצועי ורציף, נשפר ונשדרג את שירותינו, וטובת הלקוח תהווה תמיד משקל מרכזי בכל החלטה.</div>
+      </div>
+      <div class="value">
+        <div class="v-ico">💡</div>
+        <div class="v-title">חדשנות</div>
+        <p>היכולת לייצר רעיונות, תהליכים ומוצרים חדשים ופורצי דרך היוצרים ערך מוסף משמעותי לקבוצה, ללקוחות ולבעלי העניין — מתוך חשיבה יצירתית, פתיחות לשינויים וסקרנות.</p>
+        <div class="v-do">נהיה בצמיחה מתמדת, נרתום את היכולות הטכנולוגיות והאנושיות שלנו, נאתר הזדמנויות ונספק סביבה פתוחה לחקר ולאימוץ פתרונות משפרים.</div>
+      </div>
+      <div class="value">
+        <div class="v-ico">🧩</div>
+        <div class="v-title">שיתוף פעולה</div>
+        <p>מינוף מגוון היכולות והכישורים בקבוצה למציאת פתרונות חדשים, ייחודיים ומצוינים. שיתוף פעולה פורה מעצים את הכוח הקבוצתי ומחזק את תחושת השייכות והמעורבות.</p>
+        <div class="v-do">נפעל כגוף אחד, נעודד את השונות בין עובדינו ואת מיצוי היכולות של כל אחד ואחת, תוך תקשורת פתוחה ושיתוף ברעיונות ובכישורים.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== עובדים ===================== -->
+  <section id="employees">
+    <h2><span class="num">3</span>אנחנו, עובדי קבוצת אנטרופי</h2>
+    <p>
+      הצלחת הקבוצה תלויה בהון האנושי שלה — מנהליה ועובדיה. אנו שואפים ליצירת סביבת עבודה בטוחה,
+      מכבדת ונעימה, לצד דאגה לפיתוח העובדים ולמימוש הפוטנציאל שלהם, ומחויבים לפעול תוך אחריות,
+      מקצועיות וערכיות:
+    </p>
+    <ol class="commit">
+      <li><b>מחויבות לשמירה על החוקים, התקנות והכללים.</b><p>נכבד ונשמור על חוקי המדינה, התקנות והדינים הרלוונטיים, וכן על ההוראות, הכללים והנהלים של הקבוצה.</p></li>
+      <li><b>אחריות אישית.</b><p>נבצע את תפקידנו תוך לקיחת אחריות אישית וארגונית על החלטותינו ופעולותינו.</p></li>
+      <li><b>פועלים במקצועיות.</b><p>נעניק את המענה המיטבי והמקצועי בכל עת, תוך התאמה לסביבה משתנה ולמידה מתמדת.</p></li>
+      <li><b>מחויבים לשירות.</b><p>נעניק שירות מיטבי לכלל לקוחותינו.</p></li>
+      <li><b>מייצגים את אנטרופי.</b><p>התנהגותנו האישית והמקצועית משפיעה על תדמית הקבוצה כולה. נקפיד על כללי התנהגות, נראות וייצוגיות בהתאם לקוד הלבוש, וננהג תמיד בצורה מכובדת ואדיבה.</p></li>
+      <li><b>ראייה מערכתית.</b><p>נשאף לשיתוף פעולה בין היחידות השונות ולתחושת שותפות ואחריות בין המחלקות והדרגים, לטובת עמידה ביעדי הקבוצה.</p></li>
+      <li><b>קידום שוויון והכלה.</b><p>נפעל בצורה שוויונית וללא אפליה על רקע גיל, מגדר, אתניות, מוגבלות, דת, קשר פוליטי, חברות באיגוד, מצב משפחתי או כל סיווג אחר — ונקדם הכלה של ההבדלים בינינו.</p></li>
+      <li><b>בטיחות ובריאות תעסוקתית.</b><p>ניצור סביבת עבודה בטוחה לכלל העובדים ונפעל על פי הנהלים, החוקים והתקנות בתחומי הבטיחות, הגהות והבריאות.</p></li>
+      <li><b>סביבת עבודה נאותה ומניעת הטרדה מינית והתעמרות.</b><p>אנו מחויבים לסביבת עבודה בטוחה, מכבדת ונקייה מאיומים, מאלימות, משימוש בחומרים אסורים ומהטרדות מכל סוג — לרבות הטרדה מינית והתעמרות, מצד וכלפי כל גורם. כל חריגה תטופל בחומרה. בנושא הטרדה מינית והתנכלות יש לפנות לגורם הממונה בקבוצה, בהתאם לנוהל <a href="harassment-prevention.html">"מניעת הטרדה מינית והתנכלות"</a>.</p></li>
+      <li><b>מניעת ניגוד עניינים וניצול הזדמנויות עסקיות.</b><p>נפעל אך ורק לטובת הקבוצה, לא ניתן לשיקולים זרים להפריע לשיקול דעתנו — למעשה או למראית עין — ולא ננצל לטובתנו האישית הזדמנויות עסקיות המוצעות לנו מתוקף תפקידנו ומעמדנו.</p></li>
+      <li><b>מידע פנים ומידע חסוי.</b><p>לא נשתמש במידע פנים לצורך רווח אישי או לטובת כל גורם אחר, ונשמור על המידע החסוי של אנטרופי, לרבות פעולותיה ותוכניותיה.</p></li>
+      <li><b>ציוד ומתקנים.</b><p>נשמור ונגן על נכסי הקבוצה — ציוד, כלי עבודה, מערכות מידע וחומרים — מאובדן, נזק, שימוש בלתי נאות, גניבה ומעילה, ונעשה בהם שימוש ראוי ויעיל לטובת הקבוצה בלבד.</p></li>
+    </ol>
+  </section>
+
+  <!-- ===================== לקוחות ===================== -->
+  <section id="customers">
+    <h2><span class="num">4</span>לקוחות קבוצת אנטרופי</h2>
+    <p>
+      לקוחות הקבוצה הם כלל מקבלי השירות שלה. אנו שואפים לשביעות רצון גבוהה מצד לקוחותינו ופועלים
+      להשבחת מערכת היחסים עימם תוך יצירת אמון, אכפתיות ומענה הולם לצרכיהם:
+    </p>
+    <div class="card">
+      <ul style="margin-bottom:0">
+        <li><b>צרכי הלקוח במרכז העשייה</b> — נכיר ונבין את צרכי לקוחותינו ונטפל במהירות, ביעילות ובשקיפות בבקשות ובתלונות.</li>
+        <li><b>מקפידים על לוחות זמנים</b> — נפעל באופן מתמיד לעמידה בלוחות הזמנים.</li>
+        <li><b>מנגישים שירות</b> — נאפשר ללקוחותינו בעלי מוגבלות נגישות לשירותי הקבוצה ולמידע חיוני.</li>
+        <li><b>שירות שווה לכולם</b> — נעניק לכלל לקוחותינו שירות ויחס שווה.</li>
+        <li><b>בטיחות וביטחון</b> — ניצור סביבה בטיחותית ובטוחה לכלל לקוחותינו ונפעל על פי הנהלים, החוקים והתקנות בתחום.</li>
+        <li><b>אחריות בביצוע עסקאות</b> — נפעל באחריות בכל עסקה שאנו עורכים עם לקוחותינו.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== ספקים ===================== -->
+  <section id="suppliers">
+    <h2><span class="num">5</span>ספקי קבוצת אנטרופי</h2>
+    <p>
+      הקבוצה מכירה בחשיבות הקשר ושיתוף הפעולה מול ספקים, קבלנים חיצוניים ויועצים, ורואה ביחסים
+      העסקיים עימם גורם חיוני להצלחה — לצד אחריותה לבחור ספקים ראויים העומדים בכל התנאים הנדרשים
+      על פי דין:
+    </p>
+    <div class="card">
+      <ul style="margin-bottom:0">
+        <li><b>שמירה על סטנדרטים מקצועיים ואתיים</b> — נצפה מספקים, קבלנים ויועצים לעמוד בסטנדרטים מקצועיים ואתיים, תוך הקפדה על איכות, תקציב, לוח זמנים ותמורה הוגנת.</li>
+        <li><b>דבקים ברגולציה</b> — נפעל בהתאם לרגולציה ולנהלי הרכש וההתקשרויות.</li>
+        <li><b>עמידה בהתחייבויות</b> — נעמוד באופן מלא בהסכמים שחתמנו עם ספקים ושותפים.</li>
+        <li><b>הוגנות בהליכי רכש תחרותיים</b> — נפעל ללא משוא פנים, ביושר ובשקיפות בבחירת ספקים וקבלנים.</li>
+        <li><b>הקפדה על יחסים מקצועיים</b> — נשמור על יחסים מקצועיים עם ספקינו.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== קהילה וסביבה ===================== -->
+  <section id="community">
+    <h2><span class="num">6</span>קהילה, חברה וסביבה</h2>
+    <h3>מחויבות לקהילה</h3>
+    <p>
+      הקבוצה פועלת לקידום רווחת תושבי ישראל, חותרת להיות קשובה לסביבה שבה היא פועלת ורואה חשיבות
+      בתרומה לחברה. אנו רואים חשיבות רבה בפעילות התנדבותית ונעודד תמיד את עובדינו להשתתף בה.
+    </p>
+    <h3>מחויבות לאיכות הסביבה</h3>
+    <p>
+      כחלק ממחויבותנו לשמירה על איכות הסביבה ובריאות הציבור, הקבוצה פועלת לצמצום טביעת הרגל
+      הסביבתית של פעילותה — צמצום פסולת וטיפול בה, התייעלות בצריכת אנרגיה ומשאבים והפחתת מפגעים:
+    </p>
+    <ul>
+      <li><b>עמידה בדרישות החוקים, התקנים וההנחיות</b> — נעמוד בכל דרישות החוק והרגולציה לשמירה על איכות הסביבה בכל פעולות הקבוצה.</li>
+      <li><b>שיפור ביצועים סביבתיים</b> — נקדם פעילות בת־קיימא באמצעות מדיניות סביבתית הכוללת נהלים, תוכניות, דיווחים וביקורות בתחומים השונים.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== טוהר מידות ===================== -->
+  <section id="integrity">
+    <h2><span class="num">7</span>שמירה על טוהר המידות</h2>
+    <div class="card">
+      <p>
+        קבוצת אנטרופי מחויבת לנהוג ביושר, באמינות, בהגינות, בשקיפות וללא משוא פנים מול לקוחותינו,
+        ספקינו ושותפינו העסקיים. נקפיד על סטנדרטים של התנהגות עסקית תקינה, לא ננצל לרעה את כוחנו
+        ולא נפעל בצורה בלתי הוגנת — כחלק מדרכנו להיות קבוצה ראויה לאמון.
+      </p>
+      <div class="callout warn">
+        <div class="ct">🚫 אפס סובלנות לשוחד ושחיתות</div>
+        <p>
+          הקבוצה לא תשיג עסקים או יתרונות עסקיים באמצעות ניגוד עניינים או מתן שוחד מכל סוג שהוא —
+          בכסף או בשווה כסף, במישרין או בעקיפין. אנו מקיימים נהלים ותהליכים קונקרטיים למניעת הלבנת
+          הון, שוחד ושחיתות, לרבות בהיבטי צדדים שלישיים, אירוח ומתנות ותרומות — ומצפים מכל עובדינו
+          וספקינו לפעול על פיהם.
+        </p>
+      </div>
+      <h3>ניהול ספרים ודיווחים</h3>
+      <p>
+        אנו שומרים על אמות מידה מחמירות בניהול ספרים כדין ובדיווחים המחויבים: מנהלים בקפידה את ספרי
+        ומסמכי הקבוצה ומתעדים את רשומותינו והתנהלותנו השוטפת כנדרש על פי הדין.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== מידע ופרטיות ===================== -->
+  <section id="privacy">
+    <h2><span class="num">8</span>הגנה על מידע ופרטיות</h2>
+    <div class="values">
+      <div class="value">
+        <div class="v-ico">🗄️</div>
+        <div class="v-title">הגנה על מידע</div>
+        <p>נגן על מידע סודי וקנייני של הקבוצה — קניין רוחני, סודות מסחר וכל מידע עסקי ופיננסי. אין לגלות או לשתף מידע סודי עם צד שלישי אלא תחת הסכם סודיות נאות, ואין להמשיך להשתמש בו לאחר סיום ההעסקה.</p>
+      </div>
+      <div class="value">
+        <div class="v-ico">🔐</div>
+        <div class="v-title">אבטחת מידע</div>
+        <p>נפעל לפי נהלי מחלקת אבטחת המידע: לא נתיר שימוש בהרשאות גישה אישיות שניתנו לנו לצורכי עבודתנו, ונגן על סיסמאות הגישה שלנו.</p>
+      </div>
+      <div class="value">
+        <div class="v-ico">🛡️</div>
+        <div class="v-title">הגנה על פרטיות</div>
+        <p>מידע אישי הוא נכס פרטי שיש לשמור ולכבד. כארגון האוסף ומעבד מידע אישי על לקוחות, עובדים וספקים — אנו משקיעים מאמצים רבים בשמירת הפרטיות ואבטחת המידע שברשותנו, בניהולו ובשימוש בו על פי הדין.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== יישום ===================== -->
+  <section id="apply">
+    <h2><span class="num">9</span>יישום הקוד האתי</h2>
+    <p>
+      הקוד האתי משקף את מדיניות הקבוצה ואת האופן שבו נדרשים עובדיה ומנהליה לפעול. הוא <b>אינו מחליף</b>
+      את החוקים, התקנות, הנהלים וההנחיות — אלא <b>נוסף עליהם</b>, ותפקידו לתת מענה ב"תחומים האפורים"
+      שבהם מתעוררת דילמה אתית ללא מענה ישיר בחוק. במקרים כאלה נדרש כל עובד ועובדת לפעול על פי
+      הסטנדרטים, הנורמות והערכים של הקבוצה.
+    </p>
+    <div class="callout warn">
+      <div class="ct">⚖️ אכיפה</div>
+      <p>
+        הקבוצה רואה בחומרה כל הפרה של הקוד ותפעיל אמצעים משמעתיים נגד מפרים, כפי שיימצא לנכון
+        בנסיבות הרלוונטיות.
+      </p>
+    </div>
+    <div class="callout key">
+      <div class="ct">🛡️ הגנה על מתריעים</div>
+      <p>
+        בהתאם לעקרונות גלובליים של הגנה על מתריעים, אנו מתחייבים להגן על מי שמימש את מחויבותו
+        והתריע על הפרת הקוד.
+      </p>
+    </div>
+    <h3>הבהרות לקוד האתי</h3>
+    <ul class="muted-list">
+      <li class="muted">הקוד האתי אינו מחליף את הנהלים, הדינים, החוקים וההנחיות המקצועיות החלים על הקבוצה, מנהליה ועובדיה, ואין בו כדי לגרוע או להקל מהוראות כל דין.</li>
+      <li class="muted">מהות הקוד להוות מצפן בקבלת החלטות, לצד חוקים ונהלים; אין בו מענה לכל מקרה ספציפי.</li>
+      <li class="muted">הקוד מציג את כללי הפעולה הנדרשים במקרים של דילמה אתית הנובעת מהפעילות העסקית, באופן המשקף את ההתנהלות הרצויה והנדרשת.</li>
+      <li class="muted">הקוד לא נועד ליצור, ואינו יוצר, זכויות חוזיות הנוגעות להעסקה. הוא נועד לטובת קבוצת אנטרופי בלבד, והיא בלבד זכאית לאוכפו. הקוד אינו מקים עילת תביעה, סעד או זכות משפטית לכל אדם או ישות אחרת, ואין לפרשו כהסכם העסקה או כמשנה את תנאי ההעסקה (למעט נקיטת אמצעים משמעתיים בשל הפרתו, כמפורט לעיל).</li>
+    </ul>
+  </section>
+
+  <!-- ===================== דיווח ===================== -->
+  <section id="report">
+    <h2><span class="num">10</span>היוועצות ודיווח</h2>
+    <p>נתקלתם בדילמה אתית? נחשפתם לחשש להפרה של הקוד האתי? פנו באחת מהדרכים הבאות:</p>
+    <div class="contactband">
+      <h3>📣 ערוצי הפנייה</h3>
+      <p>כל פנייה תטופל ברצינות ובסודיות, וללא צעדים נגד מי שדיווח בתום לב.</p>
+      <div class="who">
+        <div class="person">
+          <div class="role">ערוץ ראשון</div>
+          <div class="name">הדרג הממונה עליכם</div>
+          <div class="line">המנהל/ת הישיר/ה — הכתובת הראשונה להיוועצות בדילמה אתית.</div>
+        </div>
+        <div class="person">
+          <div class="role">הממונה על האתיקה בארגון</div>
+          <div class="name"><span class="tbd">שם הממונה יפורסם לעובדים</span></div>
+          <div class="line">לייעוץ, הכוונה ודיווח בנושאי אתיקה.</div>
+        </div>
+        <div class="person">
+          <div class="role">הטרדה מינית והתנכלות</div>
+          <div class="name">סיגי זלינגר</div>
+          <div class="line">האחראית למניעת הטרדה מינית · <a href="harassment-prevention.html">לנוהל ולחוק המלא ←</a></div>
+        </div>
+        <div class="person">
+          <div class="role">פנייה אנונימית</div>
+          <div class="name">קו חם</div>
+          <div class="line">לפניות אנונימיות. באחריות קצין הציות של הקבוצה.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<a class="backtop" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" aria-label="חזרה לראש העמוד">↑</a>
+
+<footer>
+  <div class="wrap">
+    <div><b>קבוצת אנטרופי</b> · משאבי אנוש</div>
+    <div>מגדלי עזריאלי הרוקמים 26, חולון · בניין C, קומה 11</div>
+    <div>עמודים נוספים לעובדים: <a href="harassment-prevention.html">מניעת הטרדה מינית והתנכלות</a></div>
+    <div class="disclaimer">
+      עמוד זה נועד להנגשת הקוד האתי לעובדות ולעובדי הקבוצה, על בסיס מסמך "קוד אתי + ערכי הארגון".
+      הקוד המלא, כפי שאושר בהנהלה ובדירקטוריון, הוא הנוסח המחייב. הקוד אינו מחליף את הוראות החוק,
+      התקנות ונהלי הקבוצה — אלא נוסף עליהם.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
