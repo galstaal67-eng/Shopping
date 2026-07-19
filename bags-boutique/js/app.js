@@ -125,7 +125,7 @@
 
   function renderCatalog(filter) {
     const grid = $("#catalogGrid");
-    const items = PRODUCTS.filter((p) => filter === "all" || p.category === filter);
+    const items = PRODUCTS.filter((p) => filter === "all" || p.category === filter || (p.extraCategories || []).includes(filter));
     grid.innerHTML = items.map((p) => `
       <article class="product-card" data-slug="${p.slug}" role="button" tabindex="0">
         <div class="card-tilt">

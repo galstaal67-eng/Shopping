@@ -194,6 +194,7 @@ const PRODUCTS = [
     material: "סריגת יד בחוט רפיה בגוון אפור, מסגרת ורודה",
     badge: "פריט יחיד",
     description: "קלמית אפורה בסריגה מצולעת עם מסגרת ורודה, אבזם זהב וכדור פרווה ורוד.",
+    extraCategories: ["clutch"],
     files: ["bag-1.jpg"],
   },
   {
@@ -204,6 +205,7 @@ const PRODUCTS = [
     material: "סריגת יד בחוט רפיה בגוון אפור-כסוף",
     badge: "פריט יחיד",
     description: "קלמית בגוון אפור-כסוף עדין, עם משיכת רוכסן מעץ ותג ‘Hand Made’.",
+    extraCategories: ["clutch"],
     files: ["bag-1.jpg"],
   },
   {
@@ -214,6 +216,7 @@ const PRODUCTS = [
     material: "סריגת יד בחוט רפיה בגוון אפור עם תפר זיגזג צהוב",
     badge: "פריט יחיד",
     description: "קלמית אפורה עם שורת תפר זיגזג צהוב, רוכסן צהוב ותליון לב עץ.",
+    extraCategories: ["clutch"],
     files: ["bag-1.jpg"],
   },
   {
@@ -224,6 +227,7 @@ const PRODUCTS = [
     material: "סריגת יד בחוט רפיה בגוון אפור, עיטור לב",
     badge: "פריט יחיד",
     description: "קלמית אפורה עדינה עם עיטור לב סרוג בפינה.",
+    extraCategories: ["clutch"],
     files: ["bag-1.jpg"],
   },
   {
@@ -234,6 +238,7 @@ const PRODUCTS = [
     material: "סריגת יד בחוט רפיה בגוון לילך, מסגרת זית",
     badge: "פריט יחיד",
     description: "קלמית בגוון לילך עדין עם מסגרת ירוק-זית ותליון בד רקום.",
+    extraCategories: ["clutch"],
     files: ["bag-1.jpg"],
   },
 ];
