@@ -1,0 +1,149 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>חוּט וָרַפְיָה — תיקי סריגה בעבודת יד</title>
+<meta name="description" content="בוטיק תיקי סריגה בחוט רפיה, בעבודת יד. שוטטו בין הקולקציות, היכנסו לכל תיק וסובבו אותו 360 מעלות לפני שמזמינים." />
+<meta name="theme-color" content="#eef6f5" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👜</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="is-loading">
+<div class="grain"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<header class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">חוּט<em>&amp;</em>רַפְיָה</span>
+      <span class="logo-sub">תיקי סריגה בעבודת יד</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#categories">קטגוריות</a>
+      <a href="#catalog">הקולקציה</a>
+      <a href="#story">הסיפור שלנו</a>
+      <a href="#contact">יצירת קשר</a>
+    </nav>
+    <a href="#contact" class="btn btn-nav">הזמינו עכשיו</a>
+    <button class="nav-burger" id="navBurger" aria-label="תפריט" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section id="top" class="hero">
+    <div class="hero-stage" id="heroStage">
+      <div class="hero-blob blob-a" data-depth="0.15"></div>
+      <div class="hero-blob blob-b" data-depth="0.28"></div>
+      <div class="hero-ring" data-depth="0.4"></div>
+      <div class="hero-showcase" data-depth="0.55" aria-hidden="true">
+        <img class="hero-showcase-bag hero-showcase-back" src="images/hero/hero-cognac.png" alt="" draggable="false" />
+        <img class="hero-showcase-bag hero-showcase-front" src="images/hero/hero-clutch.png" alt="" draggable="false" />
+      </div>
+    </div>
+
+    <div class="hero-copy">
+      <p class="eyebrow">עבודת יד ישראלית · פריטים חד-פעמיים</p>
+      <h1>תיקים שנולדים <span class="hl">מהידיים</span>,<br />לא מהמפעל</h1>
+      <p class="lead">כל תיק נסרג ונרכב ביד אחת, עין אחר עין, בחוטי רפיה איכותיים. שוטטו בין הקולקציות, היכנסו לכל תיק והציצו בזוויות שונות לפני שאתם מזמינים.</p>
+      <div class="hero-actions">
+        <a href="#catalog" class="btn btn-primary">לשוטט בקולקציה</a>
+        <a href="#story" class="btn btn-ghost">הסיפור שלנו</a>
+      </div>
+      <dl class="hero-stats">
+        <div><dt>12+</dt><dd>שנות מלאכה</dd></div>
+        <div><dt>100%</dt><dd>בעבודת יד</dd></div>
+        <div><dt>1</dt><dd>תיק בכל פעם</dd></div>
+      </dl>
+    </div>
+
+    <a href="#categories" class="scroll-cue" aria-label="גללו למטה"><span></span></a>
+  </section>
+
+  <section id="categories" class="section category-section">
+    <div class="section-head">
+      <p class="eyebrow">שוטטו לפי סוג</p>
+      <h2>איזה תיק מדבר אליכם?</h2>
+    </div>
+    <div class="category-rail" id="categoryRail"></div>
+  </section>
+
+  <section id="catalog" class="section catalog-section">
+    <div class="section-head">
+      <p class="eyebrow">הקולקציה המלאה</p>
+      <h2>כל התיקים שלנו</h2>
+      <p class="section-note">התמונות מוצגות כפי שהועלו ומוינו אוטומטית לפי תיק — ייתכנו טעויות בשיוך, בשם או במחיר, ניתן לתקן ב-<code>js/products.js</code>. לחצו על תיק כדי להיכנס פנימה ולראות אותו מקרוב.</p>
+    </div>
+    <div class="filter-chips" id="filterChips"></div>
+    <div class="catalog-grid" id="catalogGrid"></div>
+  </section>
+
+  <section id="story" class="section story-section">
+    <div class="story-copy">
+      <p class="eyebrow">מי אנחנו</p>
+      <h2>כל תפר מספר סיפור</h2>
+      <p>הכל מתחיל בחוטי רפיה איכותיים, נבחרים בקפידה. אנחנו סורגים ומרכיבים כל תיק ביד, עין אחר עין, בסדנה קטנה — בלי קווי ייצור, בלי המוני. התוצאה: תיק אחד, ייחודי, שנשאר איתכם שנים.</p>
+      <div class="story-steps">
+        <div class="step"><span class="step-num">01</span><h3>בחירת חוט</h3><p>חוטי רפיה איכותיים בגוונים עשירים.</p></div>
+        <div class="step"><span class="step-num">02</span><h3>סריגה בעבודת יד</h3><p>כל תיק נסרג בסבלנות, עוגן אחר עוגן.</p></div>
+        <div class="step"><span class="step-num">03</span><h3>גימור ופרטים</h3><p>חיזוק תפרים, רצועות ואבזמים לגימור עמיד.</p></div>
+      </div>
+    </div>
+    <div class="story-visual" aria-hidden="true">
+      <div class="story-card card-1"></div>
+      <div class="story-card card-2"></div>
+      <div class="story-card card-3"></div>
+    </div>
+  </section>
+
+  <section id="contact" class="section contact-section">
+    <div class="contact-inner">
+      <p class="eyebrow">רוצים תיק משלכם?</p>
+      <h2>נשמח לשמוע מכם</h2>
+      <p>לכל שאלה, התאמה אישית או הזמנה — דברו איתנו ישירות בוואטסאפ או במייל, ונחזור אליכם בהקדם.</p>
+      <div class="contact-actions">
+        <a class="btn btn-primary btn-lg" id="contactWhatsapp" target="_blank" rel="noopener">💬 לשלוח הודעה בוואטסאפ</a>
+        <a class="btn btn-ghost btn-lg" id="contactEmail">✉️ לשלוח מייל</a>
+      </div>
+      <p class="contact-note">* כתובת המייל כאן זמנית לצורך הדגמה — יש לעדכן אותה ב-<code>js/app.js</code>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="logo-mark small">חוּט<em>&amp;</em>רַפְיָה</span>
+    <p>© <span id="year"></span> חוּט וָרַפְיָה · תיקי סריגה בעבודת יד · כל הזכויות שמורות</p>
+  </div>
+</footer>
+
+<div class="product-overlay" id="productOverlay" aria-hidden="true">
+  <div class="overlay-backdrop" id="overlayBackdrop"></div>
+  <div class="product-overlay-inner" role="dialog" aria-modal="true">
+    <button class="overlay-close" id="overlayClose" aria-label="סגירה">✕</button>
+
+    <div class="viewer-pane">
+      <div class="spin-viewer" id="spinViewer">
+        <img id="spinImg" alt="" draggable="false" />
+        <div class="spin-hint" id="spinHint"><span>🖐️ גררו לסובב</span></div>
+        <div class="spin-progress" id="spinProgress"></div>
+        <button class="spin-autoplay" id="spinAutoplay" aria-pressed="false">⟳ סיבוב אוטומטי</button>
+      </div>
+    </div>
+
+    <div class="details-pane" id="detailsPane"></div>
+  </div>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/spin-viewer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
