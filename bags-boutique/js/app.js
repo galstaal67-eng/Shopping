@@ -32,7 +32,6 @@
       setupHeroParallax();
       setupLeaves();
     }
-    setupHeroSpin();
     setupOverlay();
     requestAnimationFrame(() => document.body.classList.remove("is-loading"));
   }
@@ -265,13 +264,6 @@
       leaf.style.setProperty("--sway", `${18 + Math.random() * 30}px`);
       field.appendChild(leaf);
     }
-  }
-
-  // ---------------- hero decorative showcase ----------------
-  function setupHeroSpin() {
-    const showcase = PRODUCTS[0];
-    if (!showcase) return;
-    $("#heroSpinImg").src = showcase.cover;
   }
 
   // ---------------- product overlay ----------------
