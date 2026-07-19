@@ -8,6 +8,7 @@ const CATEGORIES = [
   { id: "crossbody", name: "תיקי צד", tagline: "לענוב על הכתף", icon: "👜" },
   { id: "pouch", name: "קלמים ונרתיקים", tagline: "לכל מה שצריך בפנים", icon: "👝" },
   { id: "clutch", name: "קלאצ'ים", tagline: "לערב מיוחד", icon: "✨" },
+  { id: "natural-raffia", name: "תיקי רפייה טבעית בצבעים", tagline: "גוונים עשירים, סריגה טבעית", icon: "🌿" },
 ];
 
 function photos(slug, files) {
@@ -188,7 +189,7 @@ const PRODUCTS = [
   {
     slug: "pouch-mist-pink",
     name: "קלמית ‘ערפל וורוד’",
-    category: "pouch",
+    category: "natural-raffia",
     price: 135,
     material: "סריגת יד בחוט רפיה בגוון אפור, מסגרת ורודה",
     badge: "פריט יחיד",
@@ -198,7 +199,7 @@ const PRODUCTS = [
   {
     slug: "pouch-silver-toggle",
     name: "קלמית ‘כסף’",
-    category: "pouch",
+    category: "natural-raffia",
     price: 130,
     material: "סריגת יד בחוט רפיה בגוון אפור-כסוף",
     badge: "פריט יחיד",
@@ -208,7 +209,7 @@ const PRODUCTS = [
   {
     slug: "pouch-graphite-yellow",
     name: "קלמית ‘זיגזג צהוב’",
-    category: "pouch",
+    category: "natural-raffia",
     price: 135,
     material: "סריגת יד בחוט רפיה בגוון אפור עם תפר זיגזג צהוב",
     badge: "פריט יחיד",
@@ -218,7 +219,7 @@ const PRODUCTS = [
   {
     slug: "pouch-cloud-heart",
     name: "קלמית ‘ענן ולב’",
-    category: "pouch",
+    category: "natural-raffia",
     price: 130,
     material: "סריגת יד בחוט רפיה בגוון אפור, עיטור לב",
     badge: "פריט יחיד",
@@ -228,7 +229,7 @@ const PRODUCTS = [
   {
     slug: "pouch-mauve-olive",
     name: "קלמית ‘לילך וזית’",
-    category: "pouch",
+    category: "natural-raffia",
     price: 140,
     material: "סריגת יד בחוט רפיה בגוון לילך, מסגרת זית",
     badge: "פריט יחיד",
