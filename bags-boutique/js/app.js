@@ -214,18 +214,30 @@
   }
 
   // ---------------- falling autumn leaves ----------------
-  const LEAF_COLORS = [
-    ["#a1532f", "#74371e"],
-    ["#c1703f", "#8a4425"],
-    ["#7a3220", "#551f13"],
-    ["#c98a3a", "#8f5c22"],
+  // Mottled two-tone palettes echoing a real fall leaf pile: reds, oranges,
+  // golds and olive-to-yellow blends, each with a darker vein tone.
+  const LEAF_PALETTES = [
+    { from: "#b23a2f", to: "#7a2318", vein: "#4a140d" }, // deep red
+    { from: "#d4772e", to: "#a1532f", vein: "#74371e" }, // burnt orange
+    { from: "#d9a441", to: "#a1532f", vein: "#74371e" }, // golden orange
+    { from: "#c98a3a", to: "#8f5c22", vein: "#5c3a15" }, // amber
+    { from: "#9aa23f", to: "#c9a83a", vein: "#5c5a1e" }, // olive-to-gold
+    { from: "#c1703f", to: "#7a3220", vein: "#4a1f13" }, // terracotta
+    { from: "#e0b64a", to: "#c1502f", vein: "#7a2318" }, // yellow-to-red
   ];
 
-  function leafSvgUrl(fill, vein) {
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>` +
-      `<path d='M50 6 C82 22 90 56 50 96 C10 56 18 22 50 6 Z' fill='${fill}'/>` +
-      `<path d='M50 14 C46 40 46 62 50 88' stroke='${vein}' stroke-width='3' fill='none' opacity='0.55' stroke-linecap='round'/>` +
-      `</svg>`;
+  let leafIdCounter = 0;
+
+  function leafSvgUrl(shape, palette) {
+    const gradId = `lg${leafIdCounter++}`;
+    const gradient = `<linearGradient id='${gradId}' x1='0' y1='0' x2='1' y2='1'>` +
+      `<stop offset='0%' stop-color='${palette.from}'/><stop offset='100%' stop-color='${palette.to}'/></linearGradient>`;
+    const body = shape === "maple"
+      ? `<path d='M50 8 L60 20 L76 18 L66 36 L90 38 L64 52 L74 66 L54 60 L50 96 L46 60 L26 66 L36 52 L10 38 L34 36 L24 18 L40 20 Z' fill='url(#${gradId})'/>` +
+        `<path d='M50 90 L50 12 M50 50 L66 36 M50 50 L34 36 M50 30 L60 20 M50 30 L40 20' stroke='${palette.vein}' stroke-width='1.6' fill='none' opacity='0.5' stroke-linecap='round'/>`
+      : `<path d='M50 6 C82 22 90 56 50 96 C10 56 18 22 50 6 Z' fill='url(#${gradId})'/>` +
+        `<path d='M50 14 C46 40 46 62 50 88' stroke='${palette.vein}' stroke-width='3' fill='none' opacity='0.55' stroke-linecap='round'/>`;
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs>${gradient}</defs>${body}</svg>`;
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
   }
 
@@ -235,13 +247,15 @@
     field.setAttribute("aria-hidden", "true");
     document.body.appendChild(field);
 
+    const shapes = ["almond", "maple"];
     const count = window.innerWidth < 720 ? 8 : 15;
     for (let i = 0; i < count; i++) {
-      const [fill, vein] = LEAF_COLORS[i % LEAF_COLORS.length];
+      const palette = LEAF_PALETTES[Math.floor(Math.random() * LEAF_PALETTES.length)];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
       const leaf = document.createElement("span");
       leaf.className = "leaf";
       const size = 14 + Math.random() * 26;
-      leaf.style.backgroundImage = leafSvgUrl(fill, vein);
+      leaf.style.backgroundImage = leafSvgUrl(shape, palette);
       leaf.style.width = `${size}px`;
       leaf.style.height = `${size}px`;
       leaf.style.left = `${Math.random() * 100}%`;
