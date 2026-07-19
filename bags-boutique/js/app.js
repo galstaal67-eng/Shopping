@@ -4,9 +4,9 @@
 (() => {
   "use strict";
 
-  // ---- TODO: replace with the real business contact details ----
+  // ---- TODO: replace the placeholder email with the real business address ----
   const CONTACT = {
-    whatsappNumber: "972500000000", // international format, no + or leading 0
+    whatsappNumber: "972524742260", // international format, no + or leading 0
     whatsappMessage: "היי! מתעניין/ת בתיק מהאתר",
     email: "hello@example.com",
   };
